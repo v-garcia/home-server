@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jdownloader
+spec:
+  serviceName: jdownloader
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jdownloader
+  template:
+    metadata:
+      labels:
+        app: jdownloader
+        tier: downloader
+    spec:
+      containers:
+        - name: jdownloader
+          imagePullPolicy: Always
+          image: 127.0.0.1:32000/jdownloader
+          env:
+            - name: EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: jdownloader-secret
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jdownloader-secret
+                  key: password
+            - name: UID
+              value: "1500"
+            - name: GID
+              value: "2500"
+          volumeMounts:
+            - name: jdownloader
+              subPath: downloads
+              mountPath: /opt/JDownloader/Downloads
+            - name: jdownloader
+              subPath: config
+              mountPath: /opt/JDownloader/cfg
+      initContainers:
+        - name: config-init
+          image: busybox
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "cp -u /org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json /opt/",
+            ]
+          volumeMounts:
+            - name: jdownloader
+              subPath: config
+              mountPath: /opt
+            - name: config
+              subPath: MyJDownloaderSettings.json
+              mountPath: /org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
+      volumes:
+        - name: config
+          configMap:
+            name: jdownloader-config
+            items:
+              - key: MyJDownloaderSettings.json
+                path: MyJDownloaderSettings.json
+        - name: jdownloader
+          persistentVolumeClaim:
+            claimName: jdownloader

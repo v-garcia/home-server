@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gmusicuploader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gmusicuploader
+  template:
+    metadata:
+      labels:
+        app: gmusicuploader
+        security-context: standard
+    spec:
+      initContainers:
+        - name: oauth-init
+          image: busybox
+          command: ["/bin/sh", "-c", "cp -v /oauth.key /opt/"]
+          volumeMounts:
+            - name: gmusicuploader-secret
+              subPath: oauth.key
+              mountPath: /oauth.key
+            - name: oauth
+              mountPath: /opt/
+          env:
+            - name: LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: gmusicuploader-secret
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gmusicuploader-secret
+                  key: password
+      containers:
+        - name: gmusicuploader
+          image: 127.0.0.1:32000/gmusicuploader
+          volumeMounts:
+            - name: public
+              subPath: music
+              mountPath: /media
+              readOnly: true
+            - name: oauth
+              mountPath: /root/oauth/
+          env:
+            - name: UPLOADER_ID
+              value: 9C:79:A3:22:ED:95
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: gmusicuploader-secret
+          secret:
+            secretName: gmusicuploader-secret
+        - name: oauth
+          emptyDir: {}

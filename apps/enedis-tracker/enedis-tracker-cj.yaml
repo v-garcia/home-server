@@ -1,0 +1,38 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: rclone-perso
+spec:
+  concurrencyPolicy: Forbid
+  schedule: '0 8 * * *' # Everyday at 8am
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: enedis-tracker
+              image: 127.0.0.1:32000/enedis-tracker
+              args:
+                - 'daily'
+              env:
+                - name: ENEDIS_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: enedis-tracker-secret
+                      key: enedis-email
+                - name: ENEDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: enedis-tracker-secret
+                      key: enedis-password
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: GOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: enedis-tracker-secret
+                      key: gotify-token
+          volumes:
+            - name: enedis-tracker-secret
+              secret:
+                secretName: enedis-tracker-secret

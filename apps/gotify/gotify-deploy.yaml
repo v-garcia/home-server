@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotify
+  template:
+    metadata:
+      labels:
+        app: gotify
+    spec:
+      initContainers:
+        - name: db-init
+          image: busybox
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "test -f /opt/gotify.db || cp -v /gotify.db /opt/",
+            ]
+          volumeMounts:
+            - name: gotify
+              subPath: data
+              mountPath: /opt/
+            - name: gotify-secret
+              subPath: gotify.db
+              mountPath: /gotify.db
+              readOnly: true
+      containers:
+        - name: gotify
+          image: 127.0.0.1:32000/gotify
+          ports:
+            - name: gotify
+              containerPort: 3000
+          volumeMounts:
+            - name: gotify
+              subPath: data
+              mountPath: /var/data/
+          env:
+            - name: GOTIFY_DATABASE_DIALECT
+              value: sqlite3
+            - name: GOTIFY_SERVER_SSL_REDIRECTTOHTTPS
+              value: "false"
+            - name: GOTIFY_DATABASE_CONNECTION
+              value: /var/data/gotify.db
+            - name: GOTIFY_SERVER_PORT
+              value: "3000"
+            - name: GOTIFY_PLUGINSDIR
+              value: /var/data/plugins
+            - name: GOTIFY_UPLOADEDIMAGESDIR
+              value: /var/data/uploaded-images
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: gotify
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: gotify
+              scheme: HTTP
+      volumes:
+        - name: gotify
+          persistentVolumeClaim:
+            claimName: gotify
+        - name: gotify-secret
+          secret:
+            secretName: gotify-secret

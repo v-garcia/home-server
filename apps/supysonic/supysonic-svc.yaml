@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: supysonic
+spec:
+  type: ClusterIP
+  selector:
+    app: supysonic
+  ports:
+    - name: supysonic
+      port: 8080
+      targetPort: 8080

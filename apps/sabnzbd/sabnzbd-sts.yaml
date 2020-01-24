@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sabnzbd
+spec:
+  serviceName: sabnzbd
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+        tier: downloader
+    spec:
+      containers:
+        - name: sabnzbd
+          image: 127.0.0.1:32000/sabnzbd
+          args:
+            - --no-login
+          ports:
+            - name: sabnzbd
+              containerPort: 8080
+          volumeMounts:
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /downloads
+            - name: sabnzbd
+              subPath: watchdir
+              mountPath: /watchdir
+            - name: sabnzbd
+              subPath: workdir
+              mountPath: /downloads_temp
+            - name: config
+              mountPath: /config
+          livenessProbe:
+            httpGet:
+              path: /staticcfg/ico/android-192x192.png
+              port: 8080
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /staticcfg/ico/android-192x192.png
+              port: 8080
+              scheme: HTTP
+      initContainers:
+        - name: config-init
+          image: busybox
+          command:
+            ["/bin/sh", "-c", "cp /cfg-src/sabnzbd.ini /cfg-dst/sabnzbd.ini"]
+          volumeMounts:
+            - name: config-readonly
+              mountPath: /cfg-src
+            - name: config
+              mountPath: /cfg-dst
+      volumes:
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: logs
+          emptyDir: {}
+        - name: config
+          emptyDir: {}
+        - name: config-readonly
+          configMap:
+            name: sabnzbd-config
+            items:
+              - key: sabnzbd.ini
+                path: sabnzbd.ini

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebrowser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebrowser
+  template:
+    metadata:
+      labels:
+        app: filebrowser
+    spec:
+      containers:
+        - name: filebrowser
+          image: 127.0.0.1:32000/filebrowser
+          args:
+            - --noauth
+            - --database
+            - "/root/workingdir/database.db"
+            - --port
+            - "3000"
+          ports:
+            - name: filebrowser
+              containerPort: 3000
+          volumeMounts:
+            - name: cloudtorrent
+              subPath: downloads
+              mountPath: /srv/downloads/torrent
+            - name: cloudtorrent
+              subPath: watchdir
+              mountPath: /srv/downloads/watchdir/torrent
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /srv/downloads/sabnzbd
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /srv/downloads/watchdir/nzb
+            - name: jdownloader
+              subPath: downloads
+              mountPath: /srv/downloads/jdownloader
+            - name: perso
+              mountPath: /srv/perso
+            - name: public
+              mountPath: /srv/public
+            - name: filebrowser
+              subPath: workingdir
+              mountPath: /root/workingdir
+      volumes:
+        - name: cloudtorrent
+          persistentVolumeClaim:
+            claimName: cloudtorrent
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: jdownloader
+          persistentVolumeClaim:
+            claimName: jdownloader
+        - name: perso
+          persistentVolumeClaim:
+            claimName: perso
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: filebrowser
+          persistentVolumeClaim:
+            claimName: filebrowser

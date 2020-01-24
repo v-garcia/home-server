@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cloudtorrent
+spec:
+  serviceName: cloudtorrent
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudtorrent
+  template:
+    metadata:
+      labels:
+        app: cloudtorrent
+        tier: downloader
+    spec:
+      initContainers:
+        - name: cloudtorrent-init
+          image: busybox
+          command: ["/bin/sh", "-c", "cp -v /cloud-torrent.json /opt/"]
+          volumeMounts:
+            - name: cloudtorrent-config
+              mountPath: /opt/
+            - name: cloudtorrent-config-ro
+              subPath: cloud-torrent.json
+              mountPath: /cloud-torrent.json
+      containers:
+        - name: cloudtorrent
+          image: 127.0.0.1:32000/cloudtorrent
+          ports:
+            - name: cloudtorrent
+              containerPort: 3000
+          volumeMounts:
+            - name: cloudtorrent-config
+              subPath: cloud-torrent.json
+              mountPath: /cloud-torrent.json
+            - name: cloudtorrent
+              subPath: downloads
+              mountPath: /downloads
+            - name: cloudtorrent
+              subPath: watchdir
+              mountPath: /watchdir
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: cloudtorrent
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: cloudtorrent
+              scheme: HTTP
+      volumes:
+        - name: cloudtorrent
+          persistentVolumeClaim:
+            claimName: cloudtorrent
+        - name: cloudtorrent-config-ro
+          configMap:
+            name: cloudtorrent-config
+        - name: cloudtorrent-config
+          emptyDir: {}

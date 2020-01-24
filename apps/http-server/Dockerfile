@@ -1,0 +1,1 @@
+FROM babardo/simple-http-server:latest

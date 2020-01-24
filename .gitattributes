@@ -1,0 +1,5 @@
+*-secret.yaml filter=crypt diff=crypt
+*-secret.conf filter=crypt diff=crypt
+*-secret.json filter=crypt diff=crypt
+*.key filter=crypt diff=crypt
+*.env filter=crypt diff=crypt

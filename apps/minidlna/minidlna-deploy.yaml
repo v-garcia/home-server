@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minidlna
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minidlna
+  template:
+    metadata:
+      labels:
+        app: minidlna
+    spec:
+      hostNetwork: true
+      containers:
+        - name: minidlna
+          image: 127.0.0.1:32000/minidlna
+          env:
+            - name: MINIDLNA_FRIENDLY_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: minidlna-config
+                  key: friendly-name
+            - name: MINIDLNA_MEDIA_DIR_1
+              value: V,/media/public
+            - name: MINIDLNA_MEDIA_DIR_2
+              value: V,/media/downloads
+            - name: MINIDLNA_MEDIA_DIR_3
+              value: P,/media/public/photos
+          livenessProbe:
+            tcpSocket:
+              port: 8200
+          readinessProbe:
+            tcpSocket:
+              port: 8200
+          ports:
+            - containerPort: 8200
+          volumeMounts:
+            - name: public
+              mountPath: /media/public
+            - name: cloudtorrent
+              subPath: downloads
+              mountPath: /media/downloads/torrent
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /media/downloads/sabnzbd
+            - name: jdownloader
+              subPath: downloads
+              mountPath: /media/downloads/jdownloader
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: cloudtorrent
+          persistentVolumeClaim:
+            claimName: cloudtorrent
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: jdownloader
+          persistentVolumeClaim:
+            claimName: jdownloader

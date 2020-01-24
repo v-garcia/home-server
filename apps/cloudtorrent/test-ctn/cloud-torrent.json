@@ -1,0 +1,20 @@
+{
+  "AutoStart": true,
+  "EngineDebug": false,
+  "MuteEngineLog": false,
+  "ObfsPreferred": true,
+  "ObfsRequirePreferred": false,
+  "DisableTrackers": false,
+  "DisableIPv6": false,
+  "DownloadDirectory": "/downloads",
+  "WatchDirectory": "/watchdir",
+  "EnableUpload": false,
+  "EnableSeeding": false,
+  "IncomingPort": 50007,
+  "DoneCmd": "",
+  "SeedRatio": 0,
+  "UploadRate": "",
+  "DownloadRate": "",
+  "TrackerListURL": "",
+  "AlwaysAddTrackers": false
+}

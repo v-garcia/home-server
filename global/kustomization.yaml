@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - basic-auth-nginx-secret.yaml
+    - local-sc.yaml
+    - perso-pv.yaml
+    - perso-pvc.yaml
+    - public-pv.yaml
+    - public-pvc.yaml
+    - res-limit-range.yaml
+patches:
+    - path: ../overlays/pv-node-affinity.yaml
+      target:
+          kind: PersistentVolume
+    - path: ../overlays/pod-security-context.yaml
+      target:
+          labelSelector: security-context=standard

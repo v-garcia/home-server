@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddns-updater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddns-updater
+  template:
+    metadata:
+      labels:
+        app: ddns-updater
+    spec:
+      containers:
+        - name: ddns-updater
+          image: 127.0.0.1:32000/ddns-updater
+          ports:
+            - name: ddns-updater
+              containerPort: 8000
+          volumeMounts:
+            - name: ddns-updater-secret
+              subPath: config.json
+              mountPath: /updater/data/config.json
+          env:
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ddns-updater-secret
+                  key: gotify-token
+      volumes:
+        - name: ddns-updater-secret
+          secret:
+            secretName: ddns-updater-secret

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cloudtorrent-local
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: local
+spec:
+  rules:
+    - host: ctorrent.local
+      http:
+        paths:
+          - backend:
+              serviceName: cloudtorrent
+              servicePort: 3000
+            path: /

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: perso
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    # the volume can be mounted as read-write by many nodes
+    - ReadWriteMany
+    # Allow WaitForFirstConsumer
+  storageClassName: local-storage
+  local:
+    path: /data/perso
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - vincent
+  claimRef:
+    namespace: default
+    name: perso

@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minidlna-config
+data:
+  friendly-name: minidlna-brix

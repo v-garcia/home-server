@@ -1,0 +1,12 @@
+    - node_modules/**
+    - obj/**
+    - bin/**
+    - x64/**
+    - x86/**
+    - debug/**
+    - packages/**
+    - .git/**
+    - .meteor/**
+    - .metadata/**
+    - _dontsync_/
+    + *

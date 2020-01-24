@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: supysonic-local
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: local
+spec:
+  rules:
+    - host: supysonic.local
+      http:
+        paths:
+          - backend:
+              serviceName: supysonic
+              servicePort: 8080
+            path: /

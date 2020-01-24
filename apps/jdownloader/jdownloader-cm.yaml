@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jdownloader-config
+data:
+  MyJDownloaderSettings.json: |
+    {
+      "devicename" : "JDownloader@vincent-k8s"
+    }

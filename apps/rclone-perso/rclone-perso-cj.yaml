@@ -1,0 +1,65 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: rclone-perso
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "30 * * * *" # Every 1 hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          initContainers:
+            - name: filters-init
+              image: busybox
+              command:
+                [
+                  "/bin/sh",
+                  "-c",
+                  "cp /rclone-filter /opt/ && md5sum /opt/rclone-filter | cut -c -32 | xargs echo -n > /opt/rclone-filter-MD5",
+                ]
+              volumeMounts:
+                - name: rclone-filters
+                  mountPath: /opt/
+                - name: rclone-perso-config
+                  subPath: rclone-filter
+                  mountPath: /rclone-filter
+          containers:
+            - name: rclone-perso
+              image: 127.0.0.1:32000/rclone-perso
+              args:
+                - --filters-file
+                - "/filters/rclone-filter"
+                - --config
+                - "/.rclone.conf"
+                - "--workdir"
+                - "/rclonesyncwd/"
+                - "/sync/"
+                - "zaclys:/"
+              volumeMounts:
+                - name: rclone-perso
+                  subPath: workingdir
+                  mountPath: /rclonesyncwd/
+                - name: perso
+                  mountPath: /sync/
+                - name: rclone-perso-secret
+                  subPath: .rclone.conf
+                  mountPath: /.rclone.conf
+                - name: rclone-filters
+                  mountPath: /filters
+          volumes:
+            - name: perso
+              persistentVolumeClaim:
+                claimName: perso
+            - name: rclone-perso
+              persistentVolumeClaim:
+                claimName: rclone-perso
+            - name: rclone-perso-secret
+              secret:
+                secretName: rclone-perso-secret
+            - name: rclone-perso-config
+              configMap:
+                name: rclone-perso-config
+            - name: rclone-filters
+              emptyDir: {}

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: supysonic-ext
+  labels:
+    type: external
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - supysonic.former-hostname.com
+      secretName: supysonic.former-hostname.com
+  rules:
+    - host: supysonic.former-hostname.com
+      http:
+        paths:
+          - backend:
+              serviceName: supysonic
+              servicePort: 8080
+            path: /

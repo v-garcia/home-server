@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supysonic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supysonic
+  template:
+    metadata:
+      labels:
+        app: supysonic
+    spec:
+      containers:
+        - name: supysonic
+          image: 127.0.0.1:32000/supysonic
+          ports:
+            - containerPort: 8080
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  [
+                    "/bin/sh",
+                    "-c",
+                    "/usr/local/bin/supysonic-cli folder scan Library &",
+                  ]
+          volumeMounts:
+            - name: public
+              subPath: music
+              mountPath: /media
+              readOnly: true
+            - name: supysonic
+              subPath: data
+              mountPath: /var/lib/supysonic
+            - name: supysonic-secret
+              subPath: password
+              mountPath: /run/secrets/supysonic
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: supysonic
+          persistentVolumeClaim:
+            claimName: supysonic
+        - name: supysonic-secret
+          secret:
+            secretName: supysonic-secret

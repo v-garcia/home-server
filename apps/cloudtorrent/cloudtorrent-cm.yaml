@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudtorrent-config
+data:
+  cloud-torrent.json: |
+      {
+        "AutoStart": true,
+        "DisableEncryption": false,
+        "DownloadDirectory": "/downloads",
+        "WatchDirectory": "/watchdir",
+        "EnableUpload": false,
+        "EnableSeeding": false,
+        "IncomingPort": 50007,
+        "DoneCmd": "",
+        "SeedRatio": 0,
+        "UploadRate": "",
+        "DownloadRate": ""
+      }

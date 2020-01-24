@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rclone-perso-config
+data:
+  rclone-filter: |
+    - node_modules/**
+    - obj/**
+    - bin/**
+    - x64/**
+    - x86/**
+    - debug/**
+    - packages/**
+    - .git/**
+    - .meteor/**
+    - .metadata/**
+    - _dontsync_/
+    + *
+  # Please use --first-sync after change
+  # obtainer by 'md5sum filters.txt' without filename

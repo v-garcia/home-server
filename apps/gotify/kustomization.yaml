@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - gotify-deploy.yaml
+  - gotify-svc.yaml
+  - gotify-pvc.yaml
+  - gotify-pv.yaml
+  - gotify-secret.yaml
+  - gotify-ext-ing.yaml
+  - gotify-local-ing.yaml
+patches:
+  - path: ../../overlays/pv-node-affinity.yaml
+    target:
+      kind: PersistentVolume
+  - path: ../../overlays/ing-authentified.yaml
+    target:
+      kind: Ingress
+      labelSelector: authentified
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
+  - path: ../../overlays/ing-local.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=local

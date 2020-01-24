@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cloudtorrent-ext
+  labels:
+    authentified: "true"
+    type: external
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - ctorrent.former-hostname.com
+      secretName: ctorrent.former-hostname.com
+  rules:
+    - host: ctorrent.former-hostname.com
+      http:
+        paths:
+          - backend:
+              serviceName: cloudtorrent
+              servicePort: 3000
+            path: /

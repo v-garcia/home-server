@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - rclone-perso-cj.yaml
+    - rclone-perso-cm.yaml
+    - rclone-perso-pv.yaml
+    - rclone-perso-pvc.yaml
+    - rclone-perso-secret.yaml
+patches:
+    - path: ../../overlays/pv-node-affinity.yaml
+      target:
+          kind: PersistentVolume

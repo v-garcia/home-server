@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      containers:
+        - name: http-server
+          image: 127.0.0.1:32000/http-server
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: public
+              subPath: serve
+              mountPath: /data
+          args:
+            - /data
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: filebrowser-ext
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: external
+    authentified: "true"
+spec:
+  tls:
+    - hosts:
+        - files.former-hostname.com
+      secretName: files.former-hostname.com
+  rules:
+    - host: files.former-hostname.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: filebrowser
+              servicePort: 3000

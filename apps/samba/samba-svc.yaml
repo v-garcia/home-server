@@ -1,0 +1,19 @@
+# No need for now because of hostNetwork
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: samba
+# spec:
+#   selector:
+#     app: samba
+#   type: NodePort
+#   ports: 
+#   - name: samba-tcp-139
+#     protocol: TCP
+#     port: 139
+#     targetPort: 139
+#   - name: samba-tcp-445
+#     protocol: TCP
+#     port: 445
+#     targetPort: 445
