@@ -1,0 +1,18 @@
+{:paths ["src"]
+
+ :deps {org.clojure/clojure           {:mvn/version "1.10.1"}}
+ :aliases {:nrepl
+           {:extra-deps {cider/cider-nrepl {:mvn/version "0.23.0"}}
+            :main-opts  ["-m" "nrepl.cmdline"
+                         "--middleware" "[cider.nrepl/cider-middleware]"
+                         "--port" "7888"
+                         "--bind" "0.0.0.0"]}
+           :native-image
+           {:main-opts     ["-m clj.native-image wallet-monitor.core"
+                            "--initialize-at-build-time"
+                            "--report-unsupported-elements-at-runtime"
+                            "-H:Name=wallet-monitor"]
+            :jvm-opts      ["-Dclojure.compiler.direct-linking=true"]
+            :extra-deps    {clj.native-image
+                            {:git/url "https://github.com/taylorwood/clj.native-image.git"
+                             :sha     "602587dfb5243ea8c72ed3e967c37c1f9d611723"}}}}}
