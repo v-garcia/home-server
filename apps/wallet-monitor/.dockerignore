@@ -1,1 +1,7 @@
 wallet-monitor
+target
+test
+*.Dockerfile
+*.md
+*.jar
+.*
