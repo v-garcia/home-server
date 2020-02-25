@@ -1,0 +1,34 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: wallet-monitor
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "5 17 * * 1,2,3,4,5" # 17h05 except weekend
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: wallet-monitor
+              image: 127.0.0.1:32000/wallet-monitor
+              env:
+                - name: GOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: wallet-monitor-secret
+                      key: gotify-token
+                - name: ALPHAVANTAGE_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: wallet-monitor-secret
+                      key: enedis-password
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: COUCHBASE_URL
+                  value: http://$(COUCHDB_SERVICE_HOST):$(COUCHDB_SERVICE_PORT)
+          volumes:
+            - name: wallet-monitor-secret
+              secret:
+                secretName: wallet-monitor-secret
