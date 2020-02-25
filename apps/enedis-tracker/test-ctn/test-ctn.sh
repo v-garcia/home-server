@@ -11,6 +11,8 @@ docker run\
     -e ENEDIS_PASSWORD="$ENEDIS_PASSWORD" \
     -e GOTIFY_URL="$GOTIFY_URL" \
     -e GOTIFY_TOKEN="$GOTIFY_TOKEN" \
+    -e COUCHDB_URL="$COUCHDB_URL" \
+    --network="host" \
     --rm \
     enedis-tracker \
     "daily"

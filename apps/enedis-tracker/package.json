@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@bokub/linky": "github:bokub/linky",
+    "couch-slouch": "^1.4.0",
     "date-fns": "^2.9.0",
     "got": "^10.2.2"
   }
