@@ -7,13 +7,9 @@
 (def get-env!
   (memoize #(System/getenv)))
 
-(defn get-wallet-path!
+(defn get-couchbase-url!
   []
-  (get (get-env!) "WALLET_PATH"))
-
-(defn get-output-folder!
-  []
-  (get (get-env!) "OUTPUT_FOLDER"))
+  (get (get-env!) "COUCHBASE_URL"))
 
 (defn get-alphavantage-api-key!
   []

@@ -28,9 +28,9 @@
 
 (s/def ::quantity pos-int?)
 
-(s/def ::ratio (s/double-in :min 0.00 :max 1 :NaN? false))
+(s/def ::ratio (s/double-in :NaN? false :infinite? false))
 
-(s/def ::target-ratio ::ratio)
+(s/def ::target-ratio (s/double-in :min 0.00 :max 1 :NaN? false))
 
 (s/def ::qty-owned ::quantity)
 
@@ -44,6 +44,8 @@
 (s/def ::price (s/keys :req-un [::currency ::amount]))
 
 (s/def ::stock-qty (s/keys :req-un [::isin ::quantity]))
+
+(s/def ::stock-ratio (s/keys :req-un [::isin ::ratio]))
 
 (s/def ::stock-price (s/merge ::price (s/keys :req-un [::isin])))
 
@@ -74,7 +76,9 @@
                             (distinct-key? :isin)))
 
 
-
+(s/def ::stocks-changes (s/and
+                         (s/coll-of ::stock-ratio :into [])
+                         (distinct-key? :isin)))
 
 
 
@@ -96,8 +100,8 @@
   (s/valid? ::wallet [{:isin "LU1681038672", :target-ratio 0.1, :qty-owned 10}
                       {:isin "FR0010688168", :target-ratio 0.1, :qty-owned 10}])
 
-  (s/valid? ::wallet-line-with-prices {:isin "LU1681038672", :target-ratio 0.12, :qty-owned 27, :price {:amount 215.65, :currency :EUR}})
-
+  (s/valid? ::wallet-line-w-prices {:isin "LU1681038672", :target-ratio 0.12, :qty-owned 27, :price {:amount 215.65, :currency :EUR}})
+  (s/valid? ::wallet-line-w-prices  {:isin "FR0013412020", :target-ratio 0.08, :qty-owned 171, :price {:amount 21.014, :currency "EUR"}})
   (s/valid? ::wallet-line-with-prices
             [{:isin "LU1681038672", :target-ratio 0.12, :qty-owned 27, :price {:amount 215.65, :currency :EUR}}
              {:isin "FR0010688168", :target-ratio 0.1, :qty-owned 12, :price {:amount 393.0, :currency :EUR}}

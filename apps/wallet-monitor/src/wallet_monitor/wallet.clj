@@ -4,29 +4,15 @@
    [wallet-monitor.domain :as d]
    [wallet-monitor.env :as env]
    [wallet-monitor.money :as m]
-   [clojure.pprint :as pp]
-   [java-time :as t]))
+   [java-time :as t]
+   [taoensso.timbre :as timbre :refer [info]]
+   [cheshire.core :as json]
+   [clj-http.lite.client :as http]
+   [camel-snake-kebab.core :as csk]))
 
 (def diff-tolerance 0.05)
 (def diff-by-stock-tolerance 0.6)
 
-(defn load-wallet!
-  []
-  {:post [(s/valid? ::d/wallet %)]}
-  (->
-   (env/get-wallet-path!)
-   slurp
-   read-string
-   :wallet))
-
-(defn save-wallet!
-  [wallet]
-  {:pre [(s/valid? ::d/wallet-w-prices wallet)]}
-  (let
-   [iso-date (t/format (t/local-date) "yyyyMMdd")]
-    (->
-     (format "%s/%s-wallet.edn" (env/get-output-folder!) iso-date)
-     (spit (with-out-str (pp/pprint wallet))))))
 
 (defn total-wallet
   [wallet]
@@ -68,29 +54,39 @@
                 Math/abs
                 (> diff-by-stock-tolerance)))))))
 
-(defn working-yesterday
-  []
+(defn wallet-stock-price-diff
+  [wal1 wal2]
+  {:pre [(s/valid? ::d/wallet-w-prices wal1)
+         (s/valid? ::d/wallet-w-prices wal2)
+         (= (->> wal1 (map :isin) set) (->> wal2 (map :isin) set))
+         (m/same-currency? (-> wal1 first :price) (-> wal2 first :price))]}
   (let
-   [today     (t/local-date)
-    yesterday (t/minus today (t/days - 1))
-    dow       (t/day-of-week today)
-    ]
-    (if
-     (or
-      (= dow
-         (t/day-of-week :sunday)
-         )
-      (= dow
-         (t/day-of-week :saturday))))
-    
-    
-    
-    ))
-  (t/minus
-   (t/local-date)
-   (t/days 1)))
+   [sfn  #(compare (:isin %1) (:isin %2))
+    wal1 (sort sfn wal1)
+    wal2 (sort sfn wal2)]
+    (->> wal1
+         (mapv (fn [{{a1 :amount} :price isin :isin}
+                    {{a2 :amount} :price}]
+                 {:isin isin :ratio (- (/ a2 a1) 1)}) wal2)
+         (sort #(> (Math/abs (:ratio %1)) (Math/abs (:ratio %2)))))))
+
+(defn wallet-value-diff
+  [wal1 wal2]
+  {:pre [(s/valid? ::d/wallet-w-prices wal1) (s/valid? ::d/wallet-w-prices wal2)]}
+  (let
+   [tot1   (total-wallet wal1)
+    tot2   (total-wallet wal2)
+    diff   (m/p-apply-p - tot1 tot2)]
+    diff))
+
+(defn same-wallet?
+  [wal1 wal2]
+  {:pre [(s/valid? ::d/wallet wal1) (s/valid? ::d/wallet wal2)]}
+  (let [to-set (fn [w] (->> w (mapv (fn [{:keys [:isin :qty-owned]}] [isin qty-owned])) set))]
+    (= (to-set wal1) (to-set wal2))))
 
 (comment
+  (t/plus (t/local-date) (t/days  1))
   (.minusDays (java.time.LocalDateTime/now) 1)
   (-> "yyyyMMdd"
       java.time.format.DateTimeFormatter/ofPattern
@@ -110,6 +106,10 @@
 
    (.format (java.text.SimpleDateFormat. "yyyyMMdd")   (java.util.Date.)))
   (m/p-apply * {:amount 215.65, :currency :EUR} 2)
+  (update-in
+   [{:isin "LU1681038672", :target-ratio 0.12, :qty-owned 27, :price {:amount 215.65, :currency :EUR}}
+    {:isin "FR0010688168", :target-ratio 0.1, :qty-owned 12, :price {:amount 393.0, :currency :EUR}}]
+   [0 :price :amount]  + 3)
   (repartition-diff
    '({:isin "LU1681038672", :target-ratio 0.12, :qty-owned 27, :price {:amount 215.65, :currency :EUR}}
      {:isin "FR0010688168", :target-ratio 0.1, :qty-owned 12, :price {:amount 393.0, :currency :EUR}}
