@@ -10,7 +10,19 @@
    [wallet-monitor.money :as m]
    [clojure.string :as str]))
 
+(defn send-gotify-notif!
+  [title message]
+  (->>
+   {:title title :message message :priority 1}
+   (#(json/encode % {:key-fn (comp csk/->camelCase name)}))
+   (hash-map
+    :url     (str (env/get-gotify-url!) "/message")
+    :method  :post
+    :headers {"X-Gotify-Key" (env/get-gotify-token!)
+              "Content-Type" "application/json"}
+    :body)
 
+   http/request))
 
 (defn report-repartion-diff!
   [wallet]

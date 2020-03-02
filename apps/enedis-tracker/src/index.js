@@ -1,7 +1,9 @@
 const linky = require('@bokub/linky');
 const getDaysInMonth = require('date-fns/getDaysInMonth');
 const startOfYesterday = require('date-fns/startOfYesterday');
+const parseIso = require('date-fns/parseISO');
 const format = require('date-fns/format');
+const isYesterday = require('date-fns/isYesterday');
 const got = require('got');
 const Slouch = require('couch-slouch');
 
@@ -39,7 +41,7 @@ function getDayPriceText({ date, value }) {
     val: dayTotal,
     text: [
       `${format(dateObj, 'EEEEEE d LLL')} | *${centsToEuro(dayTotal)}* ` +
-      `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
+        `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
     ].join('\n')
   };
@@ -80,8 +82,8 @@ async function lastDayAlreadyExists(slouch) {
 async function dailyRoutine(linkySession, gotifyClient, slouch) {
   if (await lastDayAlreadyExists(slouch)) return;
   const daily = await linkySession.getDailyData();
-  const lastDay = daily[daily.length - 1];
-  if (!lastDay.value) {
+  const lastDay = daily.find(({ date }) => isYesterday(parseIso(date)));
+  if (!lastDay || !lastDay.value) {
     throw Error(`Fetched value of '${lastDay.date}' is ${lastDay.value} `);
   }
 
