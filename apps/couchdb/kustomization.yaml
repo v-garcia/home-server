@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - couchdb-ext-ing.yaml
+  - couchdb-local-ing.yaml
+  - couchdb-cm.yaml
+  - couchdb-pvc.yaml
+  - couchdb-pv.yaml
+  - couchdb-sts.yaml
+  - couchdb-svc.yaml
+patches:
+  - path: ../../overlays/pv-node-affinity.yaml
+    target:
+      kind: PersistentVolume
+  - path: ../../overlays/ing-authentified.yaml
+    target:
+      kind: Ingress
+      labelSelector: authentified
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
+  - path: ../../overlays/ing-local.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=local
