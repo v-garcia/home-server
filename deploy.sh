@@ -14,6 +14,7 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
+sudo mkdir -p /data/couchdb/
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -89,7 +90,17 @@ docker build ./apps/gotify -t 127.0.0.1:32000/gotify
 docker push 127.0.0.1:32000/gotify
 kustomize build ./apps/gotify --load_restrictor none | kubectl apply -f -
 
+#couchdb
+docker build ./apps/couchdb -t 127.0.0.1:32000/couchdb
+docker push 127.0.0.1:32000/couchdb
+kustomize build ./apps/couchdb --load_restrictor none | kubectl apply -f  -
+
 #enedis-tracker
 docker build ./apps/enedis-tracker -t 127.0.0.1:32000/enedis-tracker
 docker push 127.0.0.1:32000/enedis-tracker
 kustomize build ./apps/enedis-tracker --load_restrictor none | kubectl apply -f -
+
+#wallet-monitor
+docker build ./apps/wallet-monitor -t 127.0.0.1:32000/wallet-monitor
+docker push 127.0.0.1:32000/wallet-monitor
+kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f -

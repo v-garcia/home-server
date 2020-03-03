@@ -23,7 +23,7 @@ spec:
                   valueFrom:
                     secretKeyRef:
                       name: wallet-monitor-secret
-                      key: enedis-password
+                      key: alphavantage-api-key
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
                 - name: COUCHBASE_URL

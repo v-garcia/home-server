@@ -41,7 +41,7 @@ function getDayPriceText({ date, value }) {
     val: dayTotal,
     text: [
       `${format(dateObj, 'EEEEEE d LLL')} | *${centsToEuro(dayTotal)}* ` +
-        `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
+      `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
     ].join('\n')
   };
