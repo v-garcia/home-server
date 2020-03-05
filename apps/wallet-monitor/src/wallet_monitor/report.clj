@@ -29,11 +29,11 @@
   {:pre [(s/valid? ::d/wallet-w-rep-diff wallet)]}
   (->>
    wallet
-   (mapv (fn [{:keys [:isin :diff-by-stock]}]
+   (mapv (fn [{:keys [:isin :stock-diff]}]
            [(format "Stock %s needs balancing" (-> isin bd/stocks :mnemo))
             (format "%s %d units for: %s"
-                    (if (neg? diff-by-stock) "Sell" "Buy")
-                    (-> diff-by-stock Math/round Math/abs)
+                    (if (neg? stock-diff) "Sell" "Buy")
+                    (Math/abs stock-diff)
                     (-> isin bd/stocks :libelle))]))
    (map (partial apply send-gotify-notif!))
    doall))

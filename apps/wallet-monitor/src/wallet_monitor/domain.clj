@@ -38,6 +38,8 @@
 
 (s/def ::diff-by-stock double?)
 
+(s/def ::stock-diff int?)
+
 
 ; hash-maps
 
@@ -55,7 +57,7 @@
 
 (s/def ::wallet-line-w-rep-diff
   (s/merge ::wallet-line-w-prices
-           (s/keys :req-un [::diff-by-line ::diff-by-stock])))
+           (s/keys :req-un [::stock-diff])))
 
 ; collections
 
