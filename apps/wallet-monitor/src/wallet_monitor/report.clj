@@ -24,19 +24,26 @@
 
    http/request))
 
+(defn stock-diff
+  [{:keys [:isin :stock-diff]}]
+  (format "%s %d units for: %s"
+          (if (neg? stock-diff) "Sell" "Buy")
+          (Math/abs stock-diff)
+          (-> isin bd/stocks :libelle)))
+
 (defn report-repartion-diff!
-  [wallet]
-  {:pre [(s/valid? ::d/wallet-w-rep-diff wallet)]}
-  (->>
-   wallet
-   (mapv (fn [{:keys [:isin :stock-diff]}]
-           [(format "Stock %s needs balancing" (-> isin bd/stocks :mnemo))
-            (format "%s %d units for: %s"
-                    (if (neg? stock-diff) "Sell" "Buy")
-                    (Math/abs stock-diff)
-                    (-> isin bd/stocks :libelle))]))
-   (map (partial apply send-gotify-notif!))
-   doall))
+  [{:keys [:wallet-w-diff :diff-total] :as diff}]
+  {:pre [(s/valid? ::d/wallet-w-diff-total diff)]}
+  (when (seq wallet-w-diff)
+    (->>
+     (format "Wallet adjust %s" (->> diff-total m/round m/m-to-str))
+     (conj
+      (map stock-diff wallet-w-diff))
+     (str/join "\n")
+     (vector
+      (format "%s wallet adjustments to do"
+              (count wallet-w-diff)))
+     (apply send-gotify-notif!))))
 
 (defn stock-evolution
   [{:keys [:isin :ratio]}]

@@ -45,6 +45,8 @@
 
 (s/def ::price (s/keys :req-un [::currency ::amount]))
 
+(s/def ::diff-total ::price)
+
 (s/def ::stock-qty (s/keys :req-un [::isin ::quantity]))
 
 (s/def ::stock-ratio (s/keys :req-un [::isin ::ratio]))
@@ -73,16 +75,19 @@
                           (s/coll-of ::wallet-line-w-prices :into [])
                           (distinct-key? :isin)))
 
-(s/def ::wallet-w-rep-diff (s/and
-                            (s/coll-of ::wallet-line-w-rep-diff :into [])
-                            (distinct-key? :isin)))
+(s/def ::wallet-w-diff (s/and
+                        (s/coll-of ::wallet-line-w-rep-diff :into [])
+                        (distinct-key? :isin)))
 
 
 (s/def ::stocks-changes (s/and
                          (s/coll-of ::stock-ratio :into [])
                          (distinct-key? :isin)))
 
+; composite
 
+(s/def ::wallet-w-diff-total
+  (s/keys :req-un [::wallet-w-diff ::diff-total]))
 
 
 (comment
