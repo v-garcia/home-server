@@ -123,18 +123,11 @@ function getAppParams() {
   return { routine, enedisEmail, enedisPassword, gotifyUrl, gotifyToken, couchDbUrl };
 }
 
-function initDb(slouch) {
-  return slouch.db.create(COLLECTION_NAME).catch(e => {
-    console.error(e);
-  });
-}
-
 async function main() {
   const appParams = getAppParams();
   const session = await linky.login(appParams.enedisEmail, appParams.enedisPassword);
   const gotifyClient = gotifyNotification(appParams.gotifyUrl, appParams.gotifyToken);
   const slouch = new Slouch(appParams.couchDbUrl);
-  initDb(slouch);
   const toRun = routines[appParams.routine];
 
   try {
