@@ -8,7 +8,7 @@ const format = require('date-fns/format');
 const isYesterday = require('date-fns/isYesterday');
 const subDays = require('date-fns/subYears');
 const startOfDay = require('date-fns/startOfDay');
-const isEqual = require('date-fns/isEqual');
+const isSameDay = require('date-fns/isSameDay')
 const got = require('got');
 const Slouch = require('couch-slouch');
 
@@ -107,7 +107,7 @@ async function dailyRoutine(linkySession, gotifyClient, slouch) {
   const dToRetrieve = await eachDayOfInterval({ start: addDays(lastSavedDay, 1), end: startOfYesterday() });
   console.info('to retrieve:', dToRetrieve);
   for (let d of dToRetrieve) {
-    d = daily.find(({ date }) => isEqual(parseIso(date), d));
+    d = daily.find(({ date }) => isSameDay(parseIso(date), d));
     if (!d || !d.value) {
       throw Error(`Fetched value of '${d.date}' is ${d.value} `);
     }
