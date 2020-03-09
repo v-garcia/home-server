@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 
 docker build --rm -t enedis-tracker ../
 
-source ./.env
+source ./../.env
 
 docker run\
     -e ENEDIS_EMAIL="$ENEDIS_EMAIL" \

@@ -27,7 +27,18 @@
    [wallet           (get-wallet-w-price-memo!)
     _                (info {:wallet wallet})
 
-    diff             (wal/repartition-diff wallet)
+    diff             (wal/repartition-diff-buy-and-sell wallet)
+
+    report           (rep/report-repartion-diff! diff)]
+    report))
+
+(defn check-wallet-repartition*!
+  []
+  (let
+   [wallet           (get-wallet-w-price-memo!)
+    _                (info {:wallet wallet})
+
+    diff             (wal/repartition-diff-only-buy wallet)
 
     report           (rep/report-repartion-diff! diff)]
     report))
@@ -81,5 +92,7 @@
 (comment
 
   (-main)
+  (get-wallet-w-price-memo!)
   (check-wallet-repartition!)
+  (check-wallet-repartition*!)
   (start-action! "save-wallet" save-wallet-state!))

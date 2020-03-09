@@ -1,9 +1,14 @@
 const linky = require('@bokub/linky');
 const getDaysInMonth = require('date-fns/getDaysInMonth');
 const startOfYesterday = require('date-fns/startOfYesterday');
+const eachDayOfInterval = require('date-fns/eachDayOfInterval');
+const addDays = require('date-fns/addDays');
 const parseIso = require('date-fns/parseISO');
 const format = require('date-fns/format');
 const isYesterday = require('date-fns/isYesterday');
+const subDays = require('date-fns/subYears');
+const startOfDay = require('date-fns/startOfDay');
+const isEqual = require('date-fns/isEqual');
 const got = require('got');
 const Slouch = require('couch-slouch');
 
@@ -11,6 +16,7 @@ const Slouch = require('couch-slouch');
 const MONTLY_FLAT_RATE = 998;
 const KW_PRICE = 13.79;
 const COLLECTION_NAME = 'enedis_consumption';
+const MAX_SEEK_DATE = startOfDay(subDays(new Date(), 14));
 
 const gotifyNotification = (url, token) => (title, message, priority) => {
   console.info(message);
@@ -41,14 +47,14 @@ function getDayPriceText({ date, value }) {
     val: dayTotal,
     text: [
       `${format(dateObj, 'EEEEEE d LLL')} | *${centsToEuro(dayTotal)}* ` +
-      `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
+        `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
     ].join('\n')
   };
 }
 
 function genDailyNotification(gotifyClient, dayInfo) {
-  return gotifyClient('Last day consumption', dayInfo.text);
+  return gotifyClient('Last days consumption', dayInfo.text);
 }
 
 function dailyId(dateObj) {
@@ -67,29 +73,48 @@ async function saveDayDataToDb(slouch, dInfo) {
   return slouch.doc.upsert(COLLECTION_NAME, toSave);
 }
 
-async function lastDayAlreadyExists(slouch) {
-  const id = dailyId(startOfYesterday());
-  const yesterday = await slouch.doc.getIgnoreMissing(COLLECTION_NAME, id);
-  const alreadyExists = Boolean(yesterday && yesterday.value);
+async function getLastDay(slouch) {
+  const {
+    docs: [item]
+  } = await slouch.doc.find(COLLECTION_NAME, {
+    selector: {
+      _id: {
+        $gt: 0
+      },
+      type: 'enedis-daily'
+    },
+    fields: ['_id', 'date'],
+    sort: [
+      {
+        _id: 'desc'
+      }
+    ],
+    limit: 1
+  });
 
-  if (alreadyExists) {
-    console.info(`Daily with '${id}' already exists`);
-  }
-
-  return alreadyExists;
+  return item ? parseIso(item.date) : MAX_SEEK_DATE;
 }
 
 async function dailyRoutine(linkySession, gotifyClient, slouch) {
-  if (await lastDayAlreadyExists(slouch)) return;
-  const daily = await linkySession.getDailyData();
-  const lastDay = daily.find(({ date }) => isYesterday(parseIso(date)));
-  if (!lastDay || !lastDay.value) {
-    throw Error(`Fetched value of '${lastDay.date}' is ${lastDay.value} `);
-  }
+  const lastSavedDay = await getLastDay(slouch);
+  if (isYesterday(lastSavedDay)) return;
 
-  const dayInfo = getDayPriceText(lastDay);
-  await saveDayDataToDb(slouch, lastDay);
-  await genDailyNotification(gotifyClient, dayInfo);
+  const daily = await linkySession.getDailyData();
+
+  console.info(addDays(lastSavedDay, 1));
+  console.info(startOfYesterday());
+
+  const dToRetrieve = await eachDayOfInterval({ start: addDays(lastSavedDay, 1), end: startOfYesterday() });
+  console.info('to retrieve:', dToRetrieve);
+  for (let d of dToRetrieve) {
+    d = daily.find(({ date }) => isEqual(parseIso(date), d));
+    if (!d || !d.value) {
+      throw Error(`Fetched value of '${d.date}' is ${d.value} `);
+    }
+    const dayInfo = getDayPriceText(lastDay);
+    await saveDayDataToDb(slouch, lastDay);
+    await genDailyNotification(gotifyClient, dayInfo);
+  }
 }
 
 const routines = {
