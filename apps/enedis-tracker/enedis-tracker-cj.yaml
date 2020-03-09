@@ -4,9 +4,10 @@ metadata:
   name: enedis-tracker
 spec:
   concurrencyPolicy: Forbid
-  schedule: "0 8,14 * * *" # Everyday at 8am
+  schedule: "0 8,14,22 * * *" # Everyday at 8am
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         spec:
           restartPolicy: Never
@@ -33,6 +34,8 @@ spec:
                     secretKeyRef:
                       name: enedis-tracker-secret
                       key: gotify-token
+                - name: COUCHDB_URL
+                  value: http://$(COUCHDB_SERVICE_HOST):$(COUCHDB_SERVICE_PORT)
           volumes:
             - name: enedis-tracker-secret
               secret:

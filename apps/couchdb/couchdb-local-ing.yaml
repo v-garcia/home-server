@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: couchdb-local
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: local
+spec:
+  rules:
+    - host: couchdb.local
+      http:
+        paths:
+          - backend:
+              serviceName: couchdb
+              servicePort: 5984
+            path: /

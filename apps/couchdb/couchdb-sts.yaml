@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: couchdb
+spec:
+  serviceName: couchdb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couchdb
+  template:
+    metadata:
+      labels:
+        app: couchdb
+        tier: database
+    spec:
+      initContainers:
+        - name: couchdb-init
+          image: busybox
+          command: ["/bin/sh", "-c", "cp -v /local.ini /opt/local.ini"]
+          volumeMounts:
+            - name: couchdb-config
+              mountPath: /opt/
+            - name: couchdb-config-ro
+              subPath: local.ini
+              mountPath: /local.ini
+      containers:
+        - name: couchdb
+          image: 127.0.0.1:32000/couchdb
+          ports:
+            - name: couchdb
+              containerPort: 5984
+          volumeMounts:
+            - name: couchdb
+              subPath: data
+              mountPath: /opt/couchdb/data
+            - name: couchdb-config
+              subPath: local.ini
+              mountPath: /opt/couchdb/etc/local.d/local.ini
+          livenessProbe:
+            httpGet:
+              path: /_up
+              port: couchdb
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /_up
+              port: couchdb
+              scheme: HTTP
+      volumes:
+        - name: couchdb
+          persistentVolumeClaim:
+            claimName: couchdb
+        - name: couchdb-config-ro
+          configMap:
+            name: couchdb-config
+        - name: couchdb-config
+          emptyDir: {}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: couchdb-config
+data:
+  local.ini: |
+    [couchdb]
+    default_security = everyone
+    single_node = true
+
+    [admins]
+    admin = admin

@@ -41,7 +41,7 @@ function getDayPriceText({ date, value }) {
     val: dayTotal,
     text: [
       `${format(dateObj, 'EEEEEE d LLL')} | *${centsToEuro(dayTotal)}* ` +
-        `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
+      `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
     ].join('\n')
   };
@@ -123,18 +123,11 @@ function getAppParams() {
   return { routine, enedisEmail, enedisPassword, gotifyUrl, gotifyToken, couchDbUrl };
 }
 
-function initDb(slouch) {
-  return slouch.db.create(COLLECTION_NAME).catch(e => {
-    console.error(e);
-  });
-}
-
 async function main() {
   const appParams = getAppParams();
   const session = await linky.login(appParams.enedisEmail, appParams.enedisPassword);
   const gotifyClient = gotifyNotification(appParams.gotifyUrl, appParams.gotifyToken);
   const slouch = new Slouch(appParams.couchDbUrl);
-  initDb(slouch);
   const toRun = routines[appParams.routine];
 
   try {

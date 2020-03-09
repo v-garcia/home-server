@@ -1,0 +1,1 @@
+FROM apache/couchdb:3.0.0

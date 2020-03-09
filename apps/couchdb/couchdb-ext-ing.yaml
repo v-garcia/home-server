@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: couchdb-ext
+  labels:
+    authentified: "true"
+    type: external
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - couchdb.former-hostname.com
+      secretName: couchdb.former-hostname.com
+  rules:
+    - host: couchdb.former-hostname.com
+      http:
+        paths:
+          - backend:
+              serviceName: couchdb
+              servicePort: 5984
+            path: /

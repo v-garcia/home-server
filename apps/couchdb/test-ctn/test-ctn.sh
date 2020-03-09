@@ -4,7 +4,8 @@ docker build --rm -t couchdb ../
 docker run\
     --rm \
     -p 3000:3000 \
-    -v $(pwd)/data:/opt/couchdb/data \
+    -v /data/couchdb_new2:/opt/couchdb/data \
+    -v $(pwd)/local.ini:/opt/couchdb/etc/local.d/local.ini \
     -p 5984:5984  \
     couchdb \
 
