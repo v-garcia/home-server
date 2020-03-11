@@ -8,7 +8,7 @@ const format = require('date-fns/format');
 const isYesterday = require('date-fns/isYesterday');
 const subDays = require('date-fns/subYears');
 const startOfDay = require('date-fns/startOfDay');
-const isSameDay = require('date-fns/isSameDay')
+const isSameDay = require('date-fns/isSameDay');
 const got = require('got');
 const Slouch = require('couch-slouch');
 
@@ -111,8 +111,8 @@ async function dailyRoutine(linkySession, gotifyClient, slouch) {
     if (!d || !d.value) {
       throw Error(`Fetched value of '${d.date}' is ${d.value} `);
     }
-    const dayInfo = getDayPriceText(lastDay);
-    await saveDayDataToDb(slouch, lastDay);
+    const dayInfo = getDayPriceText(d);
+    await saveDayDataToDb(slouch, d);
     await genDailyNotification(gotifyClient, dayInfo);
   }
 }
