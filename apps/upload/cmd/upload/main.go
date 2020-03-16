@@ -28,6 +28,8 @@ var paths = map[string]string{
 
 func main() {
 
+	fmt.Println("Starting upload server")
+
 	fs := http.FileServer(http.Dir("../../web/dist/"))
 	http.Handle("/", fs)
 
