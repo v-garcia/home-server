@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Drop files here</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./favicon.png">
+  </head>
+
+  <body>
+    <template id="upload-item"
+      ><li class="upload-item">
+        <span class="upload-item__status"></span>
+        <span class="upload-item__title"></span>
+        <button class="upload-item__start">⏸</button>
+        <span style="display:inline-block; position: relative;">
+          <span
+          class="upload-item__label"
+          style="width: 100%; position: absolute;text-align: center;color: whitesmoke;">
+          0%</span>
+        <progress
+          class="upload-item__progress"
+          value="0"
+          max="100"
+        >
+      </span></progress></li
+        
+    ></template>
+
+    <section id="root">
+      <h1 id="main-title">File uploader</h1>
+      <section id="new-upload">
+        <label>
+          Upload to:
+          <select
+            style="width: 100%;text-align: center;height: 3em;margin-bottom: 2em;"
+            name="upload_target"
+          >
+            <option value="public">public</option>
+            <option value="default">default</option>
+            <option value="private">private</option>
+          </select>
+        </label>
+        <br />
+        <label
+          >Upload file to public<br />
+          <input
+            type="file"
+            name="public_upload"
+            class="full-width-input"
+            multiple
+            style="background-color: khaki; padding-top: 2em; padding-bottom: 2em;width:100%;"
+          />
+        </label>
+      </section>
+      <section id="uploads">
+        <h1>Uploads</h1>
+        <ul id="uploads-list"></ul>
+      </section>
+    </section>
+    <script src="./src/index.js"></script>
+  </body>
+</html>
