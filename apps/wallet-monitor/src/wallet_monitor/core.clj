@@ -22,26 +22,16 @@
 (def get-wallet-w-price-memo! (memoize get-wallet-w-price!))
 
 (defn check-wallet-repartition!
-  []
+  [fn-diff]
+  (
   (let
    [wallet           (get-wallet-w-price-memo!)
     _                (info {:wallet wallet})
 
-    diff             (wal/repartition-diff-buy-and-sell wallet)
+    diff             (fn-diff wallet)
 
     report           (rep/report-repartion-diff! diff)]
-    report))
-
-(defn check-wallet-repartition*!
-  []
-  (let
-   [wallet           (get-wallet-w-price-memo!)
-    _                (info {:wallet wallet})
-
-    diff             (wal/repartition-diff-only-buy wallet)
-
-    report           (rep/report-repartion-diff! diff)]
-    report))
+    report)))
 
 (defn save-wallet-state!
   []
@@ -76,15 +66,16 @@
         (error e (format "Action '%s' failled." name)) (catch Exception _)))))
 
 (def actions
-  {"save-today-wallet"        save-wallet-state!
-   "check-wallet-repartition" check-wallet-repartition!
-   "wallet-evolution"         wallet-evolution!})
+  {"save-today-wallet"                    save-wallet-state!
+   ;"check-wallet-repartition"             (check-wallet-repartition! wal/repartition-diff-buy-and-sell)
+   "check-wallet-repartition-only-buy"    (check-wallet-repartition! wal/repartition-diff-only-buy)
+   "wallet-evolution"                     wallet-evolution!})
 
 (defn -main
   [& args]
   (info "Wallet-monitor start")
 
-  (doseq [a ["save-today-wallet" "check-wallet-repartition" "wallet-evolution"]]
+  (doseq [a ["save-today-wallet" "check-wallet-repartition-only-buy" "wallet-evolution"]]
     (start-action! a (actions a))))
 
 
