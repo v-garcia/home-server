@@ -1,0 +1,8 @@
+# rollup.js default build output
+dist/
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+
+# Dependency directories
+node_modules/
