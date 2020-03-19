@@ -22,16 +22,15 @@
 (def get-wallet-w-price-memo! (memoize get-wallet-w-price!))
 
 (defn check-wallet-repartition!
-  [fn-diff]
-  (
+  [fn-diff & args]
   (let
-   [wallet           (get-wallet-w-price-memo!)
-    _                (info {:wallet wallet})
+    [wallet           (get-wallet-w-price-memo!)
+     _                (info {:wallet wallet})
 
-    diff             (fn-diff wallet)
+     diff             (apply fn-diff wallet args)
 
-    report           (rep/report-repartion-diff! diff)]
-    report)))
+     report           (rep/report-repartion-diff! diff)]
+     report))
 
 (defn save-wallet-state!
   []
@@ -65,24 +64,40 @@
               (format "Error while executing action '%s'." name)))
         (error e (format "Action '%s' failled." name)) (catch Exception _)))))
 
-(def actions
-  {"save-today-wallet"                    save-wallet-state!
-   ;"check-wallet-repartition"             (check-wallet-repartition! wal/repartition-diff-buy-and-sell)
-   "check-wallet-repartition-only-buy"    (check-wallet-repartition! wal/repartition-diff-only-buy)
-   "wallet-evolution"                     wallet-evolution!})
+(defn get-actions
+  [config] 
+    (vector
+     [:save-today-wallet save-wallet-state!]
+     (case (-> config :diff :method)
+       "buyAndSell" [:diff-buy-and-sell (partial check-wallet-repartition! wal/repartition-diff-buy-and-sell)]
+       "onlyBuy"    [:diff-only-buy     (partial check-wallet-repartition! wal/repartition-diff-only-buy)] 
+       "addAmount"  [:diff-add-amount   (partial check-wallet-repartition! wal/repartition-diff-add-amout (some-> config :diff :amount-to-add))]
+       )
+     [:wallet-evolution  wallet-evolution!]))
 
 (defn -main
-  [& args]
+  [& _]
   (info "Wallet-monitor start")
-
-  (doseq [a ["save-today-wallet" "check-wallet-repartition-only-buy" "wallet-evolution"]]
-    (start-action! a (actions a))))
+  (let 
+   [config  (store/load-config!)
+    actions (get-actions config)
+    ]
+    (doseq [[action-name actionfn] actions]
+      (start-action! action-name actionfn))))
 
 
 
 (comment
-
+  (store/load-wallet-of! (utils/working-yesterday))
   (-main)
+  (get-wallet-w-price-memo!)
+
+  (wal/diff-new-amount (get-wallet-w-price-memo!) {:amount   2000.0
+                                                   :currency :EUR})
+  ((partial check-wallet-repartition! wal/repartition-diff-add-amout {
+                                                           :amount   2000.0,
+                                                           :currency :EUR
+                                                           }))
   (get-wallet-w-price-memo!)
   (check-wallet-repartition!)
   (check-wallet-repartition*!)

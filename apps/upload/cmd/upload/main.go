@@ -124,7 +124,7 @@ func main() {
 		io.WriteString(w, err.Error()+"\n")
 	}))
 
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":9006", nil)
 	if err != nil {
 		panic(fmt.Errorf("Unable to listen: %s", err))
 	}

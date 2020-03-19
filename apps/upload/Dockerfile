@@ -39,7 +39,7 @@ COPY --from=go-builder /app/cmd/upload/main ./cmd/upload/main
 COPY --from=web-builder /app/web/dist/ ./web/dist
 
 # # Expose port 8080 to the outside world
-EXPOSE 8080
+# EXPOSE 9001
 
 ENTRYPOINT [ "/app/cmd/upload/main" ]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]

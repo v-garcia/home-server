@@ -75,18 +75,27 @@
         (map diff-ratios->diff-unit to-update)
         (recur (m/p-apply + total 1))))))
 
+(defn diff-add-amount
+  [wallet amount]
+  (let [total     (total-wallet wallet)
+        total     (m/p-apply-p + total amount)
+        to-update (repartition-diff-base wallet total)]
+    (map diff-ratios->diff-unit to-update)))
+
 (defn- repartition-diff-w-total
-  [fn-diff wallet]
+  [fn-diff wallet & args]
   {:pre [(s/valid? ::d/wallet-w-prices wallet)]
    :post [(s/valid? ::d/wallet-w-diff-total %)]}
   (let
-   [wallet-w-diff (fn-diff wallet)
+   [wallet-w-diff (apply fn-diff wallet args)
     diff-total    (total-wallet-diff wallet-w-diff)]
     {:wallet-w-diff wallet-w-diff :diff-total diff-total}))
 
 (def repartition-diff-buy-and-sell (partial repartition-diff-w-total diff-buy-and-sell))
 
 (def repartition-diff-only-buy (partial repartition-diff-w-total diff-only-buy))
+
+(def repartition-diff-add-amout (partial repartition-diff-w-total diff-add-amount))
 
 (defn wallet-stock-price-diff
   [wal1 wal2]
