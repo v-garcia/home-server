@@ -14,4 +14,5 @@ docker run \
     -e UPLOAD_DEFAULT_DIR="/data/private/" \
     -e GOTIFY_URL="$GOTIFY_URL" \
     -e GOTIFY_TOKEN="$GOTIFY_TOKEN" \
+    -p 8080:8080 \
     upload 

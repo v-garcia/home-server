@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload
+spec:
+  serviceName: upload
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload
+  template:
+    metadata:
+      labels:
+        app: upload
+        tier: downloader
+    spec:
+      containers:
+        - name: upload
+          image: 127.0.0.1:32000/upload
+          ports:
+            - name: upload
+              containerPort: 8080
+          livenessProbe:
+              httpGet:
+                path: /healthz
+                port: upload
+                scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: upload
+              scheme: HTTP
+          volumeMounts:
+            - name: public
+              subPath: uploads
+              mountPath: /data/default
+            - name: public
+              subPath: serve
+              mountPath: /data/public
+            - name: perso
+              subPath: Uploads
+              mountPath: /data/private
+            - name: upload-temp
+              mountPath: /data/uploads
+          env:
+            - name: UPLOAD_TEMP_DIR
+              value: /data/uploads
+            - name: UPLOAD_PUBLIC_DIR
+              value: /data/public
+            - name: UPLOAD_PRIVATE_DIR
+              value: /data/private
+            - name: UPLOAD_DEFAULT_DIR
+              value: /data/default
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: upload-secret
+                  key: gotify-token
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: perso
+          persistentVolumeClaim:
+            claimName: perso
+        - name: upload-temp
+          emptyDir:
+            sizeLimit: 10Gi
+        - name: upload-secret
+          secret:
+            secretName: upload-secret

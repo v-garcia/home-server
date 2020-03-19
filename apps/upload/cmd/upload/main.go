@@ -21,16 +21,21 @@ var defaultClient = &http.Client{}
 var tempPath = os.Getenv("UPLOAD_TEMP_DIR")
 
 var paths = map[string]string{
-	"public":  os.Getenv("UPLOAD_TEMP_DIR"),
+	"public":  os.Getenv("UPLOAD_PUBLIC_DIR"),
 	"private": os.Getenv("UPLOAD_PRIVATE_DIR"),
 	"default": os.Getenv("UPLOAD_DEFAULT_DIR"),
 }
 
 func main() {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		panic(fmt.Errorf("Getting current folder failled: %s", err))
+	}
 
-	fmt.Println("Starting upload server")
+	fmt.Println("Starting upload server", dir)
 
-	fs := http.FileServer(http.Dir("../../web/dist/"))
+	fs := http.FileServer(http.Dir(filepath.Join(dir ,"../../web/dist/")))
+
 	http.Handle("/", fs)
 
 	// Create a new FileStore instance which is responsible for
@@ -56,6 +61,7 @@ func main() {
 		BasePath:              "/files/",
 		StoreComposer:         composer,
 		NotifyCompleteUploads: true,
+		RespectForwardedHeaders: true,
 	})
 	if err != nil {
 		panic(fmt.Errorf("Unable to create handler: %s", err))
@@ -125,7 +131,6 @@ func main() {
 }
 
 func sendNotification(title string, content string) error {
-	return nil
 	url := os.Getenv("GOTIFY_URL")
 	gotifyToken := os.Getenv("GOTIFY_TOKEN")
 

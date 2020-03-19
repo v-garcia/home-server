@@ -23,6 +23,8 @@ sudo mkdir -p /data/gotify/
 # }
 
 
+# docker system prune -af
+
 # kubectl patch pvc PVC_NAME -p '{"metadata":{"finalizers": []}}' --type=merge
 
 #apply config
@@ -93,3 +95,8 @@ kustomize build ./apps/gotify --load_restrictor none | kubectl apply -f -
 docker build ./apps/enedis-tracker -t 127.0.0.1:32000/enedis-tracker
 docker push 127.0.0.1:32000/enedis-tracker
 kustomize build ./apps/enedis-tracker --load_restrictor none | kubectl apply -f -
+
+#upload
+docker build ./apps/upload -t 127.0.0.1:32000/upload
+docker push 127.0.0.1:32000/upload
+kustomize build ./apps/upload --load_restrictor none | kubectl apply -f -

@@ -26,11 +26,12 @@ WORKDIR /app/cmd/upload
 # Build the Go app
 COPY /cmd/upload/* ./
 RUN go get -d -v
-RUN go build -o main .
+RUN CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o main .
 
-FROM alpine:3.9.5
+#FROM alpine:3.9.5
 
-# # FROM scratch
+FROM scratch
+
 WORKDIR /app/
 
 COPY --from=go-builder /app/cmd/upload/main ./cmd/upload/main

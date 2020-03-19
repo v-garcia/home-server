@@ -132,7 +132,7 @@ function startUpload(file, destination) {
 
   const id = createUUID();
   const options = {
-    endpoint: "/files/",
+    endpoint: `${window.location.href}files/`,
     resume: true,
     chunkSize: 10 * 1024 * 1024,
     retryDelays: [0, 1000, 3000, 5000],
@@ -143,17 +143,7 @@ function startUpload(file, destination) {
       destination: destination
     },
     onError: function(error) {
-      if (error.originalRequest) {
-        if (
-          window.confirm("Failed because: " + error + "\nDo you want to retry?")
-        ) {
-          upload.start();
-          return;
-        }
-      } else {
-        window.alert("Failed because: " + error);
-      }
-
+      window.alert("Failed because: " + error);
       updateModel(id, "error", error);
     },
     onProgress: function(bytesUploaded, bytesTotal) {
