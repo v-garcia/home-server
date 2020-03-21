@@ -1,3 +1,5 @@
+#!/bin/bash
+
 docker build --rm -t wallet-monitor ../
 
 source ./../.env

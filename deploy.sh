@@ -3,7 +3,6 @@
 # awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 # creating dirs
-sudo mkdir -p /data/ctorrent/
 sudo mkdir -p /data/jdownloader/
 sudo mkdir -p /data/sabnzbd/
 sudo mkdir -p /data/config/
@@ -14,6 +13,7 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
+sudo mkdir -p /data/qbitorrent/
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -22,6 +22,7 @@ sudo mkdir -p /data/gotify/
 #   kustomize build ./apps/$1 --load_restrictor none | kubectl apply -f -
 # }
 
+# kubectl exec -it shell-demo -- /bin/bash
 
 # docker system prune -af
 
@@ -45,11 +46,6 @@ kustomize build ./apps/http-server --load_restrictor none | kubectl apply -f -
 docker build ./apps/sabnzbd -t 127.0.0.1:32000/sabnzbd
 docker push 127.0.0.1:32000/sabnzbd
 kustomize build ./apps/sabnzbd --load_restrictor none | kubectl apply -f -
-
-#cloudtorrent
-docker build ./apps/cloudtorrent -t 127.0.0.1:32000/cloudtorrent
-docker push 127.0.0.1:32000/cloudtorrent
-kustomize build ./apps/cloudtorrent --load_restrictor none | kubectl apply -f -
 
 #jdownloader
 docker build ./apps/jdownloader -t 127.0.0.1:32000/jdownloader
@@ -100,3 +96,13 @@ kustomize build ./apps/enedis-tracker --load_restrictor none | kubectl apply -f 
 docker build ./apps/upload -t 127.0.0.1:32000/upload
 docker push 127.0.0.1:32000/upload
 kustomize build ./apps/upload --load_restrictor none | kubectl apply -f -
+
+#wallet-monitor
+docker build ./apps/wallet-monitor -t 127.0.0.1:32000/wallet-monitor
+docker push 127.0.0.1:32000/wallet-monitor
+kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f -
+
+#qbitorrent
+docker build ./apps/qbitorrent -t 127.0.0.1:32000/qbitorrent
+docker push 127.0.0.1:32000/qbitorrent
+kustomize build ./apps/qbitorrent --load_restrictor none | kubectl apply -f -

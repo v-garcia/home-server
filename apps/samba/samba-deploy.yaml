@@ -62,7 +62,7 @@ spec:
               protocol: UDP
             - containerPort: 138
           volumeMounts:
-            - name: cloudtorrent
+            - name: qbitorrent
               subPath: downloads
               mountPath: /downloads/torrent
             - name: sabnzbd
@@ -75,16 +75,16 @@ spec:
               mountPath: /perso
             - name: public
               mountPath: /public
-            - name: cloudtorrent
+            - name: qbitorrent
               subPath: watchdir
               mountPath: /downloads/watchdir/torrent
             - name: sabnzbd
               subPath: watchdir
               mountPath: /downloads/watchdir/nzb
       volumes:
-        - name: cloudtorrent
+        - name: qbitorrent
           persistentVolumeClaim:
-            claimName: cloudtorrent
+            claimName: qbitorrent
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

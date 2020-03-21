@@ -23,10 +23,13 @@
         the value configured here. Ex: A value of 62 will result
         in an SSDP advertisement being sent every second.
     -->
-    <alive>1800</alive>
+    <alive>180</alive>
     <storage>
       <sqlite3 enabled="yes">
         <database-file>gerbera.db</database-file>
+        <on-error>restore</on-error>
+        <!-- 48h backup -->
+        <backup enabled="no" interval="172800"/>
       </sqlite3>
       <mysql enabled="no">
         <host>localhost</host>
@@ -71,8 +74,8 @@
     </extended-runtime-options>
   </server>
   <import hidden-files="no">
-<autoscan use-inotify="yes">
-<directory location="/media" mode="timed" interval="300" level="basic" recursive="yes" hidden-files="no"/>
+<autoscan use-inotify="auto">
+<directory location="/media" mode="inotify" interval="3600" level="basic" recursive="yes" hidden-files="no"/>
 </autoscan>
     <scripting script-charset="UTF-8">
       <common-script>/usr/local/share/gerbera/js/common.js</common-script>

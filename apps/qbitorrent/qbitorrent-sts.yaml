@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: qbitorrent
+spec:
+  serviceName: qbitorrent
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbitorrent
+  template:
+    metadata:
+      labels:
+        app: qbitorrent
+        tier: downloader
+    spec:
+      initContainers:
+        - name: qbitorrent-init
+          image: busybox
+          command: ["/bin/sh", "-c" , "mkdir -p /opt/qBittorrent/ && cp -v /qBittorrent.conf /opt/qBittorrent/qBittorrent.conf"]
+          volumeMounts:
+            - name: qbitorrent-config
+              subPath: qBittorrent.conf
+              mountPath: /qBittorrent.conf
+            - name: qbitorrent
+              subPath: config
+              mountPath: /opt
+      containers:
+        - name: qbitorrent
+          image: 127.0.0.1:32000/qbitorrent
+          ports:
+            - name: qbitorrent
+              containerPort: 8080
+          volumeMounts:
+            - name: qbitorrent
+              subPath: downloads
+              mountPath: /downloads
+            - name: qbitorrent
+              subPath: watchdir
+              mountPath: /watchdir
+            - name: qbitorrent
+              subPath: config
+              mountPath: /config
+          env:
+          - name: GOTIFY_URL
+            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+          - name: GOTIFY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: qbitorrent-secret
+                key: gotify-token
+          - name: TZ
+            value: Europe/Paris
+          livenessProbe:
+            httpGet:
+              path: /api/v2/app/version
+              port: qbitorrent
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /api/v2/app/version
+              port: qbitorrent
+              scheme: HTTP
+      volumes:
+        - name: qbitorrent
+          persistentVolumeClaim:
+            claimName: qbitorrent
+        - name: qbitorrent-config
+          configMap:
+            name: qbitorrent-config
+        - name: qbitorrent-secret
+          secret:
+            secretName: qbitorrent-secret

@@ -39,7 +39,7 @@ spec:
           volumeMounts:
             - name: public
               mountPath: /media/public
-            - name: cloudtorrent
+            - name: qbitorrent
               subPath: downloads
               mountPath: /media/downloads/torrent
             - name: sabnzbd
@@ -52,9 +52,9 @@ spec:
         - name: public
           persistentVolumeClaim:
             claimName: public
-        - name: cloudtorrent
+        - name: qbitorrent
           persistentVolumeClaim:
-            claimName: cloudtorrent
+            claimName: qbitorrent
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

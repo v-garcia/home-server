@@ -28,7 +28,7 @@ COPY /cmd/upload/* ./
 RUN go get -d -v
 RUN CGO_ENABLED=0  GOOS=linux GOARCH=amd64 go build -o main .
 
-#FROM alpine:3.9.5
+# FROM alpine:3.9.5
 
 FROM scratch
 
