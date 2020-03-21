@@ -8,6 +8,9 @@ data:
     enabled=true
     program=notify-finished \"%N\"
 
+    [BitTorrent]
+    Session\GlobalMaxSeedingMinutes=20
+
     [LegalNotice]
     Accepted=true
 
