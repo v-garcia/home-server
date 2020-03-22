@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gerbera
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gerbera
+  template:
+    metadata:
+      labels:
+        app: gerbera
+    spec:
+      hostNetwork: true
+      containers:
+        - name: gerbera
+          image: 127.0.0.1:32000/gerbera
+          livenessProbe:
+            tcpSocket:
+              port: 49152
+          readinessProbe:
+            tcpSocket:
+              port: 49152
+          volumeMounts:
+            - name: public
+              mountPath: /public
+            - name: qbitorrent
+              subPath: downloads
+              mountPath: /torrent
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /sabnzbd
+            - name: jdownloader
+              subPath: downloads
+              mountPath: /jdownloader
+            - name: gerbera
+              subPath: home
+              mountPath: /root/
+            - name: gerbera-config
+              subPath: config.xml
+              mountPath: /root/.config/gerbera/config.xml
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: qbitorrent
+          persistentVolumeClaim:
+            claimName: qbitorrent
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: jdownloader
+          persistentVolumeClaim:
+            claimName: jdownloader
+        - name: gerbera
+          persistentVolumeClaim:
+            claimName: gerbera
+        - name: gerbera-config
+          configMap:
+            name: gerbera-config

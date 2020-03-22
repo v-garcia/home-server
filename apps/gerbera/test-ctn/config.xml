@@ -10,7 +10,7 @@
         <account user="gerbera" password="gerbera" />
       </accounts>
     </ui>
-    <name>Gerbera Custom</name>
+    <name>Brix UPnP</name>
     <udn>uuid:958fa697-4582-4931-a61b-79d8a1842a31</udn>
     <home>/root/.config/gerbera</home>
     <webroot>/usr/local/share/gerbera/web</webroot>

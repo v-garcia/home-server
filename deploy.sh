@@ -14,6 +14,15 @@ sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
 sudo mkdir -p /data/qbitorrent/
+sudo mkdir -p /data/gerbera/
+
+# cert-manager
+# https://cert-manager.io/docs/installation/kubernetes/
+# https://cert-manager.io/docs/installation/upgrading/
+# https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
+
+kubectl create namespace cert-manager
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.0/cert-manager.yaml
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -72,10 +81,10 @@ docker build ./apps/samba -t 127.0.0.1:32000/samba
 docker push 127.0.0.1:32000/samba
 kustomize build ./apps/samba --load_restrictor none | kubectl apply -f -
 
-#minidlna
-docker build ./apps/minidlna -t 127.0.0.1:32000/minidlna
-docker push 127.0.0.1:32000/minidlna
-kustomize build ./apps/minidlna --load_restrictor none | kubectl apply -f -
+#gerbera
+docker build ./apps/gerbera -t 127.0.0.1:32000/gerbera
+docker push 127.0.0.1:32000/gerbera
+kustomize build ./apps/gerbera --load_restrictor none | kubectl apply -f -
 
 #filebrowser
 docker build ./apps/filebrowser -t 127.0.0.1:32000/filebrowser

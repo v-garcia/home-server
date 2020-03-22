@@ -20,6 +20,7 @@ data:
     [Preferences]
     Advanced\RecheckOnCompletion=false
     Advanced\trackerPort=9000
+    Bittorrent\MaxRatioAction=1
     Connection\GlobalUPLimit=30
     Connection\PortRangeMin=6881
     Connection\ResolvePeerCountries=true
