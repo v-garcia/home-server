@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: upload
 spec:
-  serviceName: upload
   replicas: 1
   selector:
     matchLabels:

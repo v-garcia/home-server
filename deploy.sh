@@ -3,7 +3,6 @@
 # awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 # creating dirs
-sudo mkdir -p /data/ctorrent/
 sudo mkdir -p /data/jdownloader/
 sudo mkdir -p /data/sabnzbd/
 sudo mkdir -p /data/config/
@@ -14,6 +13,16 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
+sudo mkdir -p /data/qbitorrent/
+sudo mkdir -p /data/gerbera/
+
+# cert-manager
+# https://cert-manager.io/docs/installation/kubernetes/
+# https://cert-manager.io/docs/installation/upgrading/
+# https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
+
+kubectl create namespace cert-manager
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.0/cert-manager.yaml
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -22,6 +31,7 @@ sudo mkdir -p /data/gotify/
 #   kustomize build ./apps/$1 --load_restrictor none | kubectl apply -f -
 # }
 
+# kubectl exec -it shell-demo -- /bin/bash
 
 # docker system prune -af
 
@@ -45,11 +55,6 @@ kustomize build ./apps/http-server --load_restrictor none | kubectl apply -f -
 docker build ./apps/sabnzbd -t 127.0.0.1:32000/sabnzbd
 docker push 127.0.0.1:32000/sabnzbd
 kustomize build ./apps/sabnzbd --load_restrictor none | kubectl apply -f -
-
-#cloudtorrent
-docker build ./apps/cloudtorrent -t 127.0.0.1:32000/cloudtorrent
-docker push 127.0.0.1:32000/cloudtorrent
-kustomize build ./apps/cloudtorrent --load_restrictor none | kubectl apply -f -
 
 #jdownloader
 docker build ./apps/jdownloader -t 127.0.0.1:32000/jdownloader
@@ -76,10 +81,10 @@ docker build ./apps/samba -t 127.0.0.1:32000/samba
 docker push 127.0.0.1:32000/samba
 kustomize build ./apps/samba --load_restrictor none | kubectl apply -f -
 
-#minidlna
-docker build ./apps/minidlna -t 127.0.0.1:32000/minidlna
-docker push 127.0.0.1:32000/minidlna
-kustomize build ./apps/minidlna --load_restrictor none | kubectl apply -f -
+#gerbera
+docker build ./apps/gerbera -t 127.0.0.1:32000/gerbera
+docker push 127.0.0.1:32000/gerbera
+kustomize build ./apps/gerbera --load_restrictor none | kubectl apply -f -
 
 #filebrowser
 docker build ./apps/filebrowser -t 127.0.0.1:32000/filebrowser
@@ -100,3 +105,13 @@ kustomize build ./apps/enedis-tracker --load_restrictor none | kubectl apply -f 
 docker build ./apps/upload -t 127.0.0.1:32000/upload
 docker push 127.0.0.1:32000/upload
 kustomize build ./apps/upload --load_restrictor none | kubectl apply -f -
+
+#wallet-monitor
+docker build ./apps/wallet-monitor -t 127.0.0.1:32000/wallet-monitor
+docker push 127.0.0.1:32000/wallet-monitor
+kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f -
+
+#qbitorrent
+docker build ./apps/qbitorrent -t 127.0.0.1:32000/qbitorrent
+docker push 127.0.0.1:32000/qbitorrent
+kustomize build ./apps/qbitorrent --load_restrictor none | kubectl apply -f -

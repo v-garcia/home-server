@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- qbitorrent-cm.yaml
+- qbitorrent-ext-ing.yaml
+- qbitorrent-local-ing.yaml
+- qbitorrent-pvc.yaml
+- qbitorrent-pv.yaml
+- qbitorrent-secret.yaml
+- qbitorrent-sts.yaml
+- qbitorrent-svc.yaml
+patches:
+- path: ../../overlays/pv-node-affinity.yaml
+  target:
+    kind: PersistentVolume
+- path: ../../overlays/ing-authentified.yaml
+  target:
+    kind: Ingress
+    labelSelector: authentified
+- path: ../../overlays/ing-external.yaml
+  target:
+    kind: Ingress
+    labelSelector: type=external
+- path: ../../overlays/ing-local.yaml
+  target:
+    kind: Ingress
+    labelSelector: type=local

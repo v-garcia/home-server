@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: upload
+  name: qbitorrent
 spec:
   type: ClusterIP
   selector:
-    app: upload
+    app: qbitorrent
   ports:
-    - name: upload
+    - name: qbitorrent
       port: 8080
       targetPort: 8080

@@ -1,53 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: minidlna
+  name: gerbera
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: minidlna
+      app: gerbera
   template:
     metadata:
       labels:
-        app: minidlna
+        app: gerbera
     spec:
       hostNetwork: true
       containers:
-        - name: minidlna
-          image: 127.0.0.1:32000/minidlna
-          env:
-            - name: MINIDLNA_FRIENDLY_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: minidlna-config
-                  key: friendly-name
-            - name: MINIDLNA_MEDIA_DIR_1
-              value: V,/media/public
-            - name: MINIDLNA_MEDIA_DIR_2
-              value: V,/media/downloads
-            - name: MINIDLNA_MEDIA_DIR_3
-              value: P,/media/public/photos
+        - name: gerbera
+          image: 127.0.0.1:32000/gerbera
           livenessProbe:
             tcpSocket:
-              port: 8200
+              port: 49152
           readinessProbe:
             tcpSocket:
-              port: 8200
-          ports:
-            - containerPort: 8200
+              port: 49152
           volumeMounts:
             - name: public
-              mountPath: /media/public
+              mountPath: /public
             - name: qbitorrent
               subPath: downloads
-              mountPath: /media/downloads/torrent
+              mountPath: /torrent
             - name: sabnzbd
               subPath: downloads
-              mountPath: /media/downloads/sabnzbd
+              mountPath: /sabnzbd
             - name: jdownloader
               subPath: downloads
-              mountPath: /media/downloads/jdownloader
+              mountPath: /jdownloader
+            - name: gerbera
+              subPath: home
+              mountPath: /root/
+            - name: gerbera-config
+              subPath: config.xml
+              mountPath: /root/.config/gerbera/config.xml
       volumes:
         - name: public
           persistentVolumeClaim:
@@ -61,3 +53,9 @@ spec:
         - name: jdownloader
           persistentVolumeClaim:
             claimName: jdownloader
+        - name: gerbera
+          persistentVolumeClaim:
+            claimName: gerbera
+        - name: gerbera-config
+          configMap:
+            name: gerbera-config
