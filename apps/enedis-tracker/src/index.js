@@ -4,10 +4,11 @@ const startOfYesterday = require('date-fns/startOfYesterday');
 const eachDayOfInterval = require('date-fns/eachDayOfInterval');
 const addDays = require('date-fns/addDays');
 const parseIso = require('date-fns/parseISO');
+const dateMax = require('date-fns/max');
 const format = require('date-fns/format');
 const isYesterday = require('date-fns/isYesterday');
-const subDays = require('date-fns/subYears');
-const startOfDay = require('date-fns/startOfDay');
+const subDays = require('date-fns/subDays');
+const startOfToday = require('date-fns/startOfToday');
 const isSameDay = require('date-fns/isSameDay');
 const got = require('got');
 const Slouch = require('couch-slouch');
@@ -16,7 +17,7 @@ const Slouch = require('couch-slouch');
 const MONTLY_FLAT_RATE = 998;
 const KW_PRICE = 13.79;
 const COLLECTION_NAME = 'enedis_consumption';
-const MAX_SEEK_DATE = startOfDay(subDays(new Date(), 14));
+const SEEK_DAYS = 15; 
 
 const gotifyNotification = (url, token) => (title, message, priority) => {
   console.info(message);
@@ -92,7 +93,10 @@ async function getLastDay(slouch) {
     limit: 1
   });
 
-  return item ? parseIso(item.date) : MAX_SEEK_DATE;
+
+  const minDay = subDays(startOfToday(), SEEK_DAYS);
+  const res = item ? dateMax([minDay, parseIso(item.date)]) : minDay;
+  return res;
 }
 
 async function dailyRoutine(linkySession, gotifyClient, slouch) {
@@ -100,10 +104,6 @@ async function dailyRoutine(linkySession, gotifyClient, slouch) {
   if (isYesterday(lastSavedDay)) return;
 
   const daily = await linkySession.getDailyData();
-
-  console.info(addDays(lastSavedDay, 1));
-  console.info(startOfYesterday());
-
   const dToRetrieve = await eachDayOfInterval({ start: addDays(lastSavedDay, 1), end: startOfYesterday() });
   console.info('to retrieve:', dToRetrieve);
   for (let d of dToRetrieve) {
