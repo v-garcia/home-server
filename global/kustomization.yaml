@@ -12,6 +12,3 @@ patches:
     - path: ../overlays/pv-node-affinity.yaml
       target:
           kind: PersistentVolume
-    - path: ../overlays/pod-security-context.yaml
-      target:
-          labelSelector: security-context=standard

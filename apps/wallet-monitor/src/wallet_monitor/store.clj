@@ -21,8 +21,7 @@
 
 (defn- get-couch-db-headers!
   []
-  {"Authorization" "Basic dmluY2VudDoxUG9tbWVAcm91Z2U="
-   "Content-Type" "application/json"})
+  {"Content-Type" "application/json"})
 
 (defn get-couch-db-url!
   []
