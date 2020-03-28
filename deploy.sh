@@ -31,11 +31,15 @@ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/relea
 #   kustomize build ./apps/$1 --load_restrictor none | kubectl apply -f -
 # }
 
+## Common commands
+
 # kubectl exec -it shell-demo -- /bin/bash
 
 # docker system prune -af
 
 # kubectl patch pvc PVC_NAME -p '{"metadata":{"finalizers": []}}' --type=merge
+
+# kubectl create job --from=cronjob/<cronjob-name> <job-name>
 
 #apply config
 echo "Applying global manifests"

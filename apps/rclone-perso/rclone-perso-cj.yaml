@@ -7,6 +7,7 @@ spec:
   schedule: "30 * * * *" # Every 1 hour
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 14400 # 4 hours
       template:
         spec:
           restartPolicy: Never
