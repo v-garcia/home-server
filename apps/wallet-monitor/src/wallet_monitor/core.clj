@@ -1,13 +1,14 @@
 (ns wallet-monitor.core
   (:gen-class)
   (:require
-   [wallet-monitor.env :as env]
    [wallet-monitor.report :as rep]
-   [wallet-monitor.alphavantage :as av]
    [wallet-monitor.wallet :as wal]
    [wallet-monitor.store :as store]
    [wallet-monitor.utils :as utils]
-   [taoensso.timbre :as timbre :refer [info error]]))
+   [wallet-monitor.stocks :as stocks]
+   [wallet-monitor.yahoo]
+   [wallet-monitor.alphavantage]
+   [taoensso.timbre :as timbre :refer [info error]])) 
 
 (defn get-wallet-w-price!
   []
@@ -16,7 +17,7 @@
     _                (info {:wallet wallet})]
     (->> wallet
          (map :isin)
-         av/get-stock-prices!
+         stocks/get-stock-prices!
          (map #(assoc %1 :price %2) wallet))))
 
 (def get-wallet-w-price-memo! (memoize get-wallet-w-price!))
@@ -88,6 +89,8 @@
 
 
 (comment
+  
+  (stocks/get-quote! ::stocks/yahoo "IE00B945VV12")
   (store/load-wallet-of! (utils/working-yesterday))
   (-main)
   (get-wallet-w-price-memo!)
@@ -95,10 +98,9 @@
   (wal/diff-new-amount (get-wallet-w-price-memo!) {:amount   2000.0
                                                    :currency :EUR})
   ((partial check-wallet-repartition! wal/repartition-diff-add-amout {
-                                                           :amount   2000.0,
-                                                           :currency :EUR
-                                                           }))
-  (get-wallet-w-price-memo!)
-  (check-wallet-repartition!)
-  (check-wallet-repartition*!)
+                                                                      :amount   2000.0,
+                                                                      :currency :EUR
+                                                                      
+                                                                      }))
+
   (start-action! "save-wallet" save-wallet-state!))

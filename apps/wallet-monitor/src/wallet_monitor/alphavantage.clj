@@ -8,6 +8,7 @@
             [wallet-monitor.domain :as d]
             [clojure.spec.alpha :as s]
             [diehard.core :as dh]
+            [wallet-monitor.stocks :as stocks]
             [taoensso.timbre :as timbre :refer [warn info]]))
 
 (defn ^:private rm-key-numerotation
@@ -23,7 +24,7 @@
   [isin]
   {:pre [(s/valid? ::d/isin isin)]
    :post [(s/valid? some? %)]}
-  (get {"LU1681038672" "RS2K.SWI"
+  (get {"LU1681038672" "RS2K.PAR"
         "FR0010688168" "CS5.PAR"
         "FR0010688192" "CH5.PAR"
         "IE00B945VV12" "VEUR.AMS"
@@ -59,6 +60,8 @@
     (#(do
         (when-let [msg (:note %)]
           (throw (ex-info (str "Api quota exceeded ") {:msg msg})))
+        (when-let [error (:error-message %)]
+            (throw (ex-info (str "Unknow alphavantage error") {:msg error})))
         %))
     :global-quote
     parse-num-values))
@@ -78,7 +81,7 @@
 
 
 
-(defn get-stock-price!
+(defn get-quote!
   [isin]
   {:pre [(s/valid? ::d/isin isin)]
    :post [(s/valid? ::d/price %)]}
@@ -90,13 +93,11 @@
    (hash-map :currency (isin->currency isin) :amount)))
 
 
-(defn get-stock-prices!
-  [isins]
-  {:pre [(s/valid? (s/coll-of ::d/isin) isins)]
-   :post [(s/valid? (s/coll-of ::d/price) %)]}
-  (doall (pmap get-stock-price! isins)))
-
+(defmethod stocks/get-quote! ::stocks/alphavantage
+  [_ isin]
+  (get-quote! isin))
 
 (comment
-  (get-stock-price! "LU1681038672")
+  (get-av-quote! "RS2K.PAR")
+  (get-quote! "LU1681038672")
   (dotimes [n 10] (print (safe-get-av-quote! "PE500.PAR"))))
