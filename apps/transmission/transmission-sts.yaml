@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: transmission
+spec:
+  serviceName: transmission
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission
+  template:
+    metadata:
+      labels:
+        app: transmission
+        tier: downloader
+    spec:
+      containers:
+        - name: transmission
+          image: 127.0.0.1:32000/transmission
+          ports:
+            - name: transmission
+              containerPort: 9091
+          volumeMounts:
+            - name: transmission
+              subPath: downloads
+              mountPath: /downloads
+            - name: transmission
+              subPath: incomplete
+              mountPath: /incomplete
+            - name: transmission
+              subPath: watchdir
+              mountPath: /watchdir
+            - name: transmission
+              subPath: config
+              mountPath: /config
+          env:
+          - name: GOTIFY_URL
+            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+          - name: GOTIFY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: transmission-secret
+                key: gotify-token
+          - name: TZ
+            value: Europe/Paris
+          - name: TRANSMISSION_WEB_HOME
+            value: "/combustion-release/"
+          livenessProbe:
+            httpGet:
+              path: /transmission/web/
+              port: transmission
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /transmission/web/
+              port: transmission
+              scheme: HTTP
+      volumes:
+        - name: transmission
+          persistentVolumeClaim:
+            claimName: transmission
+        - name: transmission-config
+          configMap:
+            name: transmission-config
+        - name: transmission-secret
+          secret:
+            secretName: transmission-secret

@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- transmission-cm.yaml
+- transmission-ext-ing.yaml
+- transmission-local-ing.yaml
+- transmission-pvc.yaml
+- transmission-pv.yaml
+- transmission-secret.yaml
+- transmission-sts.yaml
+- transmission-svc.yaml
+patches:
+- path: ../../overlays/pv-node-affinity.yaml
+  target:
+    kind: PersistentVolume
+- path: ../../overlays/ing-authentified.yaml
+  target:
+    kind: Ingress
+    labelSelector: authentified
+- path: ../../overlays/ing-external.yaml
+  target:
+    kind: Ingress
+    labelSelector: type=external
+- path: ../../overlays/ing-local.yaml
+  target:
+    kind: Ingress
+    labelSelector: type=local
