@@ -25,7 +25,7 @@ spec:
           volumeMounts:
             - name: public
               mountPath: /public
-            - name: qbitorrent
+            - name: transmission
               subPath: downloads
               mountPath: /torrent
             - name: sabnzbd
@@ -44,9 +44,9 @@ spec:
         - name: public
           persistentVolumeClaim:
             claimName: public
-        - name: qbitorrent
+        - name: transmission
           persistentVolumeClaim:
-            claimName: qbitorrent
+            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

@@ -13,7 +13,7 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
-sudo mkdir -p /data/qbitorrent/
+sudo mkdir -p /data/transmission/
 sudo mkdir -p /data/gerbera/
 
 # cert-manager
@@ -22,7 +22,7 @@ sudo mkdir -p /data/gerbera/
 # https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
 
 kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.0/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.2/cert-manager.yaml
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -37,13 +37,21 @@ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/relea
 
 # docker system prune -af
 
+# https://github.com/kubernetes/kubernetes/issues/60807#issuecomment-572615776
 # kubectl patch pvc PVC_NAME -p '{"metadata":{"finalizers": []}}' --type=merge
 
 # kubectl create job --from=cronjob/<cronjob-name> <job-name>
 
+# kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443
+
 #apply config
 echo "Applying global manifests"
 kustomize build ./global/ --load_restrictor none | kubectl apply -f -
+
+#dashboard
+# uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc6/aio/deploy/alternative.yaml
+kustomize build ./apps/dashboard --load_restrictor none | kubectl apply -f -
 
 #ddns-updater
 docker build ./apps/ddns-updater -t 127.0.0.1:32000/ddns-updater
@@ -115,7 +123,7 @@ docker build ./apps/wallet-monitor -t 127.0.0.1:32000/wallet-monitor
 docker push 127.0.0.1:32000/wallet-monitor
 kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f -
 
-#qbitorrent
-docker build ./apps/qbitorrent -t 127.0.0.1:32000/qbitorrent
-docker push 127.0.0.1:32000/qbitorrent
-kustomize build ./apps/qbitorrent --load_restrictor none | kubectl apply -f -
+#transmission
+docker build ./apps/transmission -t 127.0.0.1:32000/transmission
+docker push 127.0.0.1:32000/transmission
+kustomize build ./apps/transmission --load_restrictor none | kubectl apply -f -

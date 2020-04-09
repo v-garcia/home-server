@@ -16,3 +16,5 @@ spec:
       - http01:
           ingress:
             class: nginx
+
+# https://cert-manager.io/docs/tutorials/acme/ingress/

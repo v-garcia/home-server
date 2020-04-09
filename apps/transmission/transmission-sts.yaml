@@ -14,6 +14,17 @@ spec:
         app: transmission
         tier: downloader
     spec:
+      initContainers:
+        - name: transmission-init
+          image: busybox
+          command: ["/bin/sh", "-c" , "cp -v /settings.json /opt/"]
+          volumeMounts:
+            - name: transmission-config
+              subPath: settings.json
+              mountPath: /settings.json
+            - name: transmission
+              subPath: config
+              mountPath: /opt
       containers:
         - name: transmission
           image: 127.0.0.1:32000/transmission
@@ -23,13 +34,13 @@ spec:
           volumeMounts:
             - name: transmission
               subPath: downloads
-              mountPath: /downloads
+              mountPath: /downloaded
             - name: transmission
               subPath: incomplete
               mountPath: /incomplete
             - name: transmission
               subPath: watchdir
-              mountPath: /watchdir
+              mountPath: /watch
             - name: transmission
               subPath: config
               mountPath: /config
@@ -45,6 +56,14 @@ spec:
             value: Europe/Paris
           - name: TRANSMISSION_WEB_HOME
             value: "/combustion-release/"
+          - name: PUID
+            value: "0"
+          - name: PGID
+            value: "0"
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "rm -f /downloads/{complete,incomplete}"]
           livenessProbe:
             httpGet:
               path: /transmission/web/

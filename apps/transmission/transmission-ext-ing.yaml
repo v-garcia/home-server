@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - torrent.former-hostname.com
+        - transmission.former-hostname.com
       secretName: transmission.former-hostname.com
   rules:
-    - host: torrent.former-hostname.com
+    - host: transmission.former-hostname.com
       http:
         paths:
           - backend:

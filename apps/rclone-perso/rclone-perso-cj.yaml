@@ -5,8 +5,10 @@ metadata:
 spec:
   concurrencyPolicy: Forbid
   schedule: "30 * * * *" # Every 1 hour
+  startingDeadlineSeconds: 10 # https://stackoverflow.com/questions/51065538/what-does-kubernetes-cronjobs-startingdeadlineseconds-exactly-mean
   jobTemplate:
     spec:
+      backoffLimit: 0
       activeDeadlineSeconds: 14400 # 4 hours
       template:
         spec:
@@ -35,13 +37,21 @@ spec:
                 - --config
                 - "/.rclone.conf"
                 - "--workdir"
-                - "/rclonesyncwd/"
+                - "/root/rclonesyncwd/"
                 - "/sync/"
                 - "zaclys:/"
+              env:
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: GOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: rclone-perso-secret
+                      key: gotify-token
               volumeMounts:
                 - name: rclone-perso
                   subPath: workingdir
-                  mountPath: /rclonesyncwd/
+                  mountPath: /root/rclonesyncwd/
                 - name: perso
                   mountPath: /sync/
                 - name: rclone-perso-secret

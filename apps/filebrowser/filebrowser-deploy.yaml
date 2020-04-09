@@ -25,10 +25,10 @@ spec:
             - name: filebrowser
               containerPort: 3000
           volumeMounts:
-            - name: qbitorrent
+            - name: transmission
               subPath: downloads
               mountPath: /srv/downloads/torrent
-            - name: qbitorrent
+            - name: transmission
               subPath: watchdir
               mountPath: /srv/downloads/watchdir/torrent
             - name: sabnzbd
@@ -48,9 +48,9 @@ spec:
               subPath: workingdir
               mountPath: /root/workingdir
       volumes:
-        - name: qbitorrent
+        - name: transmission
           persistentVolumeClaim:
-            claimName: qbitorrent
+            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd
