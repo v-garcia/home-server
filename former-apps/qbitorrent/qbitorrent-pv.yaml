@@ -6,7 +6,7 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 400Gi
+    storage: 600Gi
   accessModes:
     # the volume can be mounted as read-write by many nodes
     - ReadWriteMany
