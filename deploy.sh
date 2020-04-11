@@ -51,7 +51,7 @@ kustomize build ./global/ --load_restrictor none | kubectl apply -f -
 #dashboard
 # uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc6/aio/deploy/alternative.yaml
-kustomize build ./apps/dashboard --load_restrictor none | kubectl apply -f -
+./apps/dashboard/gen-resources.sh | kubectl apply -f -
 
 #ddns-updater
 docker build ./apps/ddns-updater -t 127.0.0.1:32000/ddns-updater
