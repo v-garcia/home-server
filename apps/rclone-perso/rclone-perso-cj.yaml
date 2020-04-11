@@ -4,7 +4,7 @@ metadata:
   name: rclone-perso
 spec:
   concurrencyPolicy: Forbid
-  schedule: "30 * * * *" # Every 1 hour
+  schedule: "30 */3 * * *" # Every 3 hour
   startingDeadlineSeconds: 10 # https://stackoverflow.com/questions/51065538/what-does-kubernetes-cronjobs-startingdeadlineseconds-exactly-mean
   jobTemplate:
     spec:

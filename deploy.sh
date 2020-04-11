@@ -127,3 +127,8 @@ kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f 
 docker build ./apps/transmission -t 127.0.0.1:32000/transmission
 docker push 127.0.0.1:32000/transmission
 kustomize build ./apps/transmission --load_restrictor none | kubectl apply -f -
+
+#torrent-ratio
+docker build ./apps/torrent-ratio -t 127.0.0.1:32000/torrent-ratio
+docker push 127.0.0.1:32000/torrent-ratio
+kustomize build ./apps/torrent-ratio --load_restrictor none | kubectl apply -f -

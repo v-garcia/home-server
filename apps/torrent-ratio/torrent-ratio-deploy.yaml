@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torrent-ratio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: torrent-ratio
+  template:
+    metadata:
+      labels:
+        app: torrent-ratio
+    spec:
+      containers:
+        - name: torrent-ratio
+          image: 127.0.0.1:32000/torrent-ratio
+          volumeMounts:
+            - name: torrent-ratio-secret
+              subPath: t.torrent
+              mountPath: /t.torrent
+          env:
+            - name: UPLOAD_SPEED
+              value: "100"
+      volumes:
+        - name: torrent-ratio-secret
+          secret:
+            secretName: torrent-ratio-secret

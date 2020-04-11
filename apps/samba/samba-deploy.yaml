@@ -22,11 +22,11 @@ spec:
             - -g #https://github.com/dperson/samba/issues/81
             - "ntlm auth = yes"
             - -s
-            - "downloads;/downloads;yes;no;yes;vincent"
+            - "downloads;/downloads;yes;no;yes;$(SAMBA_USR)"
             - -s
-            - "public;/public;yes;no;yes;vincent"
+            - "public;/public;yes;no;yes;$(SAMBA_USR)"
             - -s
-            - "perso;/perso;yes;no;no;vincent"
+            - "perso;/perso;yes;no;no;$(SAMBA_USR)"
             - -p
             - -n
           # browsable;readonly;guest
@@ -41,6 +41,10 @@ spec:
                 secretKeyRef:
                   name: samba-secret
                   key: password
+            - name: USERID
+              value: "0"
+            - name: GROUPID
+              value: "0"
           resources:
             requests:
               cpu: 50m
@@ -51,6 +55,7 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 445
+            initialDelaySeconds: 30
           readinessProbe:
             tcpSocket:
               port: 445
@@ -62,7 +67,7 @@ spec:
               protocol: UDP
             - containerPort: 138
           volumeMounts:
-            - name: qbitorrent
+            - name: transmission
               subPath: downloads
               mountPath: /downloads/torrent
             - name: sabnzbd
@@ -75,16 +80,16 @@ spec:
               mountPath: /perso
             - name: public
               mountPath: /public
-            - name: qbitorrent
+            - name: transmission
               subPath: watchdir
               mountPath: /downloads/watchdir/torrent
             - name: sabnzbd
               subPath: watchdir
               mountPath: /downloads/watchdir/nzb
       volumes:
-        - name: qbitorrent
+        - name: transmission
           persistentVolumeClaim:
-            claimName: qbitorrent
+            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd
