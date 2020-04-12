@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: public
+  name: downloads
   labels:
     type: local
 spec:
   capacity:
-    storage: 500Gi
+    storage: 700Gi
   accessModes:
     # the volume can be mounted as read-write by many nodes
     - ReadWriteMany
     # Allow WaitForFirstConsumer
   storageClassName: local-storage
   local:
-    path: /data/public
+    path: /data/downloads
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -24,4 +24,4 @@ spec:
                 - to-be-replaced
   claimRef:
     namespace: default
-    name: public
+    name: downloads

@@ -3,12 +3,14 @@
 # awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 # creating dirs
+sudo mkdir -p /data/perso/
+sudo mkdir -p /data/public/
+sudo mkdir -p /data/downloads/
+
 sudo mkdir -p /data/jdownloader/
 sudo mkdir -p /data/sabnzbd/
 sudo mkdir -p /data/config/
 sudo mkdir -p /data/workdir/
-sudo mkdir -p /data/perso/
-sudo mkdir -p /data/public/
 sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/

@@ -7,6 +7,8 @@ resources:
     - perso-pvc.yaml
     - public-pv.yaml
     - public-pvc.yaml
+    - downloads-pv.yaml
+    - downloads-pvc.yaml
     - res-limit-range.yaml
 patches:
     - path: ../overlays/pv-node-affinity.yaml

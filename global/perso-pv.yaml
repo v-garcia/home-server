@@ -21,7 +21,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - vincent
+                - to-be-replaced
   claimRef:
     namespace: default
     name: perso
