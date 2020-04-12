@@ -5,7 +5,6 @@
 # creating dirs
 sudo mkdir -p /data/perso/
 sudo mkdir -p /data/public/
-sudo mkdir -p /data/downloads/
 
 sudo mkdir -p /data/jdownloader/
 sudo mkdir -p /data/sabnzbd/
