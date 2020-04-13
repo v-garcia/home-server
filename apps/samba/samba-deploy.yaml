@@ -76,6 +76,9 @@ spec:
             - name: jdownloader
               subPath: downloads
               mountPath: /downloads/jdownloader
+            - name: aria2
+              subPath: downloads
+              mountPath: /downloads/aria2
             - name: perso
               mountPath: /perso
             - name: public
@@ -102,3 +105,6 @@ spec:
         - name: jdownloader
           persistentVolumeClaim:
             claimName: jdownloader
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2

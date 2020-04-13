@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: aria2
+spec:
+  serviceName: aria2
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aria2
+  template:
+    metadata:
+      labels:
+        app: aria2
+        tier: downloader
+    spec:
+      containers:
+        - name: aria2
+          image: 127.0.0.1:32000/aria2
+          ports:
+            - name: aria2-static
+              containerPort: 80
+            - name: aria2-rpc
+              containerPort: 6800
+          volumeMounts:
+            - name: aria2
+              subPath: downloads
+              mountPath: /downloads
+            - name: aria2
+              subPath: data
+              mountPath: /data
+            - name: aria2
+              subPath: watchdir
+              mountPath: /watchdir
+            - name: aria2-config
+              subPath: aria2.conf
+              mountPath: /conf/aria2.conf
+          env:
+          - name: GOTIFY_URL
+            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+          - name: GOTIFY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: aria2-secret
+                key: gotify-token
+          # livenessProbe:
+          #   httpGet:
+          #     path: /aria2/web/
+          #     port: aria2
+          #     scheme: HTTP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /aria2/web/
+          #     port: aria2
+          #     scheme: HTTP
+      volumes:
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2
+        - name: aria2-config
+          configMap:
+            name: aria2-config
+        - name: aria2-secret
+          secret:
+            secretName: aria2-secret

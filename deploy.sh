@@ -16,6 +16,7 @@ sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
 sudo mkdir -p /data/transmission/
 sudo mkdir -p /data/gerbera/
+sudo mkdir -p /data/aria2/
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -133,3 +134,8 @@ kustomize build ./apps/transmission --load_restrictor none | kubectl apply -f -
 docker build ./apps/torrent-ratio -t 127.0.0.1:32000/torrent-ratio
 docker push 127.0.0.1:32000/torrent-ratio
 kustomize build ./apps/torrent-ratio --load_restrictor none | kubectl apply -f -
+
+#aria2
+docker build ./apps/aria2 -t 127.0.0.1:32000/aria2
+docker push 127.0.0.1:32000/aria2
+kustomize build ./apps/aria2 --load_restrictor none | kubectl apply -f -

@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aria2-config
+data:
+  aria2.conf: |
+    # https://github.com/alanzhangzm/Photon/blob/master/static/aria2/aria2.conf
+
+    ### Basic ###
+    dir=/data
+    input-file=/data/.aria2/aria2.session
+    save-session=/data/.aria2/aria2.session
+    save-session-interval=30
+    force-save=true
+
+    ### HTTP/FTP/SFTP ###
+    max-concurrent-downloads=3
+    max-connection-per-server=10
+    min-split-size=10M
+    split=10
+    continue=true
+    max-overall-download-limit=0
+    max-overall-upload-limit=1K
+    enable-http-pipelining=true
+
+    ### RPC ###
+
+    enable-rpc=true
+    rpc-listen-all=true
+    rpc-allow-origin-all=true
+    rpc-listen-port=6800
+
+    ### Advanced ###
+
+    disk-cache=32M
+    no-file-allocation-limit=8M
+    file-allocation=falloc
+    log-level=info
+    log=/var/log/aria2.log
+
+    ### BitTorrent ###
+
+    bt-detach-seed-only=true
+    seed-time=0
+    enable-peer-exchange=true
+
+    ### Scripts ###
+
+    on-download-complete=/usr/bin/on-dl-finish

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: aria2-local
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: local
+spec:
+  rules:
+    - host: aria2.local
+      http:
+        paths:
+          - backend:
+              serviceName: aria2
+              servicePort: 80
+            path: /
+          - backend:
+              serviceName: aria2
+              servicePort: 6800
+            path: /jsonrpc

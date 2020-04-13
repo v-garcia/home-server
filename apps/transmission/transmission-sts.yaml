@@ -60,10 +60,6 @@ spec:
             value: "0"
           - name: PGID
             value: "0"
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "rm -f /downloads/{complete,incomplete}"]
           livenessProbe:
             httpGet:
               path: /transmission/web/

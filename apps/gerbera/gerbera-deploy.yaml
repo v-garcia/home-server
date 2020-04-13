@@ -34,6 +34,9 @@ spec:
             - name: jdownloader
               subPath: downloads
               mountPath: /jdownloader
+            - name: aria2
+              subPath: downloads
+              mountPath: /aria2
             - name: gerbera
               subPath: home
               mountPath: /root/
@@ -53,6 +56,9 @@ spec:
         - name: jdownloader
           persistentVolumeClaim:
             claimName: jdownloader
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2
         - name: gerbera
           persistentVolumeClaim:
             claimName: gerbera
