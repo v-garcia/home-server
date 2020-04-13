@@ -17,6 +17,7 @@ sudo mkdir -p /data/gotify/
 sudo mkdir -p /data/transmission/
 sudo mkdir -p /data/gerbera/
 sudo mkdir -p /data/aria2/
+sudo mkdir -p /data/heimdall/
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -139,3 +140,8 @@ kustomize build ./apps/torrent-ratio --load_restrictor none | kubectl apply -f -
 docker build ./apps/aria2 -t 127.0.0.1:32000/aria2
 docker push 127.0.0.1:32000/aria2
 kustomize build ./apps/aria2 --load_restrictor none | kubectl apply -f -
+
+#heimdall
+docker build ./apps/heimdall -t 127.0.0.1:32000/heimdall
+docker push 127.0.0.1:32000/heimdall
+kustomize build ./apps/heimdall --load_restrictor none | kubectl apply -f -

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: heimdall-ext
+  labels:
+    type: external
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - former-hostname.com
+      secretName: former-hostname.com
+  rules:
+    - host: former-hostname.com
+      http:
+        paths:
+          - backend:
+              serviceName: heimdall
+              servicePort: 80
+            path: /

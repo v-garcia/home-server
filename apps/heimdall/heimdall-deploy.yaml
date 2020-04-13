@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heimdall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: heimdall
+  template:
+    metadata:
+      labels:
+        app: heimdall
+    spec:
+      containers:
+        - name: heimdall
+          image: 127.0.0.1:32000/heimdall
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: heimdall
+              subPath: config
+              mountPath: /config
+          env:
+          - name: TZ
+            value: Europe/Paris
+      volumes:
+        - name: heimdall
+          persistentVolumeClaim:
+            claimName: heimdall

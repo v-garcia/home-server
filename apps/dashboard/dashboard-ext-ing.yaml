@@ -10,6 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header Authorization "Bearer {{BEARER}}";
     nginx.ingress.kubernetes.io/whitelist-source-range: "{{ALLOWED_EXTERNAL_IPS}}"
+  labels:
+    type: external
 spec:
   tls:
     - hosts:

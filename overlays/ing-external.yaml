@@ -3,4 +3,4 @@ kind: Ingress
 metadata:
   name: "*"
   annotations:
-    cert-manager.io/issuer: letsencrypt-issuer
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer

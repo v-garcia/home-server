@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1alpha2
-kind: Issuer
+kind: ClusterIssuer
 metadata:
-  name: letsencrypt-issuer
+  name: letsencrypt-cluster-issuer
 spec:
   acme:
     # The ACME server URL
@@ -10,11 +10,10 @@ spec:
     email: babardo@gmail.com
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
-      name: letsencrypt-issuer
+      name: letsencrypt-cluster-issuer-key
     # Enable the HTTP-01 challenge provider
     solvers:
-      - http01:
-          ingress:
-            class: nginx
-
+    - http01:
+        ingress:
+          class: nginx
 # https://cert-manager.io/docs/tutorials/acme/ingress/
