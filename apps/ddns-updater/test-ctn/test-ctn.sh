@@ -2,8 +2,7 @@
 docker build --rm -t ddns-updater-test ../
 docker run\
     --rm \
-    -v $(pwd)/config.json:/updater/data/config.json:ro \
+    -v $(pwd)/data:/updater/data \
+    -v $(pwd)/config-secret.json:/updater/data/config.json \
     -p 8000:8000/tcp \
     ddns-updater-test
-
-# --user 1500:2500 \

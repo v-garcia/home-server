@@ -12,7 +12,6 @@ spec:
       labels:
         app: samba
     spec:
-      hostNetwork: true
       containers:
         - name: samba
           image: 127.0.0.1:32000/samba
@@ -28,7 +27,6 @@ spec:
             - -s
             - "perso;/perso;yes;no;no;$(SAMBA_USR)"
             - -p
-            - -n
           # browsable;readonly;guest
           env:
             - name: SAMBA_USR
@@ -61,11 +59,14 @@ spec:
               port: 445
           ports:
             - containerPort: 139
+              protocol: TCP
             - containerPort: 445
-            # NMBD
-            - containerPort: 137
-              protocol: UDP
-            - containerPort: 138
+              protocol: TCP
+          #   # NMBD
+          #   - containerPort: 137
+          #     protocol: UDP
+          #   - containerPort: 138
+          #     protocol: UDP
           volumeMounts:
             - name: transmission
               subPath: downloads

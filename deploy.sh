@@ -145,3 +145,8 @@ kustomize build ./apps/aria2 --load_restrictor none | kubectl apply -f -
 docker build ./apps/heimdall -t 127.0.0.1:32000/heimdall
 docker push 127.0.0.1:32000/heimdall
 kustomize build ./apps/heimdall --load_restrictor none | kubectl apply -f -
+
+#couchdb
+docker build ./apps/couchdb -t 127.0.0.1:32000/couchdb
+docker push 127.0.0.1:32000/couchdb
+kustomize build ./apps/couchdb --load_restrictor none | kubectl apply -f -

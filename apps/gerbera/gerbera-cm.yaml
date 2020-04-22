@@ -84,6 +84,7 @@ data:
       <directory location="/torrent" mode="inotify" level="basic" recursive="yes" hidden-files="no"/>
       <directory location="/jdownloader" mode="inotify" level="basic" recursive="yes" hidden-files="no"/>
       <directory location="/sabnzbd" mode="inotify" level="basic" recursive="yes" hidden-files="no"/>
+      <directory location="/aria2" mode="inotify" level="basic" recursive="yes" hidden-files="no"/>
       <directory location="/public" mode="timed" level="basic" recursive="yes" interval="3600" hidden-files="no"/>
     </autoscan>
         <scripting script-charset="UTF-8">

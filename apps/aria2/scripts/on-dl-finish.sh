@@ -16,9 +16,11 @@ fi
 echo "dir: $dir"
 file_name=$(basename "$dir")
 
-body=$( printf '{"title": "New file downloaded!", "message":"File: %s"}\n' "$file_name")
+body=$( printf '{"title": "New file downloaded!", "message":"File: %s"}' "$file_name")
 
 echo "$body"
+
+mv -f -v "$dir" "$DOWNLOAD_PATH"
 
 wget -O- -q \
     --header="X-Gotify-Key: $GOTIFY_TOKEN" \
@@ -26,5 +28,3 @@ wget -O- -q \
     --post-data="$body"\
     --tries=3 \
     "$GOTIFY_URL/message"
-
-mv -f -v "$dir" "$DOWNLOAD_PATH"

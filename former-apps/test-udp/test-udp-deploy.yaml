@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-udp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-udp
+  template:
+    metadata:
+      labels:
+        app: test-udp
+    spec:
+      containers:
+        - name: test-udp
+          image: 127.0.0.1:32000/test-udp
+          ports:
+            - containerPort: 2039
+              protocol: UDP

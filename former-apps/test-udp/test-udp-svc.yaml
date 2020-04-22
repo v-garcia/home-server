@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-udp
+spec:
+  selector:
+    app: test-udp
+  ports:
+    - name: test-udp
+      port: 2039
+      targetPort: 2039
+      protocol: UDP

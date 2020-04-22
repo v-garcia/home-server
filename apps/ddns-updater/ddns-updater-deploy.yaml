@@ -22,15 +22,19 @@ spec:
             - name: ddns-updater-secret
               subPath: config.json
               mountPath: /updater/data/config.json
+            - name: ddns-data
+              mountPath: /updater/data
           env:
-            - name: GOTIFY_URL
-              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-            - name: GOTIFY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: ddns-updater-secret
-                  key: gotify-token
+            # - name: GOTIFY_URL
+            #   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            # - name: GOTIFY_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: ddns-updater-secret
+            #       key: gotify-token
       volumes:
         - name: ddns-updater-secret
           secret:
             secretName: ddns-updater-secret
+        - name: ddns-data
+          emptyDir: {}
