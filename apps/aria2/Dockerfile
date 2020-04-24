@@ -1,10 +1,25 @@
-FROM redwid/aria2-ng:1.1.4
+FROM alpine:3.11.5
 
-# https://registry.hub.docker.com/r/redwid/aria2-ng
-# https://github.com/Redwid/docker-aria2-ng
+ARG ARIA_NG_VERSION=1.1.4
 
-ADD ./scripts/on-dl-finish.sh /usr/bin/on-dl-finish
-RUN chmod +x /usr/bin/on-dl-finish
+COPY /root /
 
-ADD ./scripts/set-defaults.js /aria2-ng/js/set-defaults.js
-RUN sed -i.back 's~<head[^>]*>~&<script type="text/javascript" src="js/set-defaults.js"></script>~' /aria2-ng/index.html
+
+COPY /scripts/on-dl-finish.sh /usr/bin/on-dl-finish
+COPY /scripts/watch-torrents.sh /usr/bin/watch-torrents
+
+RUN apk add --no-cache  bash \
+                        aria2 \
+                        nginx \
+                        inotify-tools \
+                        curl && \
+    cd /aria2-ng && \
+    curl -o archive.zip -L https://github.com/mayswind/AriaNg/releases/download/${ARIA_NG_VERSION}/AriaNg-${ARIA_NG_VERSION}.zip && \
+    unzip archive.zip && \
+    rm archive.zip && \
+	sed -i.back 's~<head[^>]*>~&<script type="text/javascript" src="js/set-defaults.js"></script>~' index.html && \
+    chmod +x /app/start.sh /usr/bin/on-dl-finish /usr/bin/watch-torrents && \
+    rm -rf /var/cache/apk/*
+
+
+CMD ["/app/start.sh"]

@@ -1,30 +1,34 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "$@"
 
 # /!\ Without trailing slash please
-DATA_PATH="/data"
+DATA_PATH="/incomplete"
 DOWNLOAD_PATH="/downloads"
 
+# path of the first file
 path="$3"
-dir=$(dirname "$path")
 
-if [ "$dir" = "$DATA_PATH" ]; then
+# get to the base download dir
+p=$path
+until [[ $DATA_PATH == $p ]]
+do
+  dir=$p
+  parent=$(dirname "$p")
+done
+
+
+if [[ "$dir" = "$DATA_PATH" ]]; then
     dir=$path
 fi
 
-echo "dir: $dir"
-file_name=$(basename "$dir")
-
 body=$( printf '{"title": "New file downloaded!", "message":"File: %s"}' "$file_name")
-
-echo "$body"
 
 mv -f -v "$dir" "$DOWNLOAD_PATH"
 
-wget -O- -q \
-    --header="X-Gotify-Key: $GOTIFY_TOKEN" \
-    --header="Content-type: application/json" \
-    --post-data="$body"\
-    --tries=3 \
-    "$GOTIFY_URL/message"
+curl -XPOST \
+     -H "X-Gotify-Key: $GOTIFY_TOKEN" \
+     -H "Content-type: application/json" \
+     -d "$body"\
+     --retry 3 \
+     "$GOTIFY_URL/message"
