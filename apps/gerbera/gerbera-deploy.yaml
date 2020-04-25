@@ -31,9 +31,6 @@ spec:
             - name: sabnzbd
               subPath: downloads
               mountPath: /sabnzbd
-            - name: jdownloader
-              subPath: downloads
-              mountPath: /jdownloader
             - name: aria2
               subPath: downloads
               mountPath: /aria2
@@ -53,9 +50,6 @@ spec:
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd
-        - name: jdownloader
-          persistentVolumeClaim:
-            claimName: jdownloader
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2

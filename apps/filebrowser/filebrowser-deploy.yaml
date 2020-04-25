@@ -40,9 +40,6 @@ spec:
             - name: sabnzbd
               subPath: downloads
               mountPath: /srv/downloads/watchdir/nzb
-            - name: jdownloader
-              subPath: downloads
-              mountPath: /srv/downloads/jdownloader
             - name: perso
               mountPath: /srv/perso
             - name: public
@@ -57,9 +54,6 @@ spec:
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd
-        - name: jdownloader
-          persistentVolumeClaim:
-            claimName: jdownloader
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2
