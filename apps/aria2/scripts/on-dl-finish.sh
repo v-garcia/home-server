@@ -6,22 +6,23 @@ echo "$@"
 DATA_PATH="/incomplete"
 DOWNLOAD_PATH="/downloads"
 
-# path of the first file
-path="$3"
 
-# get to the base download dir
-p=$path
-until [[ $DATA_PATH == $p ]]
+# file basename
+file_name=$(basename $3)
+
+# get to the base download dir from the first file downloaded
+p="$3"
+until [[ "$DATA_PATH" == "$p" ]]
 do
-  dir=$p
-  parent=$(dirname "$p")
+  bpath="$p"
+  p=$(dirname "$p")
 done
 
-body=$( printf '{"title": "New file downloaded!", "message":"File: %s"}' "$file_name")
+mv -v --backup=t "$bpath" "$DOWNLOAD_PATH"
 
-mv -f -v "$dir" "$DOWNLOAD_PATH"
+body="{\"title\": \"New file downloaded!\", \"message\":\"File: $file_name\\nMove status: $?\"}"
 
-curl -XPOST \
+curl -X POST \
      -H "X-Gotify-Key: $GOTIFY_TOKEN" \
      -H "Content-type: application/json" \
      -d "$body"\

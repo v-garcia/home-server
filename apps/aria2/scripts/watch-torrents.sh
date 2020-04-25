@@ -10,7 +10,7 @@ mkdir -p "$done_dir"
 mkdir -p "$err_dir"
 
 handle_torrent(){
-    b64_torrent=$(base64 "$1" | tr -d \\n)
+    b64_torrent=$(base64 -w 0 "$1")
     uid="AUTOWATCH_$(date +%s)_$(echo "$1" | base64)"
     body="{\"jsonrpc\":\"2.0\", \"method\":\"aria2.addTorrent\", \"id\": \"$uid\", \"params\": [\"$b64_torrent\",[],{}]}"
 

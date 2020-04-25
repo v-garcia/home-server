@@ -13,6 +13,7 @@ RUN apk add --no-cache  bash \
                         aria2 \
                         nginx \
                         inotify-tools \
+                        coreutils \
                         curl && \
     cd /aria2-ng && \
     curl -o archive.zip -L https://github.com/mayswind/AriaNg/releases/download/${ARIA_NG_VERSION}/AriaNg-${ARIA_NG_VERSION}.zip && \
