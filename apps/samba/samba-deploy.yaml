@@ -87,6 +87,9 @@ spec:
             - name: sabnzbd
               subPath: watchdir
               mountPath: /downloads/watchdir/nzb
+            - name: aria2
+              subPath: watchdir
+              mountPath: /downloads/watchdir/aria2
       volumes:
         - name: transmission
           persistentVolumeClaim:

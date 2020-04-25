@@ -10,12 +10,9 @@ mkdir -p "$done_dir"
 mkdir -p "$err_dir"
 
 handle_torrent(){
-    b64_torrent="$(base64 $1 | tr -d \\n)"
+    b64_torrent=$(base64 "$1" | tr -d \\n)
     uid="AUTOWATCH_$(date +%s)_$(echo "$1" | base64)"
     body="{\"jsonrpc\":\"2.0\", \"method\":\"aria2.addTorrent\", \"id\": \"$uid\", \"params\": [\"$b64_torrent\",[],{}]}"
-
-    echo "$b64_torrent" > "$1.b64";
-    echo "$body" > "$1.body";
 
     curl -X POST "http://localhost:$aria2_port/jsonrpc" \
         --fail \
@@ -38,9 +35,9 @@ while read folder _ file; do
 
     if [[ $? -eq 0 ]]
     then
-        mv -v $filename $done_dir
+        mv -v "$filename" "$done_dir"
     else
-        mv -v $filename $err_dir
+        mv -v "$filename" "$err_dir"
     fi
  fi
 done

@@ -17,11 +17,6 @@ do
   parent=$(dirname "$p")
 done
 
-
-if [[ "$dir" = "$DATA_PATH" ]]; then
-    dir=$path
-fi
-
 body=$( printf '{"title": "New file downloaded!", "message":"File: %s"}' "$file_name")
 
 mv -f -v "$dir" "$DOWNLOAD_PATH"

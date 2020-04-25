@@ -31,6 +31,9 @@ spec:
             - name: transmission
               subPath: watchdir
               mountPath: /srv/downloads/watchdir/torrent
+            - name: aria2
+              subPath: watchdir
+              mountPath: /srv/downloads/watchdir/aria2
             - name: sabnzbd
               subPath: downloads
               mountPath: /srv/downloads/sabnzbd

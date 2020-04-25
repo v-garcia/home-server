@@ -27,14 +27,14 @@ spec:
               subPath: downloads
               mountPath: /downloads
             - name: aria2
-              subPath: data
-              mountPath: /data
+              subPath: incomplete
+              mountPath: /incomplete
             - name: aria2
               subPath: watchdir
               mountPath: /watchdir
             - name: aria2-config
               subPath: aria2.conf
-              mountPath: /conf/aria2.conf
+              mountPath: /etc/aria2.conf
           env:
           - name: GOTIFY_URL
             value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
@@ -43,16 +43,14 @@ spec:
               secretKeyRef:
                 name: aria2-secret
                 key: gotify-token
-          # livenessProbe:
-          #   httpGet:
-          #     path: /aria2/web/
-          #     port: aria2
-          #     scheme: HTTP
-          # readinessProbe:
-          #   httpGet:
-          #     path: /aria2/web/
-          #     port: aria2
-          #     scheme: HTTP
+          livenessProbe:
+            exec:
+              command:
+                - /usr/bin/health-check
+          readinessProbe:
+            exec:
+              command:
+                - /usr/bin/health-check
       volumes:
         - name: aria2
           persistentVolumeClaim:

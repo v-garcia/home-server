@@ -7,9 +7,9 @@ data:
     # https://github.com/alanzhangzm/Photon/blob/master/static/aria2/aria2.conf
 
     ### Basic ###
-    dir=/data
-    input-file=/data/.aria2/aria2.session
-    save-session=/data/.aria2/aria2.session
+    dir=/incomplete
+    input-file=/incomplete/.aria2/aria2.session
+    save-session=/incomplete/.aria2/aria2.session
     save-session-interval=30
     force-save=true
 
