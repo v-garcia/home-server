@@ -8,7 +8,7 @@ DOWNLOAD_PATH="/downloads"
 
 
 # file basename
-file_name=$(basename $3)
+file_name=$(basename "$3")
 
 # get to the base download dir from the first file downloaded
 p="$3"

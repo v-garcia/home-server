@@ -10,19 +10,24 @@ mkdir -p "$done_dir"
 mkdir -p "$err_dir"
 
 handle_torrent(){
+    post_file="$1.body"
     b64_torrent=$(base64 -w 0 "$1")
     uid="AUTOWATCH_$(date +%s)_$(echo "$1" | base64)"
-    body="{\"jsonrpc\":\"2.0\", \"method\":\"aria2.addTorrent\", \"id\": \"$uid\", \"params\": [\"$b64_torrent\",[],{}]}"
+    
+    echo -n "{\"jsonrpc\":\"2.0\", \"method\":\"aria2.addTorrent\", \"id\": \"$uid\", \"params\": [\"$b64_torrent\",[],{}]}" > "$post_file"
 
     curl -X POST "http://localhost:$aria2_port/jsonrpc" \
         --fail \
         --retry 2 \
         -H 'Content-Type: application/json;charset=UTF-8' \
         -H 'Cache-Control: no-cache'  \
-        --data-raw "$body";
+        -d "@$post_file";
 
+    handle_success=$?;
 
-    return $?
+    rm -f "$post_file"
+
+    return $handle_success
 }
 
 inotifywait -m $watch_dir -e close_write,moved_to |
