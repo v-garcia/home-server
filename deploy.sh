@@ -6,7 +6,6 @@
 sudo mkdir -p /data/perso/
 sudo mkdir -p /data/public/
 
-sudo mkdir -p /data/jdownloader/
 sudo mkdir -p /data/sabnzbd/
 sudo mkdir -p /data/config/
 sudo mkdir -p /data/workdir/
@@ -70,11 +69,6 @@ kustomize build ./apps/http-server --load_restrictor none | kubectl apply -f -
 docker build ./apps/sabnzbd -t 127.0.0.1:32000/sabnzbd
 docker push 127.0.0.1:32000/sabnzbd
 kustomize build ./apps/sabnzbd --load_restrictor none | kubectl apply -f -
-
-#jdownloader
-docker build ./apps/jdownloader -t 127.0.0.1:32000/jdownloader
-docker push 127.0.0.1:32000/jdownloader
-kustomize build ./apps/jdownloader --load_restrictor none | kubectl apply -f -
 
 #rclone-perso
 docker build ./apps/rclone-perso -t 127.0.0.1:32000/rclone-perso
