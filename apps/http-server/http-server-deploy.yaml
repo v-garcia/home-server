@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: http-server
-          image: 127.0.0.1:32000/http-server
+          image: localhost:32000/http-server
           ports:
             - containerPort: 8000
           volumeMounts:

@@ -26,7 +26,7 @@ spec:
               mountPath: /local.ini
       containers:
         - name: couchdb
-          image: 127.0.0.1:32000/couchdb
+          image: localhost:32000/couchdb
           ports:
             - name: couchdb
               containerPort: 5984

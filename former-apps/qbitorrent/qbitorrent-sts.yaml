@@ -17,7 +17,12 @@ spec:
       initContainers:
         - name: qbitorrent-init
           image: busybox
-          command: ["/bin/sh", "-c" , "mkdir -p /opt/qBittorrent/ && cp -v /qBittorrent.conf /opt/qBittorrent/qBittorrent.conf"]
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "mkdir -p /opt/qBittorrent/ && cp -v /qBittorrent.conf /opt/qBittorrent/qBittorrent.conf",
+            ]
           volumeMounts:
             - name: qbitorrent-config
               subPath: qBittorrent.conf
@@ -27,7 +32,7 @@ spec:
               mountPath: /opt
       containers:
         - name: qbitorrent
-          image: 127.0.0.1:32000/qbitorrent
+          image: localhost:32000/qbitorrent
           ports:
             - name: qbitorrent
               containerPort: 8080
@@ -42,15 +47,15 @@ spec:
               subPath: config
               mountPath: /config
           env:
-          - name: GOTIFY_URL
-            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-          - name: GOTIFY_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: qbitorrent-secret
-                key: gotify-token
-          - name: TZ
-            value: Europe/Paris
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: qbitorrent-secret
+                  key: gotify-token
+            - name: TZ
+              value: Europe/Paris
           livenessProbe:
             httpGet:
               path: /api/v2/app/version

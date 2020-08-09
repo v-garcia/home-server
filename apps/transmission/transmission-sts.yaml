@@ -17,7 +17,7 @@ spec:
       initContainers:
         - name: transmission-init
           image: busybox
-          command: ["/bin/sh", "-c" , "cp -v /settings.json /opt/"]
+          command: ["/bin/sh", "-c", "cp -v /settings.json /opt/"]
           volumeMounts:
             - name: transmission-config
               subPath: settings.json
@@ -27,7 +27,7 @@ spec:
               mountPath: /opt
       containers:
         - name: transmission
-          image: 127.0.0.1:32000/transmission
+          image: localhost:32000/transmission
           ports:
             - name: transmission
               containerPort: 9091
@@ -45,21 +45,21 @@ spec:
               subPath: config
               mountPath: /config
           env:
-          - name: GOTIFY_URL
-            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-          - name: GOTIFY_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: transmission-secret
-                key: gotify-token
-          - name: TZ
-            value: Europe/Paris
-          - name: TRANSMISSION_WEB_HOME
-            value: "/combustion-release/"
-          - name: PUID
-            value: "0"
-          - name: PGID
-            value: "0"
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: transmission-secret
+                  key: gotify-token
+            - name: TZ
+              value: Europe/Paris
+            - name: TRANSMISSION_WEB_HOME
+              value: "/combustion-release/"
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
           livenessProbe:
             httpGet:
               path: /transmission/web/

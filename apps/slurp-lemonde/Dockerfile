@@ -1,0 +1,1 @@
+FROM babardo/slurp-lemonde:latest

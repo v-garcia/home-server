@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: slurp-lemonde-ext
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: external
+spec:
+  tls:
+    - hosts:
+        - lemonde.former-hostname.com
+      secretName: lemonde.former-hostname.com
+  rules:
+    - host: lemonde.former-hostname.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: slurp-lemonde
+              servicePort: 3000

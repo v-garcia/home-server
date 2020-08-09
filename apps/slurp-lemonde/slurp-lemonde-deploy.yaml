@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurp-lemonde
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurp-lemonde
+  template:
+    metadata:
+      labels:
+        app: slurp-lemonde
+    spec:
+      containers:
+        - name: slurp-lemonde
+          image: localhost:32000/slurp-lemonde:latest
+          ports:
+            - name: slurp-lemonde
+              containerPort: 3000
+          volumeMounts:
+            - name: slurp-lemonde
+              subPath: articles
+              mountPath: /usr/src/app/articles
+            - name: slurp-lemonde-secret
+              subPath: cookies.json
+              mountPath: /usr/src/app/cookies.json
+          resources:
+            limits:
+              cpu: 1.5
+              memory: 1.5Gi
+            requests:
+              cpu: 0.1
+              memory: 100Mi
+          env:
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slurp-lemonde-secret
+                  key: gotify-token
+      volumes:
+        - name: slurp-lemonde
+          persistentVolumeClaim:
+            claimName: slurp-lemonde
+        - name: slurp-lemonde-secret
+          secret:
+            secretName: slurp-lemonde-secret

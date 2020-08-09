@@ -31,7 +31,7 @@ spec:
               readOnly: true
       containers:
         - name: gotify
-          image: 127.0.0.1:32000/gotify
+          image: localhost:32000/gotify
           ports:
             - name: gotify
               containerPort: 3000

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: test-udp
-          image: 127.0.0.1:32000/test-udp
+          image: localhost:32000/test-udp
           ports:
             - containerPort: 2039
               protocol: UDP

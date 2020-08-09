@@ -15,7 +15,7 @@ spec:
       hostNetwork: true
       containers:
         - name: minidlna
-          image: 127.0.0.1:32000/minidlna
+          image: localhost:32000/minidlna
           env:
             - name: MINIDLNA_FRIENDLY_NAME
               valueFrom:

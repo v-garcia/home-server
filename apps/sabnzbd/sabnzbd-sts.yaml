@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: sabnzbd
-          image: 127.0.0.1:32000/sabnzbd
+          image: localhost:32000/sabnzbd
           args:
             - --no-login
           ports:

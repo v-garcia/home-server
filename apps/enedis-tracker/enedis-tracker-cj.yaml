@@ -13,7 +13,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: enedis-tracker
-              image: 127.0.0.1:32000/enedis-tracker
+              image: localhost:32000/enedis-tracker
               args:
                 - "daily"
               env:

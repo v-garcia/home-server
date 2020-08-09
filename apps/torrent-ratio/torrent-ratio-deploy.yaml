@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: torrent-ratio
-          image: 127.0.0.1:32000/torrent-ratio
+          image: localhost:32000/torrent-ratio
           volumeMounts:
             - name: torrent-ratio-secret
               subPath: t.torrent

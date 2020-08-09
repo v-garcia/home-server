@@ -27,13 +27,12 @@ snap install yq
 
 # microk8s
 ```
-sudo snap install microk8s --classic --edge  
+sudo snap install microk8s --classic
 sudo usermod -a -G microk8s vincent  
 sudo microk8s.enable metrics-server dns storage registry ingress  
 microk8s.stop && microk8s.start  
 sudo snap alias microk8s.kubectl kubectl  
 sudo iptables -P FORWARD ACCEPT   
-sudo usermod -a -G microk8s \${USER}  
 '' iptables-save -f /etc/iptables/iptables.rules  
 ```
 
@@ -75,5 +74,9 @@ Run deploy.sh
 
 # Issue help
 
+## Node maintenance
 See node managment info  
 https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/#maintenance-on-a-node  
+
+## Trouve uninstalling micok8s
+https://github.com/ubuntu/microk8s/issues/58#issuecomment-400647932

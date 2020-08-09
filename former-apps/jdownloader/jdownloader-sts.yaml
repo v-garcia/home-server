@@ -17,7 +17,7 @@ spec:
       containers:
         - name: jdownloader
           imagePullPolicy: Always
-          image: 127.0.0.1:32000/jdownloader
+          image: localhost:32000/jdownloader
           env:
             - name: EMAIL
               valueFrom:

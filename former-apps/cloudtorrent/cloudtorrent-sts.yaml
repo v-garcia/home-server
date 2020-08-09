@@ -26,7 +26,7 @@ spec:
               mountPath: /cloud-torrent.json
       containers:
         - name: cloudtorrent
-          image: 127.0.0.1:32000/cloudtorrent
+          image: localhost:32000/cloudtorrent
           ports:
             - name: cloudtorrent
               containerPort: 3000

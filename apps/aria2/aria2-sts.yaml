@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: aria2
-          image: 127.0.0.1:32000/aria2
+          image: localhost:32000/aria2
           ports:
             - name: aria2-static
               containerPort: 80
@@ -36,13 +36,13 @@ spec:
               subPath: aria2.conf
               mountPath: /etc/aria2.conf
           env:
-          - name: GOTIFY_URL
-            value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-          - name: GOTIFY_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: aria2-secret
-                key: gotify-token
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aria2-secret
+                  key: gotify-token
           livenessProbe:
             exec:
               command:

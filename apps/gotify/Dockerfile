@@ -1,4 +1,4 @@
-FROM gotify/server:2.0.13
+FROM gotify/server:2.0.16
 
 # https://hub.docker.com/r/gotify/server/tags
 # https://github.com/cthit/gotify

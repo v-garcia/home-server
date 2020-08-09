@@ -15,7 +15,7 @@ spec:
       hostNetwork: true
       containers:
         - name: gerbera
-          image: 127.0.0.1:32000/gerbera
+          image: localhost:32000/gerbera
           livenessProbe:
             tcpSocket:
               port: 49152

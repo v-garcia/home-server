@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ddns-updater
-          image: 127.0.0.1:32000/ddns-updater
+          image: localhost:32000/ddns-updater
           ports:
             - name: ddns-updater
               containerPort: 8000

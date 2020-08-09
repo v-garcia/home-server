@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: supysonic
-          image: 127.0.0.1:32000/supysonic
+          image: localhost:32000/supysonic
           ports:
             - containerPort: 8080
           lifecycle:

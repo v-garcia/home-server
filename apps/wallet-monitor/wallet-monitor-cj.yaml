@@ -12,7 +12,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: wallet-monitor
-              image: 127.0.0.1:32000/wallet-monitor
+              image: localhost:32000/wallet-monitor
               env:
                 - name: GOTIFY_TOKEN
                   valueFrom:

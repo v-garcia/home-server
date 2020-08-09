@@ -15,15 +15,15 @@ spec:
     spec:
       containers:
         - name: upload
-          image: 127.0.0.1:32000/upload
+          image: localhost:32000/upload
           ports:
             - name: upload
               containerPort: 8080
           livenessProbe:
-              httpGet:
-                path: /healthz
-                port: upload
-                scheme: HTTP
+            httpGet:
+              path: /healthz
+              port: upload
+              scheme: HTTP
           readinessProbe:
             httpGet:
               path: /healthz

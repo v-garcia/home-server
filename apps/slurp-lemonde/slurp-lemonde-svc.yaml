@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: slurp-lemonde
+spec:
+  type: ClusterIP
+  selector:
+    app: slurp-lemonde
+  ports:
+    - name: slurp-lemonde
+      port: 3000
+      targetPort: 3000

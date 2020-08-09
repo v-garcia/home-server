@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: heimdall
-          image: 127.0.0.1:32000/heimdall
+          image: localhost:32000/heimdall
           ports:
             - containerPort: 80
           volumeMounts:
@@ -22,8 +22,8 @@ spec:
               subPath: config
               mountPath: /config
           env:
-          - name: TZ
-            value: Europe/Paris
+            - name: TZ
+              value: Europe/Paris
       volumes:
         - name: heimdall
           persistentVolumeClaim:

@@ -30,7 +30,7 @@ spec:
                   mountPath: /rclone-filter
           containers:
             - name: rclone-perso
-              image: 127.0.0.1:32000/rclone-perso
+              image: localhost:32000/rclone-perso
               args:
                 - --filters-file
                 - "/filters/rclone-filter"

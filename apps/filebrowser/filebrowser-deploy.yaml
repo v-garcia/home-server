@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: filebrowser
-          image: 127.0.0.1:32000/filebrowser
+          image: localhost:32000/filebrowser
           args:
             - --noauth
             - --database

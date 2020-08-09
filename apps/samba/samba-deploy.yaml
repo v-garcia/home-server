@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: samba
-          image: 127.0.0.1:32000/samba
+          image: localhost:32000/samba
           args:
             - -u
             - "$(SAMBA_USR);$(SAMBA_PWD)"
