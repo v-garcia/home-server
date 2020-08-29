@@ -16,12 +16,12 @@ FROM alpine:3.11.5 as build-rclone-sync
 
 RUN apk add --no-cache git && \
       git clone --depth=1 https://github.com/cjnaz/rclonesync-V2.git /opt/ && \
-      chmod +x /opt/rclonesync.py
+      chmod +x /opt/rclonesync
 
 
 FROM python:3.9-rc-alpine3.10
 
-COPY --from=build-rclone-sync /opt/rclonesync.py /usr/bin/rclonesync
+COPY --from=build-rclone-sync /opt/rclonesync /usr/bin/rclonesync
 COPY --from=build-rclone /rclone /usr/bin
 COPY --from=build-rclone /etc/ssl/certs /etc/ssl/certs
 COPY run.py /run.py
