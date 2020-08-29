@@ -25,12 +25,6 @@ spec:
             - name: filebrowser
               containerPort: 3000
           volumeMounts:
-            - name: transmission
-              subPath: downloads
-              mountPath: /srv/downloads/torrent
-            - name: transmission
-              subPath: watchdir
-              mountPath: /srv/downloads/watchdir/torrent
             - name: aria2
               subPath: watchdir
               mountPath: /srv/downloads/watchdir/aria2
@@ -51,9 +45,6 @@ spec:
               subPath: workingdir
               mountPath: /root/workingdir
       volumes:
-        - name: transmission
-          persistentVolumeClaim:
-            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

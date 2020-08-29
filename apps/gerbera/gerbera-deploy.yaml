@@ -25,9 +25,6 @@ spec:
           volumeMounts:
             - name: public
               mountPath: /public
-            - name: transmission
-              subPath: downloads
-              mountPath: /torrent
             - name: sabnzbd
               subPath: downloads
               mountPath: /sabnzbd
@@ -44,9 +41,6 @@ spec:
         - name: public
           persistentVolumeClaim:
             claimName: public
-        - name: transmission
-          persistentVolumeClaim:
-            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

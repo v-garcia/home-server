@@ -68,9 +68,6 @@ spec:
           #   - containerPort: 138
           #     protocol: UDP
           volumeMounts:
-            - name: transmission
-              subPath: downloads
-              mountPath: /downloads/torrent
             - name: sabnzbd
               subPath: downloads
               mountPath: /downloads/sabnzbd
@@ -81,9 +78,6 @@ spec:
               mountPath: /perso
             - name: public
               mountPath: /public
-            - name: transmission
-              subPath: watchdir
-              mountPath: /downloads/watchdir/torrent
             - name: sabnzbd
               subPath: watchdir
               mountPath: /downloads/watchdir/nzb
@@ -91,9 +85,6 @@ spec:
               subPath: watchdir
               mountPath: /downloads/watchdir/aria2
       volumes:
-        - name: transmission
-          persistentVolumeClaim:
-            claimName: transmission
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd
