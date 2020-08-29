@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Regarder une page de Le Monde</title>
+    <link rel="shortcut icon" href="https://serve.former-hostname.com/static/pacman.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .rotate {
+            display: inline-block;
+            animation: rotation 2s infinite linear;
+        }
+
+        @keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(359deg);
+            }
+        }
+
+        @media all and (max-width: 512px) {
+
+            .input-url,
+            .logo,
+            .submit-btn {
+                width: 100%;
+            }
+        }
+
+        @media all and (min-width: 512px) {
+
+            .submit-btn {
+                margin-left: 144px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img src="https://hostpic.xyz/images/2020/07/04/slurp.png" class="logo" alt="Logo">
+    <form action="/" method="post" id="form">
+        <label for="page_url">Saisir l'url de l'article:</label>
+        <input type="url" id="page_url" name="page_url" size="54" type="url" class="input-url" required
+            onClick="this.select();" placeholder="https://www.lemonde.fr/curling/article/xxxx"><br>
+        <input id="submit" class="submit-btn" type="submit" class="submit-btn" style=" margin-top: 1em; padding: .5em;"
+            value="🖕 Je finance pas la presse 🖕"><span id="loading"
+            style="visibility:hidden;display:inline-block;padding-left: 1em;"><span>En avant Guingamp
+                !</span><span class="rotate" style="margin-left:.5em;">⏳</span></span>
+    </form>
+</body>
+<script>
+    const submitElem = document.getElementById('submit');
+    const form = document.getElementById('form');
+    const input = document.getElementById('page_url');
+
+    window.addEventListener('pageshow', () => {
+        input.focus();
+        document.getElementById('loading').style.visibility = 'hidden';
+        submitElem.disabled = false;
+    });
+
+
+    form.addEventListener('submit', () => {
+        submitElem.disabled = true;
+        document.getElementById('loading').style.visibility = 'visible';
+    });
+</script>
+
+
+</html>
