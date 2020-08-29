@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: navidrome-local
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    type: local
+spec:
+  rules:
+    - host: navidrome.local
+      http:
+        paths:
+          - backend:
+              serviceName: navidrome
+              servicePort: 4533
+            path: /

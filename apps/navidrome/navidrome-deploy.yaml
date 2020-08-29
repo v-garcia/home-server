@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navidrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: navidrome
+  template:
+    metadata:
+      labels:
+        app: navidrome
+    spec:
+      containers:
+        - name: navidrome
+          image: localhost:32000/navidrome
+          ports:
+            - containerPort: 4533
+          volumeMounts:
+            - name: public
+              subPath: music
+              mountPath: /music
+              readOnly: true
+            - name: navidrome
+              subPath: data
+              mountPath: /data
+          env:
+            - name: ND_SCANINTERVAL
+              value: 10m
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: navidrome
+          persistentVolumeClaim:
+            claimName: navidrome

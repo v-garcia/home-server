@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: navidrome-ext
+  labels:
+    type: external
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - navidrome.former-hostname.com
+      secretName: navidrome.former-hostname.com
+  rules:
+    - host: navidrome.former-hostname.com
+      http:
+        paths:
+          - backend:
+              serviceName: navidrome
+              servicePort: 4533
+            path: /
