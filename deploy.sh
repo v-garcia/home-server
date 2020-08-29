@@ -13,11 +13,11 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
-sudo mkdir -p /data/transmission/
 sudo mkdir -p /data/gerbera/
 sudo mkdir -p /data/aria2/
 sudo mkdir -p /data/heimdall/
 sudo mkdir -p /data/slurp-lemonde/
+sudo mkdir -p /data/navidrome
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -25,7 +25,7 @@ sudo mkdir -p /data/slurp-lemonde/
 # https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
 
 kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.2/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.16.1/cert-manager.yaml
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -56,7 +56,7 @@ kustomize build ./global/ --load_restrictor none | kubectl apply -f -
 
 #dashboard
 # uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/alternative.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/alternative.yaml
 ./apps/dashboard/gen-resources.sh | kubectl apply -f -
 
 #ddns-updater
@@ -79,15 +79,10 @@ docker build ./apps/rclone-perso -t localhost:32000/rclone-perso
 docker push localhost:32000/rclone-perso
 kustomize build ./apps/rclone-perso --load_restrictor none | kubectl apply -f -
 
-#gmusicuploader
-docker build ./apps/gmusicuploader -t localhost:32000/gmusicuploader
-docker push localhost:32000/gmusicuploader
-kustomize build ./apps/gmusicuploader --load_restrictor none | kubectl apply -f -
-
-#supysonic
-docker build ./apps/supysonic -t localhost:32000/supysonic
-docker push localhost:32000/supysonic
-kustomize build ./apps/supysonic --load_restrictor none | kubectl apply -f -
+#navidrome
+docker build ./apps/navidrome -t localhost:32000/navidrome
+docker push localhost:32000/navidrome
+kustomize build ./apps/navidrome --load_restrictor none | kubectl apply -f -
 
 #samba
 docker build ./apps/samba -t localhost:32000/samba
@@ -124,11 +119,6 @@ kustomize build ./apps/upload --load_restrictor none | kubectl apply -f -
 docker build ./apps/wallet-monitor -t localhost:32000/wallet-monitor
 docker push localhost:32000/wallet-monitor
 kustomize build ./apps/wallet-monitor --load_restrictor none | kubectl apply -f -
-
-#transmission
-docker build ./apps/transmission -t localhost:32000/transmission
-docker push localhost:32000/transmission
-kustomize build ./apps/transmission --load_restrictor none | kubectl apply -f -
 
 #torrent-ratio
 docker build ./apps/torrent-ratio -t localhost:32000/torrent-ratio

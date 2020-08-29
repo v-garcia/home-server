@@ -71,12 +71,3 @@ Fill patch 'overlays/pv-node affinity' with the main node name
 ## Deploy
 
 Run deploy.sh  
-
-# Issue help
-
-## Node maintenance
-See node managment info  
-https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/#maintenance-on-a-node  
-
-## Trouve uninstalling micok8s
-https://github.com/ubuntu/microk8s/issues/58#issuecomment-400647932
