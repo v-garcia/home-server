@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gerbera
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gerbera
+  template:
+    metadata:
+      labels:
+        app: gerbera
+    spec:
+      hostNetwork: true
+      containers:
+        - name: gerbera
+          image: localhost:32000/gerbera
+          livenessProbe:
+            tcpSocket:
+              port: 49152
+          readinessProbe:
+            tcpSocket:
+              port: 49152
+          ports:
+            - containerPort: 8200
+          volumeMounts:
+            - name: public
+              mountPath: /public
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /sabnzbd
+            - name: aria2
+              subPath: downloads
+              mountPath: /aria2
+            - name: gerbera
+              subPath: home
+              mountPath: /root/
+            - name: gerbera-config
+              subPath: config.xml
+              mountPath: /root/.config/gerbera/config.xml
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2
+        - name: gerbera
+          persistentVolumeClaim:
+            claimName: gerbera
+        - name: gerbera-config
+          configMap:
+            name: gerbera-config
