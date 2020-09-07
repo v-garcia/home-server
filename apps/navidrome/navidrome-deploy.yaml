@@ -28,6 +28,8 @@ spec:
           env:
             - name: ND_SCANINTERVAL
               value: 10m
+            - name: ND_AUTOIMPORTPLAYLISTS
+              value: "false"
       volumes:
         - name: public
           persistentVolumeClaim:
