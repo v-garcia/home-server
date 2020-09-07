@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minidlna
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minidlna
+  template:
+    metadata:
+      labels:
+        app: minidlna
+    spec:
+      hostNetwork: true
+      containers:
+        - name: minidlna
+          image: localhost:32000/minidlna
+          # livenessProbe:
+          #   tcpSocket:
+          #     port: 8200
+          # readinessProbe:
+          #   tcpSocket:
+          #     port: 8200
+          volumeMounts:
+            - name: public
+              mountPath: /media/public
+            - name: aria2
+              subPath: downloads
+              mountPath: /media/aria2
+            - name: sabnzbd
+              subPath: downloads
+              mountPath: /media/sabnzbd
+            - name: minidlna
+              subPath: data
+              mountPath: /data
+            - name: config
+              subPath: minidlna.conf
+              mountPath: /etc/minidlna.conf
+      volumes:
+        - name: minidlna
+          persistentVolumeClaim:
+            claimName: minidlna
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2
+        - name: sabnzbd
+          persistentVolumeClaim:
+            claimName: sabnzbd
+        - name: config
+          configMap:
+            name: minidlna
+            items:
+              - key: minidlna.conf
+                path: minidlna.conf

@@ -13,7 +13,7 @@ sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
-sudo mkdir -p /data/gerbera/
+sudo mkdir -p /data/minidlna/
 sudo mkdir -p /data/aria2/
 sudo mkdir -p /data/heimdall/
 sudo mkdir -p /data/slurp-lemonde/
@@ -90,10 +90,10 @@ docker push localhost:32000/samba
 kustomize build ./apps/samba --load_restrictor none | kubectl apply -f -
 ./apps/samba/patch-ingress.sh # redirect samba ports in ingress
 
-#gerbera
-docker build ./apps/gerbera -t localhost:32000/gerbera
-docker push localhost:32000/gerbera
-kustomize build ./apps/gerbera --load_restrictor none | kubectl apply -f -
+#minidlna
+docker build ./apps/minidlna -t localhost:32000/minidlna
+docker push localhost:32000/minidlna
+kustomize build ./apps/minidlna --load_restrictor none | kubectl apply -f -
 
 #filebrowser
 docker build ./apps/filebrowser -t localhost:32000/filebrowser
