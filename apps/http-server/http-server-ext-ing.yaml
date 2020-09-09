@@ -17,5 +17,5 @@ spec:
         paths:
           - backend:
               serviceName: http-server
-              servicePort: 8000
+              servicePort: 3000
             path: /

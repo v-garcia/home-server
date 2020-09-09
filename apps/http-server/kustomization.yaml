@@ -5,6 +5,7 @@ resources:
   - http-server-local-ing.yaml
   - http-server-deploy.yaml
   - http-server-svc.yaml
+  - http-server-cm.yaml
 patches:
   - path: ../../overlays/pv-node-affinity.yaml
     target:

@@ -16,14 +16,32 @@ spec:
         - name: http-server
           image: localhost:32000/http-server
           ports:
-            - containerPort: 8000
+            - name: http-server
+              containerPort: 3000
           volumeMounts:
             - name: public
               subPath: serve
-              mountPath: /data
-          args:
-            - /data
+              mountPath: /var/www
+            - name: config
+              subPath: nginx.conf
+              mountPath: /etc/nginx/nginx.conf
+          livenessProbe:
+            httpGet:
+              path: /.health
+              port: http-server
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /.health
+              port: http-server
+              scheme: HTTP
       volumes:
         - name: public
           persistentVolumeClaim:
             claimName: public
+        - name: config
+          configMap:
+            name: http-server
+            items:
+              - key: nginx.conf
+                path: nginx.conf
