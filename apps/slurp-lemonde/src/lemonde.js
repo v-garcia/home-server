@@ -59,9 +59,13 @@ async function slurpPage(url, optionsOverride) {
     }
 
     const pageData = await page.evaluate(async options => {
+
         // specific lmd instructions to remove uneeded stufs
 
         document.getElementsByClassName('User')[0].remove();
+
+        document.getElementById('iubenda-cs-banner')
+            && document.getElementById('iubenda-cs-banner').remove();
 
         // plugin call
         const pageData = await singlefile.lib.getPageData(options);
