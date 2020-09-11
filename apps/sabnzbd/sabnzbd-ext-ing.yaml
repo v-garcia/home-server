@@ -1,4 +1,5 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
+
 kind: Ingress
 metadata:
   name: sabnzbd-ext
@@ -17,6 +18,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: sabnzbd
-              servicePort: 80
+              service:
+                name: sabnzbd
+                port:
+                  number: 80
             path: /
+            pathType: Prefix

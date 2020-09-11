@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: http-server-local
@@ -12,6 +12,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: http-server
-              servicePort: 8000
+              service:
+                name: http-server
+                port:
+                  number: 3000
             path: /
+            pathType: Prefix

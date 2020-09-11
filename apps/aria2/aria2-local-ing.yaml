@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: aria2-local
@@ -12,10 +12,16 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: aria2
-              servicePort: 80
+              service:
+                name: aria2
+                port:
+                  number: 80
             path: /
+            pathType: Prefix
           - backend:
-              serviceName: aria2
-              servicePort: 6800
+              service:
+                name: aria2
+                port:
+                  number: 6800
             path: /jsonrpc
+            pathType: Exact

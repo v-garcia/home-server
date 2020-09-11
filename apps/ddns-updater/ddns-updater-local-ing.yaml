@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ddns-updater-local
@@ -12,6 +12,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: ddns-updater
-              servicePort: 8000
+              service:
+                name: ddns-updater
+                port:
+                  number: 8000
             path: /
+            pathType: Prefix

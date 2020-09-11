@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: upload-local
@@ -13,6 +13,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: upload
-              servicePort: 8080
+              service:
+                name: upload
+                port:
+                  number: 8080
             path: /
+            pathType: Prefix

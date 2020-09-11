@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: gotify-ext
@@ -16,6 +16,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: gotify
-              servicePort: 3000
+              service:
+                name: gotify
+                port:
+                  number: 3000
             path: /
+            pathType: Prefix

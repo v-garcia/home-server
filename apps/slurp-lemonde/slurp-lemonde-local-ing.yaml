@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: slurp-lemonde-local
@@ -12,6 +12,9 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: slurp-lemonde
-              servicePort: 3000
+              service:
+                name: slurp-lemonde
+                port:
+                  number: 3000
             path: /
+            pathType: Prefix
