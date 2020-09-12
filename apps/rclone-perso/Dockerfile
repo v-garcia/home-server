@@ -1,29 +1,32 @@
-FROM alpine:3.11.5 as build-rclone
+FROM alpine:3.12.0 as build-rclone
+
+WORKDIR /opt/
 
 # Rclone version
-ENV RCLONE_VERSION "1.51.0"
+ENV RCLONE_VERSION "v1.53.0"
 
 # Quietly download rclone
-RUN wget -q -O rclone.zip https://github.com/rclone/rclone/releases/download/v$RCLONE_VERSION/rclone-v$RCLONE_VERSION-linux-amd64.zip
+RUN wget -q -O rclone.zip https://github.com/rclone/rclone/releases/download/$RCLONE_VERSION/rclone-$RCLONE_VERSION-linux-amd64.zip && \
+      unzip -j rclone.zip *rclone && \
+      chmod +x rclone
 
-# Unzip without folder structure
-RUN unzip -j rclone.zip *rclone
+FROM alpine:3.12.0 as build-rclone-sync
 
-RUN chmod +x rclone
+WORKDIR /opt/
+ENV RCLONE_SYNC_VERSION "V3.1"
 
-
-FROM alpine:3.11.5 as build-rclone-sync
-
-RUN apk add --no-cache git && \
-      git clone --depth=1 https://github.com/cjnaz/rclonesync-V2.git /opt/ && \
-      chmod +x /opt/rclonesync
+RUN wget -q -O rclone-sync.zip https://github.com/cjnaz/rclonesync-V2/archive/$RCLONE_SYNC_VERSION.zip && \
+      unzip -j rclone-sync.zip *rclonesync && \
+      chmod +x rclonesync
 
 
-FROM python:3.9-rc-alpine3.10
 
-COPY --from=build-rclone-sync /opt/rclonesync /usr/bin/rclonesync
-COPY --from=build-rclone /rclone /usr/bin
-COPY --from=build-rclone /etc/ssl/certs /etc/ssl/certs
+FROM python:3.9-rc-alpine3.12
+
+COPY --from=build-rclone-sync /opt/rclonesync /usr/bin
+COPY --from=build-rclone /opt/rclone /usr/bin
+# COPY --from=build-rclone /etc/ssl/certs /etc/ssl/certs
+
 COPY run.py /run.py
 RUN chmod +x /run.py
 

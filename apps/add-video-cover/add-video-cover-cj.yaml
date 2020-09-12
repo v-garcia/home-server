@@ -1,0 +1,45 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: add-video-cover
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "*/30 * * * *" # Every 3 hour
+  startingDeadlineSeconds: 10 # https://stackoverflow.com/questions/51065538/what-does-kubernetes-cronjobs-startingdeadlineseconds-exactly-mean
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 14400 # 4 hours
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: add-video-cover
+              image: localhost:32000/add-video-cover
+              env:
+                - name: TMDB_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: add-video-cover-secret
+                      key: dmdb-api-key
+                - name: PATH
+                  value: "/media/"
+              volumeMounts:
+                - name: public
+                  mountPath: /media/public
+                - name: aria2
+                  subPath: downloads
+                  mountPath: /media/aria2
+                - name: sabnzbd
+                  subPath: downloads
+                  mountPath: /media/sabnzbd
+          volumes:
+            - name: public
+              persistentVolumeClaim:
+                claimName: public
+            - name: aria2
+              persistentVolumeClaim:
+                claimName: aria2
+            - name: sabnzbd
+              persistentVolumeClaim:
+                claimName: sabnzbd

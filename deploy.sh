@@ -144,3 +144,8 @@ kustomize build ./apps/heimdall --load_restrictor none | kubectl apply -f -
 docker build ./apps/couchdb -t localhost:32000/couchdb
 docker push localhost:32000/couchdb
 kustomize build ./apps/couchdb --load_restrictor none | kubectl apply -f -
+
+#add-video-cover
+docker build ./apps/add-video-cover -t localhost:32000/add-video-cover
+docker push localhost:32000/add-video-cover
+kustomize build ./apps/add-video-cover --load_restrictor none | kubectl apply -f -
