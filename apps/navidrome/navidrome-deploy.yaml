@@ -30,6 +30,10 @@ spec:
               value: 10m
             - name: ND_AUTOIMPORTPLAYLISTS
               value: "false"
+            - name: ND_UIWELCOMEMESSAGE
+              value: "Bienvenue sur le serveur musical de Babardo !"
+            - name: ND_SESSIONTIMEOUT
+              value: 8760h
       volumes:
         - name: public
           persistentVolumeClaim:

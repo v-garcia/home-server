@@ -7,9 +7,9 @@ data:
     # https://github.com/alanzhangzm/Photon/blob/master/static/aria2/aria2.conf
 
     ### Basic ###
-    dir=/incomplete
-    input-file=/incomplete/.aria2/aria2.session
-    save-session=/incomplete/.aria2/aria2.session
+    dir=/downloads
+    input-file=/data/.aria2/aria2.session
+    save-session=/data/.aria2/aria2.session
     save-session-interval=30
     force-save=true
 
@@ -29,6 +29,7 @@ data:
     rpc-listen-all=true
     rpc-allow-origin-all=true
     rpc-listen-port=6800
+    rpc-save-upload-metadata=false
 
     ### Advanced ###
 
@@ -37,6 +38,7 @@ data:
     file-allocation=falloc
     log-level=info
     log=/var/log/aria2.log
+    auto-save-interval=0
 
     ### BitTorrent ###
 

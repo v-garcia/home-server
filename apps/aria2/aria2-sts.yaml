@@ -27,8 +27,8 @@ spec:
               subPath: downloads
               mountPath: /downloads
             - name: aria2
-              subPath: incomplete
-              mountPath: /incomplete
+              subPath: data
+              mountPath: /data
             - name: aria2
               subPath: watchdir
               mountPath: /watchdir

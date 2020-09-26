@@ -19,11 +19,12 @@ handle_torrent(){
     curl -X POST "http://localhost:$aria2_port/jsonrpc" \
         --fail \
         --retry 2 \
+        --max-time 10 \
         -H 'Content-Type: application/json;charset=UTF-8' \
         -H 'Cache-Control: no-cache'  \
         -d "@$post_file";
 
-    handle_success=$?;
+    handle_success=$?
 
     rm -f "$post_file"
 
@@ -36,6 +37,9 @@ while read folder _ file; do
  if [[ -f "$filename" && $filename =~ .torrent$ ]]; then 
 
     echo "Handling torrent $filename"
+
+    sleep 1
+
     handle_torrent "$filename"
 
     if [[ $? -eq 0 ]]
