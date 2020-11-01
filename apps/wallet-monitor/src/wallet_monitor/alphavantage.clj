@@ -18,22 +18,27 @@
 (def ^:private is-number?
   (partial re-find #"^-?\d+\.?\d*$"))
 
+(def stocks
+  {"LU1681038672" "RS2K.PAR"
+   "FR0010688168" "CS5.PAR"
+   "FR0010688192" "CH5.PAR"
+   "IE00B945VV12" "VEUR.AMS"
+   "FR0010900076" "ESM.PAR"
+   "FR0013412020" "PAEEM.PAR"
+   "FR0011869304" "PMEH.PAR"
+   "FR0013412285" "PE500.PAR"
+   "LU1377382285" "VALU.FRK"
+
+   "LU1834985845" "FOO.PAR"
+   "LU1681041544" "CEM.PAR"})
+
 ; Note get alphavantage symbol:
 ; https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=FR0013412285&apikey=
 (defn ^:private isin->av-sym
   [isin]
   {:pre [(s/valid? ::d/isin isin)]
    :post [(s/valid? some? %)]}
-  (get {"LU1681038672" "RS2K.PAR"
-        "FR0010688168" "CS5.PAR"
-        "FR0010688192" "CH5.PAR"
-        "IE00B945VV12" "VEUR.AMS"
-        "FR0010900076" "ESM.PAR"
-        "FR0013412020" "PAEEM.PAR"
-        "FR0011869304" "PMEH.PAR"
-        "FR0013412285" "PE500.PAR"
-        "LU1377382285" "VALU.FRK"}
-       isin))
+  (get stocks isin))
 
 
 (defn ^:private isin->currency
@@ -61,7 +66,7 @@
         (when-let [msg (:note %)]
           (throw (ex-info (str "Api quota exceeded ") {:msg msg})))
         (when-let [error (:error-message %)]
-            (throw (ex-info (str "Unknow alphavantage error") {:msg error})))
+          (throw (ex-info (str "Unknow alphavantage error") {:msg error})))
         %))
     :global-quote
     parse-num-values))

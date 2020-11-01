@@ -89,18 +89,23 @@
 
 
 (comment
-  
+
   (stocks/get-quote! ::stocks/yahoo "IE00B945VV12")
   (store/load-wallet-of! (utils/working-yesterday))
+
   (-main)
+  (store/load-wallet!)
   (get-wallet-w-price-memo!)
+
+  (clojure.set/difference
+   (->> (store/load-wallet!) (map :isin) set)
+   #_(-> wallet-monitor.alphavantage/stocks keys set)
+   (-> wallet-monitor.yahoo/stocks keys set)
+   #_(-> wallet-monitor.boursedirect/stocks keys set))
 
   (wal/diff-new-amount (get-wallet-w-price-memo!) {:amount   2000.0
                                                    :currency :EUR})
-  ((partial check-wallet-repartition! wal/repartition-diff-add-amout {
-                                                                      :amount   2000.0,
-                                                                      :currency :EUR
-                                                                      
-                                                                      }))
+  ((partial check-wallet-repartition! wal/repartition-diff-add-amout {:amount   2000.0
+                                                                      :currency :EUR}))
 
   (start-action! "save-wallet" save-wallet-state!))

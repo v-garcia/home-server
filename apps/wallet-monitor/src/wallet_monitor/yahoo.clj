@@ -1,39 +1,40 @@
-(ns wallet-monitor.yahoo  
-  (:require 
-            [clojure.string :as string]
-            [wallet-monitor.stocks :as stocks]
-            [wallet-monitor.domain :as d]
-            [clojure.spec.alpha :as s]
-            [diehard.core :as dh]
-            [taoensso.timbre :as timbre :refer [warn info]])
+(ns wallet-monitor.yahoo
+  (:require
+   [clojure.string :as string]
+   [wallet-monitor.stocks :as stocks]
+   [wallet-monitor.domain :as d]
+   [clojure.spec.alpha :as s]
+   [diehard.core :as dh]
+   [taoensso.timbre :as timbre :refer [warn info]])
   (:import [yahoofinance YahooFinance]))
 
+(def stocks {"LU1681038672" "RS2K.PA"
+             "FR0010688168" "CS5.PA"
+             "FR0010688192" "CH5.PA"
+             "IE00B945VV12" "VGEU.DE"
+             "FR0010900076" "ESM.PA"
+             "FR0013412020" "PAEEM.PA"
+             "FR0011869304" "PMEH.PA"
+             "FR0013412285" "PE500.PA"
+             "LU1377382285" "VALU.F"
+             "LU1834985845" "FOO.PA"
+             "LU1681041544" "CEM.PA"})
 
+; Search on https://fr.finance.yahoo.com
 (defn ^:private isin->av-sym
   [isin]
   {:pre [(s/valid? ::d/isin isin)]
    :post [(s/valid? some? %)]}
-  (get {"LU1681038672" "RS2K.PA"
-        "FR0010688168" "CS5.PA"
-        "FR0010688192" "CH5.PA"
-        "IE00B945VV12" "VGEU.DE"
-        "FR0010900076" "ESM.PA"
-        "FR0013412020" "PAEEM.PA"
-        "FR0011869304" "PMEH.PA"
-        "FR0013412285" "PE500.PA"
-        "LU1377382285" "VALU.F"}
-       isin))
+  (get stocks isin))
 
 
 (defn get-yahoo-quote!
   [sym]
-  (let 
+  (let
    [stock (YahooFinance/get sym)
     c     (-> stock .getCurrency string/upper-case keyword)
-    p     (-> stock .getQuote .getPrice .doubleValue)
-    ]
-    {:amount p :currency c}
-    ))
+    p     (-> stock .getQuote .getPrice .doubleValue)]
+    {:amount p :currency c}))
 
 (defn get-quote!
   [isin]

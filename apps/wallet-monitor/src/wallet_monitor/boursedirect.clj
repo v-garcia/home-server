@@ -23,7 +23,7 @@
    "LU1377382285" {:libelle "BNPP Value EU"
                    :mnemo "EVAE"
                    :explain "EUR: Sociétés sous-évaluées"}
-   
+
    ; Removed
    "FR0010688168" {:libelle "AMUNDI PEA SP500"
                    :mnemo "CS5"
@@ -33,10 +33,10 @@
                    :explain "EUR: Petite capitalisation"}
 
     ; Added 09/10/2020
-    "LU1834985845" {:libelle "LYXOR STX EU FO BE"
-                   :mnemo "RTA"
+   "LU1834985845" {:libelle "LYXOR STX EU FO BE"
+                   :mnemo "FOO"
                    :explain "EUR: Biens de conso courantes"}
-    "LU1681041544" {:libelle "AMUNDI ETF EUR MID "
+   "LU1681041544" {:libelle "AMUNDI ETF EUR MID "
                    :mnemo "CEM"
                    :explain "EUR: Petite capitalisation"}})
 
