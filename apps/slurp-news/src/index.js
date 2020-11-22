@@ -76,12 +76,16 @@ fastify.post('/api/checkUrl', async ({ body }, reply) => {
 
 fastify.get('/api/providers', async (req, reply) => {
 
-    const res = providers.all.map(async ({ name, url, fullName }) => ({
-        name,
-        url,
-        fullName,
-        ...(req.query.withStatus ? { isLogged: (await x.isLogged()) } : {})
-    }));
+    const res = providers.all.map(async p => {
+        const { name, url, fullName } = p;
+
+        return {
+            name, url, fullName,
+            ...(req.query.withStatus ? { isLogged: (await p.isLogged()) } : {})
+        };
+
+
+    });
 
     reply.send(await Promise.all(res));
 })
