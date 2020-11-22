@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Lire des articles</title>
+    <link rel="shortcut icon" href="favicons/pacman.ico">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/skeleton.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <link rel="stylesheet" href="css/custom-loader.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./js/icons.js"></script>
+</head>
+
+<body>
+    <div class="app container">
+        <div class="row">
+            <h1 class="page-title">Article grabber</h1>
+        </div>
+        <div class="row">
+            <form action="/slurp" method="get" id="search-url-form" class="search-url-form">
+
+                <div id="page_url_ctn" class="page_url_ctn default-state">
+                    <input type="url" id="page_url" name="page_url" size="54" type="url" class="input-url " autofocus
+                        required onClick="this.select();" placeholder="Copier l'url d'un article ici">
+                    <i class="fas fa-check fa-lg url-state valid-state"></i>
+                    <i class="fas fa-spinner fa-spin fa-lg url-state loading-state"></i>
+                    <i class="fas fa-times fa-lg url-state error-state"></i>
+                </div>
+                <input id="submit-btn" class="submit-btn btn " type="submit" value="Je finance pas la presse" />
+            </form>
+        </div>
+        <div class="row">
+            <div id="form_loading_ctn" class="form_loading_ctn">
+                <div class="loader_ctn">
+                    <div class="pacman">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <div id="provider-logo" class="provider-logo"></div>
+            </div>
+        </div>
+        <div class="row">
+            <footer>
+                <small>
+                    Journaux supportés: <span id="provider-list" class="provider-list"></span>
+                </small>
+            </footer>
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+
+</html>

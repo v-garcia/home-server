@@ -1,0 +1,18 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# dotenv environment variables file
+.env
+.env.test
+
+# assets
+/assets/*
+
+# caches
+.cache
+.parcel-cache
+
+
+
+cookies.json

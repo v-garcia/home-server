@@ -1,0 +1,95 @@
+/* https://codepen.io/Atiksh_Thakur/pen/JjXBdZO */
+
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+div {
+  display:flex;
+  justify-content: center;
+}
+
+div, form {
+  width: 100%;
+}
+
+.btn:disabled, .btn.disabled {
+  border: 1px solid #E3E3E3 !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
+}
+
+.app {
+  flex-direction: column;
+  max-width: 800px;
+  padding-top: 4em;
+  text-align: center;
+
+}
+
+.page-title {
+  margin-bottom: 4rem;
+}
+
+
+.search-url-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.input-url {
+  margin-bottom: 1.5rem;
+
+
+  padding: 6px 35px 6px 10px !important;
+}
+
+.provider-list > a {
+  display: inline-block;
+  margin-right: 1ch;
+}
+
+.provider-list > a:not(:last-child)::after {
+  content: ",";
+}
+
+.provider-list .selected {
+  font-weight: bold;
+  color: #0FA0CE;
+}
+
+.page_url_ctn {
+  position: relative;
+  width: auto;
+}
+
+.page_url_ctn .url-state {
+  display: none;
+}
+
+.page_url_ctn.loading-state .url-state.loading-state,
+.page_url_ctn.valid-state .url-state.valid-state,
+.page_url_ctn.error-state .url-state.error-state {
+  display: inline-block;
+}
+
+.page_url_ctn > .url-state {
+  position: absolute;
+  right: 0;
+  padding: 0px 10px;
+  /* display: inline-block; */
+  height: 38px;
+  color: #666;
+}
+
+.page_url_ctn > .url-state.valid-state {
+  color: #27ae60;
+}
+
+.page_url_ctn > .url-state.error-state {
+  color:#c0392b;
+}

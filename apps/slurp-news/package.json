@@ -1,0 +1,28 @@
+{
+  "name": "slurp-lemonde-pages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "sh ./init.sh",
+    "dev": "concurrently \"nodemon ./src/index.js\" \"cd client;  yarn run parcel ./src/index.html --dist-dir ../static/;\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "base32-encode": "^1.1.1",
+    "farmhash": "^3.1.1",
+    "fastify": "^2.15.1",
+    "fastify-formbody": "^3.2.0",
+    "fastify-static": "^2.7.0",
+    "got": "^11.4.0",
+    "hi-base32": "^0.5.0",
+    "path": "^0.12.7",
+    "puppeteer": "^5.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.6"
+  }
+}
