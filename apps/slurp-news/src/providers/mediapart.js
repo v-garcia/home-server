@@ -33,6 +33,10 @@ class MediaPart extends NewsProvider {
         // Remove menu pannel
         let menuPanel = document.getElementById('menuPanelEl');
         menuPanel && menuPanel.remove();
+
+        // Cookie consent
+        let cookieConsent = document.querySelector('.cc-cookie-consent-banner-modal');
+        cookieConsent && cookieConsent.remove()
     }
 
     prepareUrlForSlurp(url) {

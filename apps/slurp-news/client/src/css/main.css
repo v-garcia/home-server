@@ -63,6 +63,8 @@ div, form {
 
 .page_url_ctn {
   position: relative;
+  max-width: 100%;
+  width: auto;
 }
 
 .page_url_ctn .url-state {

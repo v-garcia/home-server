@@ -19,6 +19,12 @@ class Courrier extends NewsProvider {
         return "https://www.courrierinternational.com";
     }
 
+    preloadFn() {
+        // Remove banneer & annoying styles
+        let iubendaBanner = document.getElementById('iubenda-cs-banner');
+        iubendaBanner && iubendaBanner.remove();
+    }
+
     isLoggedFn() {
         return /logged\=1;/.test(document.cookie);
     }

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurp-news
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurp-news
+  template:
+    metadata:
+      labels:
+        app: slurp-news
+    spec:
+      containers:
+        - name: slurp-news
+          image: localhost:32000/slurp-news:latest
+          ports:
+            - name: slurp-news
+              containerPort: 3000
+          volumeMounts:
+            - name: slurp-news
+              subPath: articles
+              mountPath: /usr/src/app/articles
+            - name: slurp-news-secret
+              subPath: cookies.json
+              mountPath: /usr/src/app/cookies.json
+          resources:
+            limits:
+              cpu: 1.5
+              memory: 1.5Gi
+            requests:
+              cpu: 0.1
+              memory: 100Mi
+          env:
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slurp-news-secret
+                  key: gotify-token
+      volumes:
+        - name: slurp-news
+          persistentVolumeClaim:
+            claimName: slurp-news
+        - name: slurp-news-secret
+          secret:
+            secretName: slurp-news-secret
