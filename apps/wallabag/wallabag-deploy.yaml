@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallabag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wallabag
+  template:
+    metadata:
+      labels:
+        app: wallabag
+    spec:
+      containers:
+        - name: wallabag
+          image: localhost:32000/wallabag
+          ports:
+            - name: wallabag
+              containerPort: 80
+          volumeMounts:
+            - name: wallabag
+              subPath: data
+              mountPath: /var/www/wallabag/data
+            - name: wallabag
+              subPath: images
+              mountPath: /var/www/wallabag/web/assets/images
+          env:
+            - name: SYMFONY__ENV__FOSUSER_REGISTRATION
+              value: "false"
+            - name: SYMFONY__ENV__DOMAIN_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: wallabag-secret
+                  key: hostname
+            - name: ADMIN_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: wallabag-secret
+                  key: admin-password
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "/usr/bin/create-user"]
+          # livenessProbe:
+          #   httpGet:
+          #     path: /favicon.ico
+          #     port: wallabag
+          #     scheme: HTTP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /favicon.ico
+          #     port: wallabag
+          #     scheme: HTTP
+      volumes:
+        - name: wallabag
+          persistentVolumeClaim:
+            claimName: wallabag
+        - name: wallabag-secret
+          secret:
+            secretName: wallabag-secret
