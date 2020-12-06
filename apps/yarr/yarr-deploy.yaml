@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yarr
+  template:
+    metadata:
+      labels:
+        app: yarr
+    spec:
+      containers:
+        - name: yarr
+          image: localhost:32000/yarr
+          ports:
+            - containerPort: 7070
+          volumeMounts:
+            - name: yarr
+              subPath: data
+              mountPath: /data
+      volumes:
+        - name: yarr
+          persistentVolumeClaim:
+            claimName: yarr

@@ -11,13 +11,16 @@ sudo mkdir -p /data/config/
 sudo mkdir -p /data/workdir/
 sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
-sudo mkdir -p /data/supysonic/
 sudo mkdir -p /data/gotify/
 sudo mkdir -p /data/minidlna/
 sudo mkdir -p /data/aria2/
 sudo mkdir -p /data/heimdall/
 sudo mkdir -p /data/slurp-lemonde/
 sudo mkdir -p /data/navidrome
+sudo mkdir -p /data/yarr
+sudo mkdir -p /data/slurp-news
+sudo mkdir -p /data/wallabag
+
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -56,7 +59,7 @@ kustomize build ./global/ --load_restrictor none | kubectl apply -f -
 
 #dashboard
 # uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/alternative.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.5/aio/deploy/alternative.yaml
 ./apps/dashboard/gen-resources.sh | kubectl apply -f -
 
 #ddns-updater
@@ -149,3 +152,23 @@ kustomize build ./apps/couchdb --load_restrictor none | kubectl apply -f -
 docker build ./apps/add-video-cover -t localhost:32000/add-video-cover
 docker push localhost:32000/add-video-cover
 kustomize build ./apps/add-video-cover --load_restrictor none | kubectl apply -f -
+
+#attestation
+docker build ./apps/attestation -t localhost:32000/attestation
+docker push localhost:32000/attestation
+kustomize build ./apps/attestation --load_restrictor none | kubectl apply -f -
+
+#yarr
+docker build ./apps/yarr -t localhost:32000/yarr
+docker push localhost:32000/yarr
+kustomize build ./apps/yarr --load_restrictor none | kubectl apply -f -
+
+#slurp-news
+docker build ./apps/slurp-news -t localhost:32000/slurp-news
+docker push localhost:32000/slurp-news
+kustomize build ./apps/slurp-news --load_restrictor none | kubectl apply -f -
+
+#wallabag
+docker build ./apps/wallabag -t localhost:32000/wallabag
+docker push localhost:32000/wallabag
+kustomize build ./apps/wallabag --load_restrictor none | kubectl apply -f -

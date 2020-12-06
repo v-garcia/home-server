@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yarr
+spec:
+  type: ClusterIP
+  selector:
+    app: yarr
+  ports:
+    - name: yarr
+      port: 7070
+      targetPort: 7070
