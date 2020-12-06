@@ -2,7 +2,7 @@
 
 source ../.env
 
-docker build --rm -t  add-video-cover ./
+docker build --rm -t  add-video-cover ../
 
 docker run \
     -v $(pwd)/media-test:/media/ \

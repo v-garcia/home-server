@@ -184,7 +184,10 @@ func run(params AppParams) {
 		panic(fmt.Errorf("Init api failled: %s", err))
 	}
 
-	errWalk := filepath.Walk(params.scanPath, func(path string, f os.FileInfo, errWalkItem error) error {
+	scanPath := filepath.Clean(params.scanPath)
+
+	errWalk := filepath.Walk(scanPath, func(path string, f os.FileInfo, errWalkItem error) error {
+
 		if errWalkItem != nil {
 			fmt.Printf("Error on walk item: %+v\n", errWalkItem)
 			return nil
@@ -197,6 +200,20 @@ func run(params AppParams) {
 
 		if !contains(videoExtensions, ext) {
 			return nil
+		}
+
+		vidDir := path
+		for {
+			vidDir = filepath.Dir(vidDir)
+			noImagePath := vidDir + "/.nopic"
+
+			if fileExists(noImagePath) {
+				return nil
+			}
+
+			if vidDir == scanPath {
+				break
+			}
 		}
 
 		var picturePath = strings.TrimSuffix(path, filepath.Ext(f.Name())) + ".jpg"
