@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1.0",
     "base32-encode": "^1.1.1",
     "farmhash": "^3.1.1",
     "fastify": "^2.15.1",

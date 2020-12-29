@@ -22,9 +22,6 @@ spec:
             - name: slurp-news
               subPath: articles
               mountPath: /usr/src/app/articles
-            - name: slurp-news-secret
-              subPath: cookies.json
-              mountPath: /usr/src/app/cookies.json
           resources:
             limits:
               cpu: 1.5
@@ -40,10 +37,12 @@ spec:
                 secretKeyRef:
                   name: slurp-news-secret
                   key: gotify-token
+            - name: APP_BUCKET
+              value: "slurp-news"
+          envFrom:
+            - secretRef:
+                name: s3-secret
       volumes:
         - name: slurp-news
           persistentVolumeClaim:
             claimName: slurp-news
-        - name: slurp-news-secret
-          secret:
-            secretName: slurp-news-secret

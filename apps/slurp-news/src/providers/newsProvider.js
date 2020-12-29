@@ -1,5 +1,6 @@
-const cookies = require('../../cookies.json');
+
 const singleFileParams = require('../singleFileParams');
+const storage = require('../storage');
 const { get: getSingleFileScripts } = require('../../assets/SingleFile-master/cli/back-ends/common/scripts.js');
 const puppeteer = require('puppeteer');
 
@@ -53,7 +54,8 @@ class NewsProvider {
     }
 
 
-    getCookies() {
+    async getCookies() {
+        const cookies = await storage.retrieveCookies();
         return cookies[this.name] || [];
     }
 
@@ -71,7 +73,7 @@ class NewsProvider {
         const page = await browser.newPage();
 
         // Inject credentials cookies
-        await page.setCookie(...this.getCookies());
+        await page.setCookie(...(await this.getCookies()));
         await page.goto(this.url);
 
         const res = await page.evaluate(this.isLoggedFn);
@@ -93,7 +95,7 @@ class NewsProvider {
         const page = await browser.newPage();
 
         // Inject credentials cookies
-        await page.setCookie(...this.getCookies());
+        await page.setCookie(...(await this.getCookies()));
 
         // Inject SingleFile extension
         await page.evaluateOnNewDocument(toInject);
