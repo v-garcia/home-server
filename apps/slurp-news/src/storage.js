@@ -16,4 +16,10 @@ async function retrieveCookies() {
   return res;
 }
 
-module.exports = { retrieveCookies };
+async function retrieveCredentials() {
+  let res = await s3.getObject({ Key: "credentials.json", Bucket: process.env.APP_BUCKET });
+  res = JSON.parse(await readableToString(res.Body));
+  return res;
+}
+
+module.exports = { retrieveCookies, retrieveCredentials };

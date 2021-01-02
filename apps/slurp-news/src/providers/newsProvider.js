@@ -56,7 +56,22 @@ class NewsProvider {
 
     async getCookies() {
         const cookies = await storage.retrieveCookies();
-        return cookies[this.name] || [];
+
+        if (!this.name in cookies) {
+            throw new Error(`getCookies found nothing for '${this.name}'`);
+        }
+
+        return cookies[this.name];
+    }
+
+    async getCredentials() {
+        const creds = await storage.retrieveCredentials();
+
+        if (!this.name in creds) {
+            throw new Error(`getCredentials found nothing for '${this.name}'`);
+        }
+
+        return creds[this.name];
     }
 
     preloadFn() { }
@@ -74,7 +89,7 @@ class NewsProvider {
 
         // Inject credentials cookies
         await page.setCookie(...(await this.getCookies()));
-        await page.goto(this.url);
+        await page.goto(this.url, { waitUntil: 'networkidle0' });
 
         const res = await page.evaluate(this.isLoggedFn);
 
