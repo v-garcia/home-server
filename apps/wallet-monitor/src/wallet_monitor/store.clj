@@ -3,116 +3,74 @@
    [clojure.spec.alpha :as s]
    [wallet-monitor.domain :as d]
    [wallet-monitor.env :as env]
+   [wallet-monitor.s3 :as s3]
    [java-time :as t]
    [taoensso.timbre :as timbre :refer [info]]
    [cheshire.core :as json]
    [clj-http.lite.client :as http]
    [camel-snake-kebab.core :as csk]))
 
-(defn- gen-couch-key-fn
-  [key-fn]
-  (fn [k]
-    (case k
-      :_id   "_id"
-      :_rev  "_rev"
-      "_id"  :_id
-      "_rev" :_rev
-      (key-fn k))))
+(def s3-bucket "wallet-monitor")
 
-(defn- get-couch-db-headers!
-  []
-  {"Content-Type" "application/json"})
+;; Json convert
 
-(defn get-couch-db-url!
-  []
-  (str (env/get-couchbase-url!) "/wallet_monitor/"))
-
-(defn load-document!
-  [docid]
-  (->>
-   docid
-   (str (get-couch-db-url!))
-   (hash-map
-    :headers (get-couch-db-headers!)
-    :method :GET
-    :url)
-   http/request
-   :body
-   (#(json/parse-string % (gen-couch-key-fn csk/->kebab-case-keyword)))))
-
-(defn load-wallet!
-  []
-  {:post [(s/valid? ::d/wallet %)]}
+(defn get-json-object!
+  [& args]
   (->
-   "wallet"
-   load-document!
-   :wallet))
+   (apply s3/get-object-as-str! args)
+   (json/parse-string csk/->kebab-case-keyword)))
+
+(defn put-json-object!
+  [& args]
+  (as->
+   (vec args) args
+    (conj (vec args) :content-type "application/json")
+    (update args 2 #(json/encode % {:key-fn (comp csk/->camelCase name) :pretty true}))
+    (apply s3/put-object-from-str! args)))
+
+;; Utils
 
 (defn date->dwallet-id
   [date]
   (->> date
        (t/format "yyyyMMdd")
-       (format "%s_daily_wallet")))
-
-(defn- couch-db-encode
-  [obj]
-  (json/encode obj {:key-fn (gen-couch-key-fn (comp csk/->camelCase name))}))
-
-(defn save-wallet-to-db!
-  ([wallet date]
-   {:pre [(s/valid? ::d/wallet-w-prices wallet)]}
-   (let
-    [to-save  {:wallet wallet
-               :type   "daily_wallet"
-               :_id     (date->dwallet-id date)}
-
-     query    {:method  :POST
-               :headers (get-couch-db-headers!)
-               :url     (get-couch-db-url!)
-               :as      :json
-               :body    (couch-db-encode to-save)}
-     _        (info query)]
-     (http/request query)))
-  ([wallet] (save-wallet-to-db! wallet (t/local-date))))
+       (format "daily_wallets/%s_daily_wallet.json")))
 
 (defn- price->keyword
   [{:keys [:currency :amount] :as p}]
   (assoc p :currency (keyword currency) :amount (double amount)))
 
+;; Functions
+
+(defn load-wallet!
+  []
+  {:post [(s/valid? ::d/wallet %)]}
+  (:wallet (get-json-object! s3-bucket "wallet.json")))
+
+
+(defn save-wallet-to-db!
+  ([wallet date]
+   {:pre [(s/valid? ::d/wallet-w-prices wallet)]}
+   (put-json-object!  s3-bucket (date->dwallet-id date) {:wallet wallet}))
+  ([wallet] (save-wallet-to-db! wallet (t/local-date))))
+
 (defn load-wallet-of!
   [date]
   {:post [(s/valid? ::d/wallet-w-prices %)]}
   (->>
-   date
-   date->dwallet-id
-   load-document!
+   (get-json-object! s3-bucket (date->dwallet-id date))
    :wallet
    (map #(update-in % [:price] price->keyword))))
 
 (defn load-config!
   []
-  (let [config    (load-document! "config")
-        config    (update-in config [:diff :amount-to-add] price->keyword)
-        conf-diff (:diff config)
-        met-once  (:method-once conf-diff)]
-
-    (when met-once
-      (->> config
-           (update-in config [:diff :method-once] (constantly nil))
-           (couch-db-encode)
-           (hash-map
-            :method :POST
-            :headers (get-couch-db-headers!)
-            :url    (get-couch-db-url!)
-            :as     :json
-            :body)
-           http/request))
-    (if met-once
-      (update-in config [:diff :method] (constantly met-once))
-      config)))
+  (->
+   (get-json-object! s3-bucket "config.json")
+   (update-in [:diff :amount-to-add] price->keyword)))
 
 (comment
   (load-wallet!)
+  (load-wallet-of! (t/local-date 2020 03 05))
   (load-wallet-of! (t/local-date))
   (t/plus (t/local-date) (t/days  1))
   (load-config!)

@@ -50,3 +50,7 @@ pom.xml.asc
 .history
 
 # End of https://www.gitignore.io/api/linux,clojure,visualstudiocode
+
+.clj-kondo/*
+.lsp/*
+output.calva-repl
