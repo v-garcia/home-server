@@ -1,23 +1,29 @@
-const linky = require('@bokub/linky');
-const getDaysInMonth = require('date-fns/getDaysInMonth');
-const startOfYesterday = require('date-fns/startOfYesterday');
-const eachDayOfInterval = require('date-fns/eachDayOfInterval');
-const addDays = require('date-fns/addDays');
-const parseIso = require('date-fns/parseISO');
-const dateMax = require('date-fns/max');
-const format = require('date-fns/format');
-const isYesterday = require('date-fns/isYesterday');
-const subDays = require('date-fns/subDays');
-const startOfToday = require('date-fns/startOfToday');
-const isSameDay = require('date-fns/isSameDay');
+const linky = require('linky');
+const { format: dateFormat, parseISO: dateParseISO, subDays, startOfToday, max: dateMax, addDays, getDaysInMonth } = require('date-fns')
 const got = require('got');
-const Slouch = require('couch-slouch');
+const store = require('./store');
 
-// All price in euro cents
-const MONTLY_FLAT_RATE = 998;
-const KW_PRICE = 13.79;
-const COLLECTION_NAME = 'enedis_consumption';
-const SEEK_DAYS = 15; 
+const SEEK_DAYS = 30;
+
+async function getLinkySession() {
+  const { accessToken, refreshToken } = await store.getAuthTokens();
+
+  const session = new linky.Session({
+    accessToken,
+    refreshToken,
+    usagePointId: process.env.USAGE_POINT_ID,
+    onTokenRefresh: (accessToken, refreshToken) => {
+      console.log('Token refresh');
+      console.log({ accessToken, refreshToken });
+
+      store.putAuthTokens(accessToken, refreshToken).catch(x => {
+        console.error('Failled to save new tokens');
+      });
+    },
+  });
+
+  return session;
+}
 
 const gotifyNotification = (url, token) => (title, message, priority) => {
   console.info(message);
@@ -32,88 +38,64 @@ const gotifyNotification = (url, token) => (title, message, priority) => {
   });
 };
 
-function centsToEuro(value) {
+function getGotityClient() {
+  return gotifyNotification(process.env.GOTIFY_URL, process.env.GOTIFY_TOKEN);
+}
+
+function toLinkyDate(date) {
+  return dateFormat(date, 'yyyy-MM-dd');
+}
+
+function centsToEuroStr(value) {
   const eurs = Math.floor(value / 100);
   const cents = value % 100;
   return `${eurs},${String(cents).padStart(2, '0')}€`;
 }
 
-function getDayPriceText({ date, value }) {
-  const dateObj = new Date(date);
-  const dayFlat = Math.round(MONTLY_FLAT_RATE / getDaysInMonth(dateObj));
-  const day = Math.round(value * KW_PRICE);
+function getDayPriceText({ monthlyFlatRage, kwhPrice }, { date, value }) {
+  value = value / 1000; // wh to kwh
+  const dayFlat = Math.round(monthlyFlatRage / getDaysInMonth(date));
+  const day = Math.round(value * kwhPrice);
   const dayTotal = dayFlat + day;
 
   return {
     val: dayTotal,
     text: [
-      `${format(dateObj, 'EEEEEE d LLL')} | *${centsToEuro(dayTotal)}* ` +
-        `(${centsToEuro(day)} + flat ${centsToEuro(dayFlat)})`,
+      `${dateFormat(date, 'EEEEEE d LLL')} | *${centsToEuroStr(dayTotal)}* ` +
+      `(${centsToEuroStr(day)} + flat ${centsToEuroStr(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
     ].join('\n')
   };
 }
 
-function genDailyNotification(gotifyClient, dayInfo) {
-  return gotifyClient('Last days consumption', dayInfo.text);
-}
+async function dailyRoutine(linkySession, gotifyClient) {
+  // Determining min days
 
-function dailyId(dateObj) {
-  return `${format(dateObj, 'yyyyMMdd')}_daily`;
-}
+  let minDay = subDays(startOfToday(), SEEK_DAYS);
+  minDay = dateMax([minDay, (await store.getLastDay()) || minDay]);
+  minDay = addDays(minDay, 1);
 
-async function saveDayDataToDb(slouch, dInfo) {
-  const dateObj = new Date(dInfo.date);
+  // Retrieving prices 
+  const prices = await store.getPrices();
 
-  const toSave = {
-    ...dInfo,
-    type: 'enedis-daily',
-    _id: dailyId(dateObj)
-  };
+  // Retrieving data from linky
+  const dailyParams = [toLinkyDate(minDay), toLinkyDate(startOfToday())];
+  console.info(`Running 'getDailyConsumption' with params: '${dailyParams}'`);
 
-  return slouch.doc.upsert(COLLECTION_NAME, toSave);
-}
+  const { unit, data } = dailyParams[0] === dailyParams[1] ?
+    { data: [] } : await linkySession.getDailyConsumption(...dailyParams);
 
-async function getLastDay(slouch) {
-  const {
-    docs: [item]
-  } = await slouch.doc.find(COLLECTION_NAME, {
-    selector: {
-      _id: {
-        $gt: 0
-      },
-      type: 'enedis-daily'
-    },
-    fields: ['_id', 'date'],
-    sort: [
-      {
-        _id: 'desc'
-      }
-    ],
-    limit: 1
-  });
+  // Handling daily consumptions
+  for (let { date, value } of data) {
+    date = dateParseISO(date);
 
+    // Store
+    await store.putDailyConsumption(date, { unit, value });
 
-  const minDay = subDays(startOfToday(), SEEK_DAYS);
-  const res = item ? dateMax([minDay, parseIso(item.date)]) : minDay;
-  return res;
-}
-
-async function dailyRoutine(linkySession, gotifyClient, slouch) {
-  const lastSavedDay = await getLastDay(slouch);
-  if (isYesterday(lastSavedDay)) return;
-
-  const daily = await linkySession.getDailyData();
-  const dToRetrieve = await eachDayOfInterval({ start: addDays(lastSavedDay, 1), end: startOfYesterday() });
-  console.info('to retrieve:', dToRetrieve);
-  for (let d of dToRetrieve) {
-    d = daily.find(({ date }) => isSameDay(parseIso(date), d));
-    if (!d || !d.value) {
-      throw Error(`Fetched value of '${d.date}' is ${d.value} `);
-    }
-    const dayInfo = getDayPriceText(d);
-    await saveDayDataToDb(slouch, d);
-    await genDailyNotification(gotifyClient, dayInfo);
+    // Notify
+    const dayCost = getDayPriceText(prices, { date, value });
+    //console.info(dayCost);
+    await gotifyClient('Last days consumption', dayCost.text);
   }
 }
 
@@ -121,53 +103,25 @@ const routines = {
   daily: dailyRoutine
 };
 
-function getAppParams() {
-  const routine = process.argv[2];
-  const enedisEmail = process.env.ENEDIS_EMAIL;
-  const enedisPassword = process.env.ENEDIS_PASSWORD;
-  const gotifyUrl = process.env.GOTIFY_URL;
-  const gotifyToken = process.env.GOTIFY_TOKEN;
-  const couchDbUrl = process.env.COUCHDB_URL;
-
-  if (!couchDbUrl) {
-    throw Error('couch db url must be set');
-  }
-
-  if (!enedisEmail || !enedisPassword) {
-    throw Error('Enedis credentials must be set');
-  }
-
-  if (!gotifyUrl || !gotifyToken) {
-    throw Error('Gotify token must be set');
-  }
-
-  if (!routine || !routine in routines) {
-    throw Error(`Valid routine must be specified as first arg(${action} provided)`);
-  }
-
-  return { routine, enedisEmail, enedisPassword, gotifyUrl, gotifyToken, couchDbUrl };
-}
-
-async function main() {
-  const appParams = getAppParams();
-  const session = await linky.login(appParams.enedisEmail, appParams.enedisPassword);
-  const gotifyClient = gotifyNotification(appParams.gotifyUrl, appParams.gotifyToken);
-  const slouch = new Slouch(appParams.couchDbUrl);
-  const toRun = routines[appParams.routine];
-
-  try {
-    await toRun(session, gotifyClient, slouch);
-  } catch (e) {
-    await gotifyClient('An error has occured in routine:' + appParams.routine, e.name + ': ' + e.message);
-    throw e;
-  }
-}
-
 (async () => {
+
+  const routine = process.argv[2];
+  const toRun = routines[routine];
+
+
+  // Initiate resources
+  const linkySession = await getLinkySession();
+  const gotifyClient = getGotityClient();
+
+  console.info(`Starting ${routine} routine`);
+
   try {
-    await main();
-  } catch (err) {
-    console.error(err);
+    await toRun(linkySession, gotifyClient);
+    console.info(`Ending ${routine} routine`);
+  } catch (e) {
+    console.error(e);
+    await gotifyClient(`An error has occured in ${routine} routine: ${e.name}: ${e.message}`);
     process.exit(1);
   }
 })();
+

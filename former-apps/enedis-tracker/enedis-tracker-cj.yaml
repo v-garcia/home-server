@@ -27,6 +27,11 @@ spec:
                     secretKeyRef:
                       name: enedis-tracker-secret
                       key: enedis-password
+                - name: USAGE_POINT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: enedis-tracker-secret
+                      key: usage-point-id
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
                 - name: GOTIFY_TOKEN

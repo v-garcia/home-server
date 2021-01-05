@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@bokub/linky": "github:bokub/linky",
-    "couch-slouch": "^1.4.0",
-    "date-fns": "^2.9.0",
-    "got": "^10.2.2"
+    "@aws-sdk/client-s3": "^3.1.0",
+    "date-fns": "^2.16.1",
+    "got": "^11.8.1",
+    "linky": "^1.1.0"
   }
 }
