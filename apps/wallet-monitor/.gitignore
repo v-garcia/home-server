@@ -54,3 +54,4 @@ pom.xml.asc
 .clj-kondo/*
 .lsp/*
 output.calva-repl
+.calva/*

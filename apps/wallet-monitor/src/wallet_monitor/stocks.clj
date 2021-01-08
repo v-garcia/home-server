@@ -27,15 +27,17 @@
               (get-quote-from-providers! (rest ps) isin))))))
   ([isin] (get-quote-from-providers! quote-providers isin)))
 
-(defn get-stock-prices!
+(defn get-stock-prices-uncached!
   [isins]
   {:pre [(s/valid? (s/coll-of ::d/isin) isins)]
    :post [(s/valid? (s/coll-of ::d/price) %)]}
-  (doall (map get-quote-from-providers! isins)))
+  (mapv get-quote-from-providers! isins))
+
+
+(def get-stock-prices! (memoize get-stock-prices-uncached!))
 
 (comment
   (get-quote!  ::yahoo "LU1377382285")
   (get-quote!  ::alphavantage "LU1377382285")
   (get-quote-from-providers! "LU1377382285")
-  (get-stock-prices! ["FR0010688192" "FR0013412020"])
-  )
+  (get-stock-prices! #{"FR0010688192" "FR0013412020"}))

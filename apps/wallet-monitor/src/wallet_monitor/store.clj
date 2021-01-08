@@ -2,12 +2,9 @@
   (:require
    [clojure.spec.alpha :as s]
    [wallet-monitor.domain :as d]
-   [wallet-monitor.env :as env]
    [wallet-monitor.s3 :as s3]
    [java-time :as t]
-   [taoensso.timbre :as timbre :refer [info]]
    [cheshire.core :as json]
-   [clj-http.lite.client :as http]
    [camel-snake-kebab.core :as csk]))
 
 (def s3-bucket "wallet-monitor")
@@ -65,8 +62,10 @@
 (defn load-config!
   []
   (->
-   (get-json-object! s3-bucket "config.json")
-   (update-in [:diff :amount-to-add] price->keyword)))
+   (get-json-object! s3-bucket "config_new.json")
+   (update :diff-method csk/->kebab-case-keyword)
+   (update :available-diff-methods (partial mapv csk/->kebab-case-keyword))
+   (update :amount-to-add price->keyword)))
 
 (comment
   (load-wallet!)

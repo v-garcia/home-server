@@ -30,7 +30,10 @@
    "LU1377382285" "VALU.FRK"
 
    "LU1834985845" "FOO.PAR"
-   "LU1681041544" "CEM.PAR"})
+   "LU1681041544" "CEM.PAR"
+
+   "LU1834986900" "HLT.PAR"
+   "LU1291101555" "EESM.PAR"})
 
 ; Note get alphavantage symbol:
 ; https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=FR0013412285&apikey=

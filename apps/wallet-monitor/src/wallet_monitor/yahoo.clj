@@ -18,7 +18,9 @@
              "FR0013412285" "PE500.PA"
              "LU1377382285" "VALU.F"
              "LU1834985845" "FOO.PA"
-             "LU1681041544" "CEM.PA"})
+             "LU1681041544" "CEM.PA"
+             "LU1834986900" "HLT.PA"
+             "LU1291101555" "EESM.PA"})
 
 ; Search on https://fr.finance.yahoo.com
 (defn ^:private isin->av-sym
@@ -43,10 +45,9 @@
   (->>
    isin
    isin->av-sym
-   get-yahoo-quote!
- ))
+   get-yahoo-quote!))
 
-(defmethod stocks/get-quote! ::stocks/yahoo 
+(defmethod stocks/get-quote! ::stocks/yahoo
   [_ isin]
   (get-quote! isin))
 

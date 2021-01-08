@@ -24,7 +24,15 @@
 
 (def total-wallet (partial total-wallet-base :qty-owned))
 
-(def total-wallet-diff (partial total-wallet-base :stock-diff))
+(defn add-to-total-wallet
+  [wallet to-add]
+  {:pre [(s/valid? ::d/wallet-w-prices wallet) (s/valid? ::d/price to-add)]
+   :post [(s/valid? ::d/price %)]}
+  (m/p-apply-p + (total-wallet wallet) to-add))
+
+(defn total-wallet-diff
+ [wallet] 
+ (total-wallet-base :stock-diff wallet))
 
 (defn line-repartition-diff
   [{total :amount}
@@ -50,37 +58,29 @@
       (assoc :stock-diff (Math/round diff-by-stock))
       (dissoc  :diff-by-line :diff-by-stock)))
 
-(defn repartition-diff-base
-  ([wallet]
-   (repartition-diff-base wallet (total-wallet wallet)))
-  ([wallet total]
-   (->> wallet
-        (map (partial line-repartition-diff total))
-        (map merge wallet)
-        (filter needs-balance?))))
+(defn repartition-diff
+  [wallet total]
+  (->> wallet
+       (map (partial line-repartition-diff total))
+       (map merge wallet)
+       (filter needs-balance?)))
 
 (defn diff-buy-and-sell
-  [wallet]
-  (->> wallet repartition-diff-base (map diff-ratios->diff-unit)))
+  [wallet to-add]
+  (map diff-ratios->diff-unit (repartition-diff wallet (add-to-total-wallet wallet to-add))))
+
 
 (defn diff-only-buy
-  [wallet]
+  [wallet to-add]
   (loop
-   [total (total-wallet wallet)]
+   [total (add-to-total-wallet wallet to-add)]
     (let
-     [to-update  (repartition-diff-base wallet total)
+     [to-update  (repartition-diff wallet total)
       to-sell    (filter (comp neg? :diff-by-stock) to-update)]
       (if
        (empty? to-sell)
         (map diff-ratios->diff-unit to-update)
         (recur (m/p-apply + total 1))))))
-
-(defn diff-add-amount
-  [wallet amount]
-  (let [total     (total-wallet wallet)
-        total     (m/p-apply-p + total amount)
-        to-update (repartition-diff-base wallet total)]
-    (map diff-ratios->diff-unit to-update)))
 
 (defn- repartition-diff-w-total
   [fn-diff wallet & args]
@@ -95,7 +95,6 @@
 
 (def repartition-diff-only-buy (partial repartition-diff-w-total diff-only-buy))
 
-(def repartition-diff-add-amout (partial repartition-diff-w-total diff-add-amount))
 
 (defn wallet-stock-price-diff
   [wal1 wal2]

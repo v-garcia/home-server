@@ -4,7 +4,7 @@
   {"LU1681038672" {:libelle "AMUNDI RUSSEL 2K"
                    :mnemo "RS2K"
                    :explain "US: Petite capitalisations"}
-   "FR0010688192" {:libelle "AMUNDI ETF MSCI EUROPE HEALTHCAR"
+   "FR0010688192" {:libelle "AMUNDI ETF MSCI EUROPE HEALTHCARE"
                    :mnemo "CH5"
                    :explain "EUR, Santé"}
    "IE00B945VV12" {:libelle "VANGUARD FUNDS PLC VANGUARD FT"
@@ -38,6 +38,14 @@
                    :explain "EUR: Biens de conso courantes"}
    "LU1681041544" {:libelle "AMUNDI ETF EUR MID "
                    :mnemo "CEM"
+                   :explain "EUR: Petite capitalisation"}
+
+   ; Added 01/01/2021
+   "LU1834986900" {:libelle "LYXOR STX EU HLTHC"
+                   :mnemo "HLT"
+                   :explain "Eur, Santé"}
+   "LU1291101555" {:libelle "BNPP Small SRI ETF"
+                   :mnemo "EESM"
                    :explain "EUR: Petite capitalisation"}})
 
 

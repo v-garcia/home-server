@@ -25,13 +25,13 @@
 (defn check-wallet-repartition!
   [fn-diff & args]
   (let
-    [wallet           (get-wallet-w-price-memo!)
-     _                (info {:wallet wallet})
+   [wallet           (get-wallet-w-price-memo!)
+    _                (info {:wallet wallet})
 
-     diff             (apply fn-diff wallet args)
+    diff             (apply fn-diff wallet args)
 
-     report           (rep/report-repartion-diff! diff)]
-     report))
+    report           (rep/report-repartion-diff! diff)]
+    report))
 
 (defn save-wallet-state!
   []
@@ -66,29 +66,28 @@
         (error e (format "Action '%s' failled." name)) (catch Exception _)))))
 
 (defn get-actions
-  [config] 
-    (vector
-     [:save-today-wallet save-wallet-state!]
-     (case (-> config :diff :method)
-       "buyAndSell" [:diff-buy-and-sell (partial check-wallet-repartition! wal/repartition-diff-buy-and-sell)]
-       "onlyBuy"    [:diff-only-buy     (partial check-wallet-repartition! wal/repartition-diff-only-buy)] 
-       "addAmount"  [:diff-add-amount   (partial check-wallet-repartition! wal/repartition-diff-add-amout (some-> config :diff :amount-to-add))]
-       )
-     [:wallet-evolution  wallet-evolution!]))
+  [config]
+  (vector
+   [:save-today-wallet save-wallet-state!]
+   (case (:diff-method config)
+     :buy-and-sell [:diff-buy-and-sell (partial check-wallet-repartition! wal/repartition-diff-buy-and-sell (:amount-to-add config))]
+     :only-buy     [:diff-only-buy     (partial check-wallet-repartition! wal/repartition-diff-only-buy (:amount-to-add config))])
+   [:wallet-evolution  wallet-evolution!]))
 
 (defn -main
   [& _]
   (info "Wallet-monitor start")
-  (let 
+  (let
    [config  (store/load-config!)
-    actions (get-actions config)
-    ]
+    actions (get-actions config)]
     (doseq [[action-name actionfn] actions]
       (start-action! action-name actionfn))))
 
 
 
 (comment
+
+  (-main)
 
   (stocks/get-quote! ::stocks/yahoo "IE00B945VV12")
   (store/load-wallet-of! (utils/working-yesterday))
@@ -103,9 +102,31 @@
    (-> wallet-monitor.yahoo/stocks keys set)
    #_(-> wallet-monitor.boursedirect/stocks keys set))
 
-  (wal/diff-new-amount (get-wallet-w-price-memo!) {:amount   2000.0
-                                                   :currency :EUR})
-  ((partial check-wallet-repartition! wal/repartition-diff-add-amout {:amount   2000.0
-                                                                      :currency :EUR}))
+  (->>  (check-wallet-repartition!
+         wal/repartition-diff-buy-and-sell
+         {:amount   2000.0
+          :currency :EUR}))
 
+
+  (->>  (check-wallet-repartition!
+         wal/repartition-diff-only-buy
+         {:amount   10.0
+          :currency :EUR}))
+
+  (-main)
+
+  (->>
+   (wal/diff-buy-and-sell (get-wallet-w-price!) {:amount   2000.0
+                                                 :currency :EUR})
+   wal/total-wallet-diff)
+
+
+
+
+
+
+
+  (wallet-monitor.money/p-apply-p +
+                                  {:amount 31636.861100000002, :currency :EUR}
+                                  {:amount 10000.0, :currency :EUR})
   (start-action! "save-wallet" save-wallet-state!))
