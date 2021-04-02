@@ -1,9 +1,9 @@
 import levelup from 'levelup';
 import leveldown from 'leveldown';
 import dayjs from 'dayjs';
+import { NEO_PREFIX, MEUH_PREFIX } from './common.js';
 
 const DATA_PATH = './data';
-const NEO_PREFIX = 'neo';
 
 const db = levelup(leveldown(`${DATA_PATH}/db`));
 
@@ -14,7 +14,7 @@ function handleNotFoundError(err) {
   throw err;
 }
 
-const savePlayedTrack = (prefix) => async (date, artist, title) => {
+const savePlayedTrackIfDifferent = (prefix) => async (date, artist, title) => {
   if (!title || !artist) throw new Error('Artist & track title must be set');
   const epochS = dayjs(date).unix();
 
@@ -51,7 +51,8 @@ async function getSpotifyTrackId(artist, title) {
 }
 
 export default {
-  saveNeoPlayedTrack: savePlayedTrack(NEO_PREFIX),
+  saveMeuhPlayedTrackIfDifferent: savePlayedTrackIfDifferent(MEUH_PREFIX),
+  saveNeoPlayedTrackIfDifferent: savePlayedTrackIfDifferent(NEO_PREFIX),
   getNeoTracksAsStream: getTracksAsStream(NEO_PREFIX),
   getSpotifyTrackId,
   saveSpotifyTrackId,

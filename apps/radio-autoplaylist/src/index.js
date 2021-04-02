@@ -12,6 +12,11 @@ const bree = new Bree({
       timeout: '30 seconds',
     },
     {
+      name: 'save-meuh-current-song',
+      interval: '1m',
+      timeout: '30 seconds',
+    },
+    {
       name: 'update-neo-most-played-playlist-on-spotify',
       interval: 'every 2 days',
     },

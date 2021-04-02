@@ -9,6 +9,6 @@ const url = `http://www.radioneo.org/liveJSON.json?_=${nowDate.valueOf()}`;
 const { body: { artisteNom: artist, titreNom: title } = {} } = await got.get(url, { responseType: 'json' });
 
 // saving song occurence
-await localStore.saveNeoPlayedTrack(nowDate, artist, title);
+await localStore.saveNeoPlayedTrackIfDifferent(nowDate, artist, title);
 
 process.exit(0);
