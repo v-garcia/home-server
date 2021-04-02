@@ -26,8 +26,9 @@ spec:
                       key: alphavantage-api-key
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-                - name: COUCHBASE_URL
-                  value: http://$(COUCHDB_SERVICE_HOST):$(COUCHDB_SERVICE_PORT)
+              envFrom:
+                - secretRef:
+                    name: s3-secret
           volumes:
             - name: wallet-monitor-secret
               secret:

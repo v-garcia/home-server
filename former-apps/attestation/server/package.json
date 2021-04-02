@@ -1,0 +1,17 @@
+{
+  "name": "attestation-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.7.0",
+    "fastify-static": "^3.3.0",
+    "got": "^11.8.0",
+    "path": "^0.12.7"
+  }
+}

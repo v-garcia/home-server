@@ -4,7 +4,7 @@ metadata:
   name: add-video-cover
 spec:
   concurrencyPolicy: Forbid
-  schedule: "*/30 * * * *" # Every 30 minuts
+  schedule: "30 * * * *" # At minute 30
   startingDeadlineSeconds: 10 # https://stackoverflow.com/questions/51065538/what-does-kubernetes-cronjobs-startingdeadlineseconds-exactly-mean
   jobTemplate:
     spec:

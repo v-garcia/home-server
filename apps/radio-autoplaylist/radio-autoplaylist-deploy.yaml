@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radio-autoplaylist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radio-autoplaylist
+  template:
+    metadata:
+      labels:
+        app: radio-autoplaylist
+    spec:
+      containers:
+        - name: radio-autoplaylist
+          image: localhost:32000/radio-autoplaylist
+          volumeMounts:
+            - name: radio-autoplaylist
+              subPath: data
+              mountPath: /usr/src/app/data
+          env:
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: radio-autoplaylist-secret
+                  key: gotify-token
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: radio-autoplaylist-secret
+                  key: spotify-client-id
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: radio-autoplaylist-secret
+                  key: spotify-client-secret
+          envFrom:
+            - secretRef:
+                name: s3-secret
+      volumes:
+        - name: radio-autoplaylist
+          persistentVolumeClaim:
+            claimName: radio-autoplaylist

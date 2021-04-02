@@ -108,14 +108,14 @@ const routines = {
   const routine = process.argv[2];
   const toRun = routines[routine];
 
-
   // Initiate resources
-  const linkySession = await getLinkySession();
-  const gotifyClient = getGotityClient();
 
   console.info(`Starting ${routine} routine`);
 
   try {
+    const linkySession = await getLinkySession();
+    const gotifyClient = getGotityClient();
+
     await toRun(linkySession, gotifyClient);
     console.info(`Ending ${routine} routine`);
   } catch (e) {

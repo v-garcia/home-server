@@ -69,6 +69,8 @@ async function slurpPage(url, optionsOverride) {
             && document.getElementById('iubenda-cs-banner').remove();
 
         document.body.removeAttribute('style');
+        document.documentElement.removeAttribute('style');
+
 
         // plugin call
         const pageData = await singlefile.lib.getPageData(options);

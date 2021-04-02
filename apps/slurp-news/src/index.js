@@ -79,11 +79,18 @@ fastify.get('/api/providers', async (req, reply) => {
     const res = providers.all.map(async p => {
         const { name, url, fullName } = p;
 
-        return {
-            name, url, fullName,
-            ...(req.query.withStatus ? { isLogged: (await p.isLogged()) } : {})
+        const getStatus = async () => {
+            try {
+                return { isLogged: await p.isLogged() };
+            } catch (e) {
+                return { isLogged: false, error: e.toString() };
+            }
         };
 
+        return {
+            name, url, fullName,
+            ...(req.query.withStatus ? (await getStatus()) : {})
+        };
 
     });
 

@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - radio-autoplaylist-secret.yaml
+  - radio-autoplaylist-deploy.yaml
+  - radio-autoplaylist-pvc.yaml
+  - radio-autoplaylist-pv.yaml
+patches:
+  - path: ../../overlays/pv-node-affinity.yaml
+    target:
+      kind: PersistentVolume

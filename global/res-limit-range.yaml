@@ -9,5 +9,5 @@ spec:
         cpu: 0.5
       defaultRequest:
         memory: 32Mi
-        cpu: 0.1
+        cpu: 0.05
       type: Container

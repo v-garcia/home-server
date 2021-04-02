@@ -1,19 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: slurp-lemonde-local
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+  name: attestation-ext
+
   labels:
-    type: local
+    type: external
 spec:
+  tls:
+    - hosts:
+        - attestation.former-hostname.com
+      secretName: attestation.former-hostname.com
   rules:
-    - host: slurp-lemonde.local
+    - host: attestation.former-hostname.com
       http:
         paths:
           - backend:
               service:
-                name: slurp-lemonde
+                name: attestation
                 port:
                   number: 3000
             path: /

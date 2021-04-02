@@ -43,14 +43,14 @@ spec:
                 secretKeyRef:
                   name: aria2-secret
                   key: gotify-token
-          livenessProbe:
-            exec:
-              command:
-                - /usr/bin/health-check
-          readinessProbe:
-            exec:
-              command:
-                - /usr/bin/health-check
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - /usr/bin/health-check
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - /usr/bin/health-check
       volumes:
         - name: aria2
           persistentVolumeClaim:

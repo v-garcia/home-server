@@ -2,8 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: upload-local
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   labels:
     type: local

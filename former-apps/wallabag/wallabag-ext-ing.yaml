@@ -2,8 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wallabag-ext
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+
   labels:
     type: external
 spec:

@@ -2,8 +2,8 @@
 
 echo "Run script";
 
-mkdir -p /incomplete/.aria2
-touch /incomplete/.aria2/aria2.session
+mkdir -p /data/.aria2
+touch /data/.aria2/aria2.session
 
 watch-torrents &
 nginx -g "daemon off;" &

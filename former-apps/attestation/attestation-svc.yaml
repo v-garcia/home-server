@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: attestation
+spec:
+  type: ClusterIP
+  selector:
+    app: attestation
+  ports:
+    - name: attestation
+      port: 3000
+      targetPort: 3000

@@ -192,20 +192,28 @@ func run(params AppParams) {
 			fmt.Printf("Error on walk item: %+v\n", errWalkItem)
 			return nil
 		}
+
 		if f.IsDir() {
 			return nil
 		}
 
+		// Check if file has video extention
 		ext := filepath.Ext(path)
-
 		if !contains(videoExtensions, ext) {
 			return nil
 		}
 
-		vidDir := path
+		// Check if cover is already here
+		var picturePath = strings.TrimSuffix(path, filepath.Ext(f.Name())) + ".jpg"
+		if fileExists(picturePath) {
+			return nil
+		}
+
+		// Check if there is a .nocover in root dirs
+		var vidDir = path
 		for {
 			vidDir = filepath.Dir(vidDir)
-			noImagePath := vidDir + "/.nopic"
+			noImagePath := vidDir + "/.nocover"
 
 			if fileExists(noImagePath) {
 				return nil
@@ -216,11 +224,7 @@ func run(params AppParams) {
 			}
 		}
 
-		var picturePath = strings.TrimSuffix(path, filepath.Ext(f.Name())) + ".jpg"
-		if fileExists(picturePath) {
-			return nil
-		}
-
+		// Download cover
 		var fName = strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
 		var release = rp.Parse(fName)
 		var query = releaseToQuery(release)

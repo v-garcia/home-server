@@ -23,6 +23,15 @@ class Courrier extends NewsProvider {
         // Remove banneer & annoying styles
         let iubendaBanner = document.getElementById('iubenda-cs-banner');
         iubendaBanner && iubendaBanner.remove();
+        let countryBanner = document.querySelector('.country-selection');
+        countryBanner && countryBanner.remove();;
+
+        // Rm gdpr stuffs
+        document.body.classList.remove('popin-gdpr-no-scroll');
+        document.documentElement.classList.remove('popin-gdpr-no-scroll');
+        let gdprModal = document.getElementsByClassName('gdpr-glm-standard');
+        gdprModal[0] && gdprModal[0].remove();
+
     }
 
     isLoggedFn() {

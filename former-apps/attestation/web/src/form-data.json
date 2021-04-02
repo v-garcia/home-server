@@ -1,0 +1,114 @@
+[
+  [
+    {
+      "key": "firstname",
+      "type": "text",
+      "contentType": "firstname",
+      "label": "Prénom",
+      "autocomplete": "given-name",
+      "placeholder": "Camille"
+    },
+    {
+      "key": "lastname",
+      "type": "text",
+      "contentType": "lastname",
+      "label": "Nom",
+      "autocomplete": "family-name",
+      "placeholder": "Dupont"
+    },
+    {
+      "key": "birthday",
+      "type": "text",
+      "contentType": "birthday",
+      "label": "Date de naissance",
+      "autocomplete": "birthday",
+      "pattern": "^([0][1-9]|[1-2][0-9]|30|31)\/([0][1-9]|10|11|12)\/(19[0-9][0-9]|20[0-1][0-9]|2020)",
+      "maxlength": 10,
+      "placeholder": "01/01/1970"
+    }
+  ],
+  [
+    {
+      "key": "placeofbirth",
+      "type": "text",
+      "contentType": "cityofbirth",
+      "label": "Lieu de naissance",
+      "autocomplete": "off",
+      "placeholder": "Paris"
+    },
+    {
+      "key": "address",
+      "type": "text",
+      "contentType": "address",
+      "label": "Adresse",
+      "autocomplete": "adress-line1",
+      "placeholder": "999 avenue de France"
+    },
+    {
+      "key": "city",
+      "type": "text",
+      "contentType": "city",
+      "label": "Ville",
+      "autocomplete": "address-level2",
+      "placeholder": "Toulouse"
+    },
+    {
+      "key": "zipcode",
+      "type": "number",
+      "contentType": "zipcode",
+      "label": "Code Postal",
+      "autocomplete": "postal-code",
+      "placeholder": "31000",
+      "inputmode": "numeric",
+      "pattern": "[0-9]{5}",
+      "min": 1000,
+      "max": 99999,
+      "minlength": 4,
+      "maxlength": 5
+    }
+  ],
+  [
+    {
+      "key": "creationDate",
+      "type": "date",
+      "contentType": "creationDate",
+      "label": "Date de création",
+      "isHidden": true
+    },
+    {
+      "key": "creationHour",
+      "type": "time",
+      "contentType": "creationHour",
+      "label": "Heure de création"
+    },
+    {
+      "key": "datesortie",
+      "type": "date",
+      "contentType": "datesortie",
+      "label": "Date de sortie",
+      "pattern": "^([0][1-9]|[1-2][0-9]|30|31)\/([0][1-9]|10|11|12)\/(19[0-9][0-9]|20[0-1][0-9]|2020)",
+      "autocomplete": ""
+    },
+    {
+      "key": "heuresortie",
+      "type": "time",
+      "contentType": "heuresortie",
+      "label": "Heure de sortie",
+      "autocomplete": ""
+    },
+    {
+      "key": "reason",
+      "type": "list",
+      "items": [
+        {
+          "code": "sport_animaux",
+          "label": "Déplacements brefs, dans la limite d'une heure quotidienne et dans un rayon maximal d'un kilomètre autour du domicile, liés soit à l'activité physique individuelle des personnes, à l'exclusion de toute pratique sportive collective et de toute proximité avec d'autres personnes, soit à la promenade avec les seules personnes regroupées dans un même domicile, soit aux besoins des animaux de compagnie ;"
+        },
+        {
+          "code": "achats",
+          "label": "Déplacements pour effectuer des achats de fournitures nécessaires à l'activité professionnelle, des achats de première nécessité <a class=\"footnote\" href=\"#footnote3\">[3]</a> dans des établissements dont les activités demeurent autorisées, le retrait de commande et les livraisons à domicile ;"
+        }
+      ]
+    }
+  ]
+]

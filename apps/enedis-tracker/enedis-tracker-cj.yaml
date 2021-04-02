@@ -17,16 +17,6 @@ spec:
               args:
                 - "daily"
               env:
-                - name: ENEDIS_EMAIL
-                  valueFrom:
-                    secretKeyRef:
-                      name: enedis-tracker-secret
-                      key: enedis-email
-                - name: ENEDIS_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: enedis-tracker-secret
-                      key: enedis-password
                 - name: USAGE_POINT_ID
                   valueFrom:
                     secretKeyRef:
@@ -39,8 +29,9 @@ spec:
                     secretKeyRef:
                       name: enedis-tracker-secret
                       key: gotify-token
-                - name: COUCHDB_URL
-                  value: http://$(COUCHDB_SERVICE_HOST):$(COUCHDB_SERVICE_PORT)
+              envFrom:
+                - secretRef:
+                    name: s3-secret
           volumes:
             - name: enedis-tracker-secret
               secret:

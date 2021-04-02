@@ -1,5 +1,6 @@
 const farmhash = require('farmhash');
 const base32Encode = require('base32-encode')
+const S3 = require('@aws-sdk/client-s3')
 
 function hashStr(str) {
     const buf = Buffer.allocUnsafe(8);
@@ -24,5 +25,7 @@ function cleanUrl(url) {
     url = removeLastSlash(url);
     return url;
 }
+
+
 
 module.exports = { cleanUrl, removeLastSlash, removeUrlParams, hashStr };

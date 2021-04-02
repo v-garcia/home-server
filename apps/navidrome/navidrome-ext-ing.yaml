@@ -4,8 +4,7 @@ metadata:
   name: navidrome-ext
   labels:
     type: external
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+
 spec:
   tls:
     - hosts:

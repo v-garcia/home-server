@@ -1,0 +1,6 @@
+test-ctn
+npm-debug.log
+**/node_modules/**
+**/.git
+**/dist
+**/.cache

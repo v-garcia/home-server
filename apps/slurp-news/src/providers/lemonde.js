@@ -33,6 +33,13 @@ class LeMonde extends NewsProvider {
 
         // Rm no scroll style
         document.body.removeAttribute('style');
+        document.documentElement.removeAttribute('style');
+
+        // Rm gdpr stuffs
+        document.body.classList.remove('popin-gdpr-no-scroll');
+        document.documentElement.classList.remove('popin-gdpr-no-scroll');
+        let gdprModal = document.getElementsByClassName('gdpr-lmd-standard');
+        gdprModal[0] && gdprModal[0].remove();
     }
 
     // TODO: Be more restrictive here

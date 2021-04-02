@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attestation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: attestation
+  template:
+    metadata:
+      labels:
+        app: attestation
+    spec:
+      containers:
+        - name: attestation
+          image: localhost:32000/attestation:latest
+          ports:
+            - name: attestation
+              containerPort: 3000
+          env:
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: attestation-secret
+                  key: google-api-key
+      volumes:
+        - name: attestation-secret
+          secret:
+            secretName: attestation-secret

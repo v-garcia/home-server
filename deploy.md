@@ -37,15 +37,10 @@ sudo iptables -P FORWARD ACCEPT
 ```
 
 ## containrd
-add to /var/snap/microk8s/current/args/containerd-template.toml  
-[plugins.cri.registry.mirrors]
-  [plugins.cri.registry.mirrors."docker.io"]
-    endpoint = ["https://registry-1.docker.io"]
-  [plugins.cri.registry.mirrors."local.insecure-registry.io"]
-    endpoint = ["http://127.0.0.1:32000"]
-  [plugins.cri.registry.mirrors."127.0.0.1:32000"]
-    endpoint = ["http://127.0.0.1:32000"]
-
+add to /var/snap/microk8s/current/args/containerd-template.toml
+https://microk8s.io/docs/registry-private
+example https://github.com/ubuntu/microk8s/blob/master/microk8s-resources/default-args/containerd-template.toml
+curl localhost:32000/v2/_catalog
 
 # Connect to dashboard
 

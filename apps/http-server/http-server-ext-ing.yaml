@@ -4,8 +4,6 @@ metadata:
   name: http-server-ext
   labels:
     type: external
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
     - hosts:
