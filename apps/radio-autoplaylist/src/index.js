@@ -1,38 +1,42 @@
-import Bree from 'bree';
+
 import path from 'path';
-import Graceful from '@ladjs/graceful';
-import { gotifyNotification } from './utils.js';
+import schedule from 'node-schedule';
+import { gotifyNotification } from './gotify.js';
 
-const bree = new Bree({
-  root: path.join(path.resolve(), 'src', 'jobs'),
-  jobs: [
-    {
-      name: 'save-neo-current-song',
-      interval: '1m',
-      timeout: '30 seconds',
-    },
-    {
-      name: 'save-meuh-current-song',
-      interval: '1m',
-      timeout: '30 seconds',
-    },
-    {
-      name: 'update-neo-most-played-playlist-on-spotify',
-      interval: 'every 2 days',
-    },
-    {
-      name: 'import-spotify-track-ids',
-      interval: 'every 6 hours'
-    }
-  ],
-  errorHandler: async (error, workerMetadata) => {
-    const msg = `Error on worker ${workerMetadata.name} : ${error.name}, ${error.message}`;
-    console.error(msg, error);
-    await gotifyNotification(`Error on ${workerMetadata.name}`, msg);
-  },
-});
+import saveNeoCurrentSong from './jobs/save-neo-current-song.js';
+import saveMeuhCurrentSong from './jobs/save-neo-current-song.js';
+import importSpotifyTracksIds from './jobs/import-spotify-track-ids.js';
+import updateNeoMostPlayedPlaylistOnSpotify from './jobs/update-neo-most-played-playlist-on-spotify.js';
+import updateMeuhMostPlayedPlaylistOnSpotify from './jobs/update-meuh-most-played-playlist-on-spotify.js';
 
-const graceful = new Graceful({ brees: [bree] });
-graceful.listen();
+let jobs = {};
 
-bree.start();
+function scheduleJob({ name, rule, fn }) {
+  const job = schedule.scheduleJob(name, rule, fn);
+  jobs = { ...jobs, [name]: job };
+
+  job.on('run', () => console.log(`Running ${name}`));
+
+  job.on('error', async e => {
+    console.error(`Error on ${name}`, e);
+    await gotifyNotification(`Error on ${name}: ${e.name}, ${e.message}`);
+  });
+}
+
+scheduleJob({ name: 'saveNeoCurrentSong', rule: '10 * * * * *', fn: saveNeoCurrentSong });
+scheduleJob({ name: 'saveMeuhCurrentSong', rule: '20 * * * * *', fn: saveMeuhCurrentSong });
+scheduleJob({ name: 'importSpotifyTracksIds', rule: '0 4 * * *', fn: importSpotifyTracksIds });
+scheduleJob({ name: 'updateNeoMostPlayedPlaylistOnSpotify', rule: '20 4 * * *', fn: updateNeoMostPlayedPlaylistOnSpotify });
+scheduleJob({ name: 'updateMeuhMostPlayedPlaylistOnSpotify', rule: '25 4 * * *', fn: updateMeuhMostPlayedPlaylistOnSpotify });
+
+async function closeGracefully(signal) {
+  console.log(`Received signal to terminate: ${signal}`)
+  for (const jobName of Object.keys(jobs)) {
+    console.info(`Cancel job ${jobName}`);
+    jobs[jobName].cancel();
+  }
+  process.exit();
+}
+
+process.on('SIGINT', closeGracefully)
+process.on('SIGTERM', closeGracefully)

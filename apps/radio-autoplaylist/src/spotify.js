@@ -9,67 +9,48 @@ function toSpotifyUri(id) {
   return `spotify:track:${id}`;
 }
 
-let _authInfo = null;
-let _dateRetrieved = null;
+let _token = null;
+let _tokenGenerationDate = null;
 async function getSpotifyApi() {
-  const spotifyApi = new SpotifyWebApi({
+  const client = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     redirectUri: REDIRECT_URL,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   });
-  let authInfo;
 
-  const saveAuthInfo = async (accessToken, refreshToken, expiresIn = 3600) => {
-    const toSave = {
-      accessToken,
-      refreshToken,
-      validUntil: dayjs().add(expiresIn, 'second').unix(),
-      codeGrant: null,
+  if (_token && dayjs(_tokenGenerationDate).add(5, 'minutes').isAfter(dayjs())) {
+    client.setAccessToken(_token);
+  } else {
+    console.info('Fetch credentials from s3');
+    const setAccessToken = (token) => {
+      client.setAccessToken(token);
+      _token = token;
+      _tokenGenerationDate = dayjs().valueOf();
     };
-    spotifyApi.setAccessToken(accessToken);
-    spotifyApi.setRefreshToken(refreshToken);
 
-    await putCredentials(toSave);
-    _authInfo = null;
-  };
+    const creds = await getCredentials();
 
-  // Use local authinfo cache if not too old
-  if (_authInfo && dayjs(_dateRetrieved).add(5, 'minutes').isAfter(dayjs())) {
-    authInfo = _authInfo;
-  } else {
-    console.info('Fetching credentials from s3');
-    authInfo = await getCredentials();
-    _dateRetrieved = dayjs().valueOf();
-    _authInfo = authInfo;
+    if (creds.codeGrant) {
+      console.info('Get token from code grant');
+      await putCredentials({ ...creds, codeGrant: null });
+      const { body: { access_token, refresh_token } = {} } = await client.authorizationCodeGrant(
+        creds.codeGrant
+      );
+      await putCredentials({ refreshToken: refresh_token, codeGrant: null });
+      setAccessToken(access_token);
+    } else if (creds.refreshToken) {
+      console.info('Refresh token');
+      client.setRefreshToken(creds.refreshToken);
+      const { body: { access_token } = {} } = await client.refreshAccessToken();
+      setAccessToken(access_token);
+    } else {
+      throw new Error('There is no enough info to authentificate');
+    }
   }
 
-  // Throw error if it's not possible to auth
-  if (!authInfo.codeGrant && !authInfo.refreshToken) {
-    throw new Error('There is no enough info to authentificate');
-  }
-
-  // If codeGrant is set, delete it and refresh all tokens
-  if (authInfo.codeGrant) {
-    console.info('Get token from code grant');
-    await saveAuthInfo(authInfo.accessToken, authInfo.refreshToken);
-    const { body: { access_token, refresh_token, expires_in } = {} } = await spotifyApi.authorizationCodeGrant(
-      authInfo.codeGrant
-    );
-    await saveAuthInfo(access_token, refresh_token, expires_in);
-  }
-
-  // Access token not set or expired
-  if (!authInfo.accessToken || !authInfo.validUntil || dayjs().isAfter(dayjs.unix(authInfo.validUntil))) {
-    console.info('Refreshing token');
-    spotifyApi.setRefreshToken(authInfo.refreshToken);
-    const { body: { access_token, expires_in } = {} } = await spotifyApi.refreshAccessToken();
-    await saveAuthInfo(access_token, authInfo.refreshToken, expires_in);
-  } else {
-    spotifyApi.setAccessToken(authInfo.accessToken);
-  }
-
-  return spotifyApi;
+  return client;
 }
+
 
 function addApi(fn) {
   return async (...params) => {

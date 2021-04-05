@@ -6,16 +6,16 @@
   "license": "MIT",
   "scripts": {
     "start": "set -a && . ./.env && set +a && node ./src/index.js",
+    "start-job": "set -a && . ./.env && set +a && node ./src/run-job.js",
     "start-ctn": "./bin/run-ctn.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.9.0",
-    "@ladjs/graceful": "^1.0.5",
-    "bree": "^6.2.0",
     "dayjs": "^1.10.4",
     "got": "^11.8.2",
     "leveldown": "^5.6.0",
     "levelup": "^4.4.0",
+    "node-schedule": "^2.0.0",
     "spotify-web-api-node": "^5.0.2"
   }
 }
