@@ -7,7 +7,7 @@ import { TRIGGER_JOB_CHANNEL } from './common.js';
 
 import saveNeoCurrentSong from './jobs/save-neo-current-song.js';
 import saveMeuhCurrentSong from './jobs/save-meuh-current-song.js';
-import importSpotifyTracksIds from './jobs/import-spotify-track-ids.js';
+import importSpotifyTrackIds from './jobs/import-spotify-track-ids.js';
 import updateNeoMostPlayedPlaylistOnSpotify from './jobs/update-neo-most-played-playlist-on-spotify.js';
 import updateMeuhMostPlayedPlaylistOnSpotify from './jobs/update-meuh-most-played-playlist-on-spotify.js';
 
@@ -29,7 +29,7 @@ function scheduleJob({ name, rule, fn }) {
 
 scheduleJob({ name: 'saveNeoCurrentSong', rule: '10 * * * * *', fn: saveNeoCurrentSong });
 scheduleJob({ name: 'saveMeuhCurrentSong', rule: '20 * * * * *', fn: saveMeuhCurrentSong });
-scheduleJob({ name: 'importSpotifyTracksIds', rule: '0 4 * * *', fn: importSpotifyTracksIds });
+scheduleJob({ name: 'importSpotifyTrackIds', rule: '0 4 * * *', fn: importSpotifyTracksIds });
 scheduleJob({ name: 'updateNeoMostPlayedPlaylistOnSpotify', rule: '20 4 * * *', fn: updateNeoMostPlayedPlaylistOnSpotify });
 scheduleJob({ name: 'updateMeuhMostPlayedPlaylistOnSpotify', rule: '25 4 * * *', fn: updateMeuhMostPlayedPlaylistOnSpotify });
 
