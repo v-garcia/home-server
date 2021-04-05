@@ -1,9 +1,13 @@
+import camelCase from 'camelcase';
+import { BroadcastChannel } from "broadcast-channel";
+import { TRIGGER_JOB_CHANNEL } from './common.js';
 
-let [, , scriptName] = process.argv;
+let [, , jobName] = process.argv;
 
-scriptName = scriptName.split('/').pop();
-scriptName = scriptName.endsWith('.js') ? scriptName : `${scriptName}.js`;
-const { default: fnJob } = await import(`./jobs/${scriptName}`);
-await fnJob();
+jobName = jobName.split('/').pop();
+jobName = jobName.replace(/.js$/, '');
+jobName = camelCase(jobName);
 
+console.info(`Trying to execute job: "${jobName}"`);
+await new BroadcastChannel(TRIGGER_JOB_CHANNEL).postMessage(JSON.stringify({ jobName }));
 process.exit(0);
