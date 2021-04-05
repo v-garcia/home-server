@@ -4,7 +4,7 @@ import schedule from 'node-schedule';
 import { gotifyNotification } from './gotify.js';
 
 import saveNeoCurrentSong from './jobs/save-neo-current-song.js';
-import saveMeuhCurrentSong from './jobs/save-neo-current-song.js';
+import saveMeuhCurrentSong from './jobs/save-meuh-current-song.js';
 import importSpotifyTracksIds from './jobs/import-spotify-track-ids.js';
 import updateNeoMostPlayedPlaylistOnSpotify from './jobs/update-neo-most-played-playlist-on-spotify.js';
 import updateMeuhMostPlayedPlaylistOnSpotify from './jobs/update-meuh-most-played-playlist-on-spotify.js';
