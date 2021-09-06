@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# usage ./scripts/gen-secret-from-envfile.sh radio-autoplaylist apps/radio-autoplaylist/.env apps/radio-autoplaylist/
+# usage ./scripts/gen-secret-from-envfile.sh radio-autoplaylist
 
-kubectl create secret generic "$1" --from-env-file="$2" --dry-run  -o yaml > "$3/$1-secret.yaml"
+kubectl create secret generic "$1" --from-env-file="apps/$1/.env" --dry-run=client  -o yaml > "apps/$1/$1-secret.yaml"

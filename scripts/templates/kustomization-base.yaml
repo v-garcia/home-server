@@ -17,3 +17,5 @@ patches:
     target:
       kind: Ingress
       labelSelector: type=local
+transformers:
+  - ../../global/ingress-domain-transformer-secret.yaml
