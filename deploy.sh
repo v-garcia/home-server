@@ -28,7 +28,7 @@ sudo mkdir -p /data/radio-autoplaylist
 # https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
 
 kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.1.1/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
 
 
 # deploy-ctn-app () {
@@ -60,7 +60,7 @@ kustomize build ./global/ --load-restrictor LoadRestrictionsNone | kubectl apply
 
 #dashboard
 # uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/alternative.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/alternative.yaml
 ./apps/dashboard/gen-resources.sh | kubectl apply -f -
 
 #ddns-updater

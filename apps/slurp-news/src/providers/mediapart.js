@@ -37,6 +37,10 @@ class MediaPart extends NewsProvider {
         // Cookie consent
         let cookieConsent = document.querySelector('.cc-cookie-consent-banner-modal');
         cookieConsent && cookieConsent.remove()
+        let jsModal = document.getElementById('js-cc-modal');
+        jsModal && jsModal.remove();
+
+        document.documentElement.classList.remove('no-scroll');
     }
 
     prepareUrlForSlurp(url) {
@@ -45,19 +49,19 @@ class MediaPart extends NewsProvider {
         return `${url}?onglet=full`;
     }
 
-    #validateUrlRegex = /^(https|http):\/\/(www\.)?mediapart\.fr\/journal\/[a-z]+\/(?<id>\d+)\/.+/;
+    #validateUrlRegex = /^(https|http):\/\/(www\.)?mediapart\.fr\/journal\/(?<cat>[a-z]+)\/(?<day>\d+)\/(?<title>[^/]+)/
     validateUrl(url) {
         return this.#validateUrlRegex.test(url);
     }
 
     extractArticleIdFromUrl(url) {
-        const { groups: { id } } = url.match(this.#validateUrlRegex);
+        const { groups: { day, title } } = url.match(this.#validateUrlRegex);
 
-        if (!id || isNaN(id)) {
-            throw "Cannot parse article url for article id";
+        if (!day || isNaN(day) || !title) {
+            throw "Cannot parse article url";
         }
 
-        return id;
+        return hashStr(`${day}-${title}`);
     }
 }
 

@@ -27,3 +27,16 @@ kubectl logs -n ingress nginx-ingress-microk8s-controller-dq74p
 ## Missing certificates
 
 - microk8s refresh-certs
+
+## Node had noschedule taint
+
+sudo journalctl -u snap.microk8s.daemon-containerd | tail -n 50
+sudo journalctl -u snap.microk8s.daemon-kubelet | tail -n 50
+
+microk8s.stop
+remove /var/snap/microk8s/common/var/lib/
+microk8s.start
+
+## Arch linux
+
+cd /tmp && git clone 'https://aur.archlinux.org/yay.git' && cd /tmp/yay && makepkg -si && cd ~ && rm -rf /tmp/yay/

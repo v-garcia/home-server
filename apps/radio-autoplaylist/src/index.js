@@ -29,7 +29,7 @@ function scheduleJob({ name, rule, fn }) {
 
 scheduleJob({ name: 'saveNeoCurrentSong', rule: '10 * * * * *', fn: saveNeoCurrentSong });
 scheduleJob({ name: 'saveMeuhCurrentSong', rule: '20 * * * * *', fn: saveMeuhCurrentSong });
-scheduleJob({ name: 'importSpotifyTrackIds', rule: '0 4 * * *', fn: importSpotifyTracksIds });
+scheduleJob({ name: 'importSpotifyTrackIds', rule: '0 4 * * *', fn: importSpotifyTrackIds });
 scheduleJob({ name: 'updateNeoMostPlayedPlaylistOnSpotify', rule: '20 4 * * *', fn: updateNeoMostPlayedPlaylistOnSpotify });
 scheduleJob({ name: 'updateMeuhMostPlayedPlaylistOnSpotify', rule: '25 4 * * *', fn: updateMeuhMostPlayedPlaylistOnSpotify });
 
@@ -40,8 +40,8 @@ manualJobEventChannel.onmessage = async (message) => {
     message = JSON.parse(message);
     const { jobName } = message;
     console.info(`Received manual job trigger msg for: ${jobName}`);
-    const job = jobs[jobName];
-    if (!job) throw new Error(`Job ${jobName} not found`);
+    const j = jobs[jobName];
+    if (!j) throw new Error(`Job ${jobName} not found`);
     await j.job();
   } catch (e) {
     console.error(e);

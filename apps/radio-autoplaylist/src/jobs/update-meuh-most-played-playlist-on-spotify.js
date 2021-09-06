@@ -3,7 +3,7 @@ import store from '../local-store.js';
 import { saveSpotifyNotFoundTracks } from '../store.js';
 import spotifyApi from '../spotify.js';
 
-const NB_SONGS = 80;
+const NB_SONGS = 90;
 const SPOTIFY_PLAYLIST_ID = '2OioDzmnxunaDleMmsUZZG';
 
 

@@ -31,7 +31,7 @@ class MediaCites extends NewsProvider {
         comments && comments.remove();
     }
 
-    #validateUrlRegex = /^(https|http):\/\/(www\.)?mediacites\.fr\/(complement-denquete|enquete|reportage|portrait|decryptage|breve|decryptage|veracites|interview)\/[a-z0-9]+\/\d{4}\/\d{2}\/\d{2}\/(?<id>[a-z0-9\-]+)/;
+    #validateUrlRegex = /^(https|http):\/\/(www\.)?mediacites\.fr\/((?!mon-compte)([a-z0-9]|\-)+)\/[a-z0-9]+\/\d{4}\/\d{2}\/\d{2}\/(?<id>[a-z0-9\-]+)/;
     validateUrl(url) {
         return this.#validateUrlRegex.test(url);
     }
