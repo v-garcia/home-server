@@ -1,0 +1,47 @@
+.info-msg,
+.success-msg,
+.warning-msg,
+.error-msg {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 3px 3px 3px 3px;
+}
+.info-msg {
+  color: #059;
+  background-color: #bef;
+}
+.success-msg {
+  color: #270;
+  background-color: #dff2bf;
+}
+.warning-msg {
+  color: #9f6000;
+  background-color: #feefb3;
+}
+.error-msg {
+  color: #d8000c;
+  background-color: #ffbaba;
+}
+
+.track-input {
+  display: flex;
+}
+
+.track-input input {
+  flex: 1;
+}
+
+.track-input .ctn-t-spotify-iframe {
+  flex: 2;
+  min-height: 85px;
+}
+
+.t-label {
+  font-size: large;
+  font-weight: 500;
+}
+
+.copy-track-name-to-clipboard {
+  cursor: pointer;
+  padding: 0 0.2em;
+}
