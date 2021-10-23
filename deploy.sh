@@ -158,7 +158,7 @@ docker build ./apps/radio-autoplaylist -t localhost:32000/radio-autoplaylist && 
 docker push localhost:32000/radio-autoplaylist && \
 kustomize build ./apps/radio-autoplaylist --load-restrictor LoadRestrictionsNone | kubectl apply -f -
 
-#boursorama-tracker
+#enedis-tracker
 docker build ./apps/enedis-tracker -t localhost:32000/enedis-tracker && \
 docker push localhost:32000/enedis-tracker && \
 kustomize build ./apps/enedis-tracker --load-restrictor LoadRestrictionsNone | kubectl apply -f -
