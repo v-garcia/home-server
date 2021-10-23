@@ -1,11 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - http-server-ext-ing.yaml
-  - http-server-local-ing.yaml
-  - http-server-deploy.yaml
-  - http-server-svc.yaml
-  - http-server-cm.yaml
+  - vaultwarden-ext-ing.yaml
+  - vaultwarden-deploy.yaml
+  - vaultwarden-svc.yaml
+  - vaultwarden-pvc.yaml
+  - vaultwarden-pv.yaml
 patches:
   - path: ../../overlays/pv-node-affinity.yaml
     target:
@@ -22,3 +22,5 @@ patches:
     target:
       kind: Ingress
       labelSelector: type=local
+transformers:
+  - ../../global/ingress-domain-transformer-secret.yaml

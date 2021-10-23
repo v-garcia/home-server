@@ -4,6 +4,7 @@ metadata:
   name: upload-ext
   labels:
     type: external
+  annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
@@ -12,10 +13,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - upload.former-hostname.com
-      secretName: upload.former-hostname.com
+        - upload.{hostname}
+      secretName: upload.ing.cert
   rules:
-    - host: upload.former-hostname.com
+    - host: upload.{hostname}
       http:
         paths:
           - backend:

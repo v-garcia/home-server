@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radio-autoplaylist-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radio-autoplaylist-frontend
+  template:
+    metadata:
+      labels:
+        app: radio-autoplaylist-frontend
+    spec:
+      containers:
+        - name: radio-autoplaylist-frontend
+          image: localhost:32000/radio-autoplaylist-frontend
+          envFrom:
+            - secretRef:
+                name: s3-secret
+            - secretRef:
+                name: radio-autoplaylist-frontend-secret
+          ports:
+            - name: rapf-frontend
+              containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: rapf-frontend
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: rapf-frontend
+              scheme: HTTP

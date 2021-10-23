@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - sabnzbd.former-hostname.com
-      secretName: sabnzbd.former-hostname.com
+        - sabnzbd.{hostname}
+      secretName: sabnzbd.ing.cert
   rules:
-    - host: sabnzbd.former-hostname.com
+    - host: sabnzbd.{hostname}
       http:
         paths:
           - backend:

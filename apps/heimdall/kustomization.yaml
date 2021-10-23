@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - heimdall-deploy.yaml
 - heimdall-ext-ing.yaml
-- heimdall-local-ing.yaml
 - heimdall-pvc.yaml
 - heimdall-pv.yaml
 - heimdall-svc.yaml
@@ -23,3 +22,5 @@ patches:
   target:
     kind: Ingress
     labelSelector: type=local
+transformers:
+  - ../../global/ingress-domain-transformer-secret.yaml

@@ -20,6 +20,9 @@ function createSpotifySongFrame(trackId, spotifyId) {
 }
 
 window.addEventListener("DOMContentLoaded", (event) => {
+  // Feather icons
+  feather?.replace()
+
   // Display spotify frame next to track
   document.querySelectorAll('[name^="t-new-spotify-id-"]').forEach((e) => {
     e.addEventListener("input", (e) => {

@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - serve.former-hostname.com
-      secretName: serve.former-hostname.com
+        - serve.{hostname}
+      secretName: serve.ing.cert
   rules:
-    - host: serve.former-hostname.com
+    - host: serve.{hostname}
       http:
         paths:
           - backend:

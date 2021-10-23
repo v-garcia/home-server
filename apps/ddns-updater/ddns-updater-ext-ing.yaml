@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - ddns.former-hostname.com
-      secretName: ddns.former-hostname.com
+        - ddns.{hostname}
+      secretName: ddns.ing.cert
   rules:
-    - host: ddns.former-hostname.com
+    - host: ddns.{hostname}
       http:
         paths:
           - backend:

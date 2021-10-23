@@ -1,6 +1,5 @@
 FROM alpine:3.14.1 as builder
 
-
 RUN apk add --no-cache \
     nodejs \
     npm

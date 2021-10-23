@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: edith-ext
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  labels:
+    type: external
+spec:
+  tls:
+    - hosts:
+        - pad.{hostname}
+      secretName: edith.ing.cert
+  rules:
+    - host: pad.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: not-existing-service
+                port:
+                  number: 3001
+            path: /local.*
+            pathType: Prefix
+          - backend:
+              service:
+                name: edith
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix

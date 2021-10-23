@@ -1,4 +1,6 @@
 import Papa from "papaparse";
+import got from "got";
+
 class Utils {
   static groupBy = (items, key) =>
     items.reduce(

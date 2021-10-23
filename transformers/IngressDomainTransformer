@@ -11,7 +11,7 @@ def main(args=sys.argv[2:]):
     for resource in resources:
         if resource['apiVersion'] in ['extensions/v1beta1', 'networking.k8s.io/v1', 'networking.k8s.io/v1beta1'] and resource['kind'] == 'Ingress':
             annotations = resource['metadata']['annotations']
-            for entry in resource['spec']['tls']:
+            for entry in resource['spec'].get('tls', []):
                 if 'hosts' in entry:
                     for idx, domain in enumerate(entry['hosts']):
                         entry['hosts'][idx] = transform_host(

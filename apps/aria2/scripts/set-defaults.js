@@ -13,6 +13,7 @@
       rpcInterface: "jsonrpc",
       rpcPort: isHttps ? 443 : 80,
       protocol: isHttps ? "wss" : "ws",
+      language: 'en'
     };
   
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultConfig));

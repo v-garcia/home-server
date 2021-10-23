@@ -4,20 +4,19 @@ metadata:
   name: autoplaylist-ext
   labels:
     type: external
-
 spec:
   tls:
     - hosts:
-        - autoplaylist.{hostname}
-      secretName: autoplaylist
+        - not-found-on-spotify.{hostname}
+      secretName: autoplaylist.ing.cert
   rules:
     - host: not-found-on-spotify.{hostname}
       http:
         paths:
           - backend:
               service:
-                name: autoplaylist
+                name: radio-autoplaylist-frontend
                 port:
-                  number: 4533
+                  number: 3000
             path: /
             pathType: Prefix

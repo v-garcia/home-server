@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - feeds.former-hostname.com
-      secretName: feeds.former-hostname.com
+        - feeds.{hostname}
+      secretName: feeds.ing.cert
   rules:
-    - host: feeds.former-hostname.com
+    - host: feeds.{hostname}
       http:
         paths:
           - backend:

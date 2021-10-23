@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      containers:
+        - name: vaultwarden
+          image: localhost:32000/vaultwarden
+          ports:
+            - name: vaultwarden
+              containerPort: 3000
+          env:
+            - name: DOMAIN_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: domain-name-secret
+                  key: host
+            - name: DOMAIN
+              value: "https://vault.$(DOMAIN_HOST)"
+            - name: ROCKET_PORT
+              value: "3000"
+            - name: SHOW_PASSWORD_HINT
+              value: "true"
+          volumeMounts:
+            - name: vaultwarden
+              subPath: data
+              mountPath: /data/
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: vaultwarden
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: vaultwarden
+              scheme: HTTP
+      volumes:
+        - name: vaultwarden
+          persistentVolumeClaim:
+            claimName: vaultwarden

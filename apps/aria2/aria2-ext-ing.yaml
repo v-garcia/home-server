@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - aria2.former-hostname.com
-      secretName: aria2.former-hostname.com
+        - aria2.{hostname}
+      secretName: aria2.ing.cert
   rules:
-    - host: aria2.former-hostname.com
+    - host: aria2.{hostname}
       http:
         paths:
           - backend:

@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - files.former-hostname.com
-      secretName: files.former-hostname.com
+        - files.{hostname}
+      secretName: files.ing.cert
   rules:
-    - host: files.former-hostname.com
+    - host: files.{hostname}
       http:
         paths:
           - backend:

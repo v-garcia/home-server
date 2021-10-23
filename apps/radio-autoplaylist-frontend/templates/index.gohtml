@@ -11,12 +11,12 @@
     <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
   </head>
   <body>
     <h4 style="text-align:center;">
-      The 🤖 making <a class="glightbox" href="https://open.spotify.com/embed/playlist/2OioDzmnxunaDleMmsUZZG">these</a> <a class="glightbox" href="https://open.spotify.com/embed/playlist/4S1G62EWPPG51ijZc4uEvs">playlists</a> from radio track is very dumb, and it would be kind
-      of you to provide little help finding songs on spotify 🙏
+      The 🤖 making <a class="glightbox" href="https://open.spotify.com/embed/playlist/2OioDzmnxunaDleMmsUZZG">these</a> <a class="glightbox" href="https://open.spotify.com/embed/playlist/4S1G62EWPPG51ijZc4uEvs">playlists</a> from radio tracks can't find every tracks on spotify! It would be kind
+      of you to provide little help finding them 🙏
       <br><br>
      👇 Here are the not found tracks 👇
     </h4>
@@ -58,15 +58,15 @@
 
           <label for="t-spotify-id-{{ $i }}" class="t-label"
             >{{ $e.Artist }} - {{ $e.Title }}
-            <i
+            <span
               class="copy-track-name-to-clipboard clipboard-please"
               title="Copy to clipboard"
-              data-clipboard-text="{{ $e.Artist }} {{ $e.Title }}"
-              >🗐</i
-            >
+              data-clipboard-text="{{ $e.Artist }} {{ $e.Title }}">
+                <i data-feather="copy"></i>
+              </span>
           </label>
           <fieldset class="track-input">
-            <button id="t-paste-btn-{{ $i }}" class="paste-from-clipboard" title="Paste clipboard text here">📋</button>
+            <button id="t-paste-btn-{{ $i }}" class="paste-from-clipboard" title="Paste clipboard text here"><i data-feather="clipboard"></i></button>
             <input
               type="text"
               name="t-new-spotify-id-{{ $i }}"
@@ -96,7 +96,7 @@
           end
         }}
       </ul>
-      <input type="submit" style="width:100%; padding:1em;" value="💾 Save" />
+      <input type="submit" style="width:100%; padding:1em;" value="Save" />
     </form>
   </body>
 </html>

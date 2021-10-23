@@ -17,7 +17,5 @@ docker run\
     -e BOURSO_ACCOUNT_0="$BOURSO_ACCOUNT_0" \
     -e BOURSO_USER_0="$BOURSO_USER_0" \
     -e BOURSO_PWD_0="$BOURSO_PWD_0" \
-    -e WORKING_DIR="/downloads" \
-     -v $(pwd)/downloads:/downloads \
     --rm \
     boursorama-tracker

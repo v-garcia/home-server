@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - gotify.former-hostname.com
-      secretName: gotify.former-hostname.com
+        - gotify.{hostname}
+      secretName: gotify.ing.cert
   rules:
-    - host: gotify.former-hostname.com
+    - host: gotify.{hostname}
       http:
         paths:
           - backend:

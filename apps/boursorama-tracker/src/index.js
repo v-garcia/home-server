@@ -20,7 +20,7 @@ const pupetterParams = {
 };
 
 const s3Store = new S3Store();
-const boursoApi = new BoursoramaApi(process.env.WORKING_DIR);
+const boursoApi = new BoursoramaApi(process.env.WORKING_DIR || '/opt/');
 const notifier = Utils.notify(process.env.GOTIFY_URL, process.env.GOTIFY_TOKEN);
 
 async function cleanExit(signal) {

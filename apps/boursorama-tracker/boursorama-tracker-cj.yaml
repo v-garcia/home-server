@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: boursorama-tracker
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 6 * * *" # Everyday at 6am
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: boursorama-tracker
+              image: localhost:32000/boursorama-tracker
+              env:
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+              envFrom:
+                - secretRef:
+                    name: s3-secret
+                - secretRef:
+                    name: boursorama-tracker-secret

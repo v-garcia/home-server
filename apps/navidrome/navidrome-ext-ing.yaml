@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - navidrome.former-hostname.com
-      secretName: navidrome.former-hostname.com
+        - navidrome.{hostname}
+      secretName: navidrome.ing.cert
   rules:
-    - host: navidrome.former-hostname.com
+    - host: navidrome.{hostname}
       http:
         paths:
           - backend:

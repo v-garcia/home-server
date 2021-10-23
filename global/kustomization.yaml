@@ -10,6 +10,7 @@ resources:
     - public-pvc.yaml
     - res-limit-range.yaml
     - letsencrypt-cluster-issuer.yaml
+    - domain-name-secret.yaml
 patches:
     - path: ../overlays/pv-node-affinity.yaml
       target:

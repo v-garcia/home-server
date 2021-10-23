@@ -1,19 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: heimdall-local
-
+  name: vaultwarden-ext
   labels:
-    type: local
+    type: external
 spec:
+  tls:
+    - hosts:
+        - vault.{hostname}
+      secretName: vaultwarden.ing.cert
   rules:
-    - host: heimdall.local
+    - host: vault.{hostname}
       http:
         paths:
           - backend:
               service:
-                name: heimdall
+                name: vaultwarden
                 port:
-                  number: 80
+                  number: 3000
             path: /
             pathType: Prefix

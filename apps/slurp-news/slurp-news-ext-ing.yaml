@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - news.former-hostname.com
-      secretName: news.former-hostname.com
+        - news.{hostname}
+      secretName: news.ing.cert
   rules:
-    - host: news.former-hostname.com
+    - host: news.{hostname}
       http:
         paths:
           - backend:

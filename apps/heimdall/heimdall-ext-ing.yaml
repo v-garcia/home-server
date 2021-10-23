@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - former-hostname.com
-      secretName: former-hostname.com
+        - "{hostname}"
+      secretName: babardo.ing.cert
   rules:
-    - host: former-hostname.com
+    - host: "{hostname}"
       http:
         paths:
           - backend:

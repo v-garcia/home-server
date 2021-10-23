@@ -1,6 +1,6 @@
 FROM alpine:3.14
 
-ARG ARIA_NG_VERSION=1.2.1
+ARG ARIA_NG_VERSION=1.2.2
 
 COPY /root /
 

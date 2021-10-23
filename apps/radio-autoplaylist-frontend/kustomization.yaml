@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - radio-autoplaylist-frontend-secret.yaml
+  - radio-autoplaylist-frontend-deploy.yaml
+  - radio-autoplaylist-frontend-svc.yaml
   - radio-autoplaylist-frontend-ext-ing.yaml
 patches:
   - path: ../../overlays/pv-node-affinity.yaml

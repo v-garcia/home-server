@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edith
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edith
+  template:
+    metadata:
+      labels:
+        app: edith
+    spec:
+      containers:
+        - name: edith
+          image: localhost:32000/edith
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: perso
+              subPath: pad
+              mountPath: /app/data
+      volumes:
+        - name: perso
+          persistentVolumeClaim:
+            claimName: perso
