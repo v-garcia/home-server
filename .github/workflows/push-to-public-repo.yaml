@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          persist-credentials: false
       - run:  ./scripts/rm-repo-secrets.sh
       - name: Push changes to public repo
         uses: ad-m/github-push-action@master
