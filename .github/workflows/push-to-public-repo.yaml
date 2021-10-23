@@ -18,5 +18,6 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          ls -al
           ./scripts/rm-repo-secrets.sh
+           git remote add public-repo git@github.com:v-garcia/home-server.git
+           git push  public-repo master --force
