@@ -1,0 +1,6 @@
+### Clojure ###
+.cpcache/
+.calva/
+.clj-kondo/
+.lsp/
+.nrepl-port

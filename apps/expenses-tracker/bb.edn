@@ -1,0 +1,16 @@
+
+
+{:paths ["src"]
+ :tasks {:requires ([babashka.fs :as fs])
+         -nrepl-port (or (System/getenv "NREPL_PORT")
+                         "54601")
+         nrepl {:doc "Start nrepl server for editor integration"
+                :depends [-nrepl-port]
+                :task
+                (do
+                  (spit ".nrepl-port" -nrepl-port)
+                  (try
+                    (shell "bb" "--nrepl-server" -nrepl-port)
+                    (finally
+                      (fs/delete ".nrepl-port"))))}}}
+
