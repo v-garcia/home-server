@@ -90,7 +90,7 @@ async function dailyRoutine(linkySession, gotifyClient) {
     date = dateParseISO(date);
 
     // Store
-    await store.putDailyConsumption(date, { unit, value });
+    await store.putDailyConsumption(date, { unit, value, usagePointId: process.env.USAGE_POINT_ID});
 
     // Notify
     const dayCost = getDayPriceText(prices, { date, value });
