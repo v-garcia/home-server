@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-assistant-local
+
+  labels:
+    type: local
+spec:
+  rules:
+    - host: ha.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: home-assistant
+                port:
+                  number: 8123
+            path: /
+            pathType: Prefix

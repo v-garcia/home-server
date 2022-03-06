@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  configuration.yaml: |2
+
+    # Configure a default setup of Home Assistant (frontend, api, etc)
+    default_config:
+
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 0.0.0.0/0
+
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: home-assistant-config

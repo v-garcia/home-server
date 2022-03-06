@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-assistant-ext
+  labels:
+    type: external
+  annotations:
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+spec:
+  tls:
+    - hosts:
+        - "ha.{hostname}"
+      secretName: home-assistant.ing.cert
+  rules:
+    - host: "ha.{hostname}"
+      http:
+        paths:
+          - backend:
+              service:
+                name: home-assistant
+                port:
+                  number: 8123
+            path: /
+            pathType: Prefix
