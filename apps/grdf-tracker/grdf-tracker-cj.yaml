@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: grdf-tracker
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 7,23 * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: grdf-tracker
+              image: localhost:32000/grdf-tracker
+              env:
+                - name: USAGE_POINT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: grdf-tracker-secret
+                      key: usage-point-id
+                - name: GRDF_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: grdf-tracker-secret
+                      key: grdf-user
+                - name: GRDF_PWD
+                  valueFrom:
+                    secretKeyRef:
+                      name: grdf-tracker-secret
+                      key: grdf-pwd
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: GOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: grdf-tracker-secret
+                      key: gotify-token
+              envFrom:
+                - secretRef:
+                    name: s3-secret
+          volumes:
+            - name: grdf-tracker-secret
+              secret:
+                secretName: grdf-tracker-secret

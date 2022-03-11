@@ -1,0 +1,3 @@
+pygazpar~=1.1.4
+boto3~=1.21.13
+requests~=2.27.1
