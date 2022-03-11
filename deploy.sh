@@ -24,7 +24,7 @@ sudo mkdir -p /data/navidrome
 sudo mkdir -p /data/yarr
 sudo mkdir -p /data/slurp-news
 sudo mkdir -p /data/radio-autoplaylist
-
+sudo mkdir -p /data/home-assistant
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -182,3 +182,13 @@ kustomize build ./apps/edith --load-restrictor LoadRestrictionsNone --enable-alp
 docker build ./apps/vaultwarden -t localhost:32000/vaultwarden && \
 docker push localhost:32000/vaultwarden && \
 kustomize build ./apps/vaultwarden --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#home-assistant
+docker build ./apps/home-assistant -t localhost:32000/home-assistant && \
+docker push localhost:32000/home-assistant && \
+kustomize build ./apps/home-assistant --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#grdf-tracker
+docker build ./apps/grdf-tracker -t localhost:32000/grdf-tracker && \
+docker push localhost:32000/grdf-tracker && \
+kustomize build ./apps/grdf-tracker --load-restrictor LoadRestrictionsNone | kubectl apply -f -
