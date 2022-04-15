@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - netcheck-deploy.yaml
+  - netcheck-ext-ing.yaml
+  - netcheck-local-ing.yaml
+  - netcheck-svc.yaml
+patches:
+  - path: ../../overlays/pv-node-affinity.yaml
+    target:
+      kind: PersistentVolume
+  - path: ../../overlays/ing-local.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=local
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
+transformers:
+  - ../../global/ingress-domain-transformer-secret.yaml

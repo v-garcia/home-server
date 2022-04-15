@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netcheck-updater-ext
+
+  labels:
+    type: external
+spec:
+  tls:
+    - hosts:
+        - netcheck.{hostname}
+      secretName: netcheck.ing.cert
+  rules:
+    - host: netcheck.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: netcheck
+                port:
+                  number: 9000
+            path: /
+            pathType: Prefix

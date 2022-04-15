@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netcheck-local
+
+  labels:
+    type: local
+spec:
+  rules:
+    - host: netcheck.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: netcheck
+                port:
+                  number: 9000
+            path: /
+            pathType: Prefix

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netcheck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netcheck
+  template:
+    metadata:
+      labels:
+        app: netcheck
+    spec:
+      containers:
+        - name: netcheck
+          image: localhost:32000/netcheck
+          ports:
+            - name: netcheck
+              containerPort: 9000
