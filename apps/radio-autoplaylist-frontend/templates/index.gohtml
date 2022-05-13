@@ -60,13 +60,13 @@
             >{{ $e.Artist }} - {{ $e.Title }}
             <span
               class="copy-track-name-to-clipboard clipboard-please"
-              title="Copy to clipboard"
+              title="Copy artist & title to clipboard"
               data-clipboard-text="{{ $e.Artist }} {{ $e.Title }}">
                 <i data-feather="copy"></i>
               </span>
           </label>
           <fieldset class="track-input">
-            <button id="t-paste-btn-{{ $i }}" class="paste-from-clipboard" title="Paste clipboard text here"><i data-feather="clipboard"></i></button>
+            <button id="t-paste-btn-{{ $i }}" class="paste-from-clipboard" title="Paste clipboard text"><i data-feather="clipboard"></i></button>
             <input
               type="text"
               name="t-new-spotify-id-{{ $i }}"
