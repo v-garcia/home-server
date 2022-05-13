@@ -1,16 +1,10 @@
 FROM alpine:3.14.1 as builder
 
-
 ARG GIT_HASH="9289acc24c1f22ad39988e045c4a68f02de8bbd7"
 
 WORKDIR /opt
 
-RUN apk add git && \
-  git clone https://github.com/sunny/edith . && \
-  git checkout $GIT_HASH
-
-RUN ls -R
-
+RUN wget -O - https://github.com/sunny/edith/archive/${GIT_HASH}.tar.gz | tar xz --strip=1
 
 FROM php:7.4-apache
 
@@ -28,5 +22,7 @@ COPY --from=builder /opt/lib lib
 COPY --from=builder /opt/public public
 COPY --from=builder /opt/templates templates
 
-RUN mkdir -p data && chown -R www-data data && chmod a+w /app/data
+RUN mkdir -p data ; chown -R www-data data/ ; chmod a+w data
 
+VOLUME ["/app/data"]
+EXPOSE 80/tcp
