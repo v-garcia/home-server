@@ -12,6 +12,14 @@ spec:
       labels:
         app: edith
     spec:
+      initContainers:
+        - name: edith-init
+          image: busybox
+          command: ["/bin/sh", "-c", "chmod 777 -R /opt/"]
+          volumeMounts:
+            - name: perso
+              subPath: pad
+              mountPath: /opt/
       containers:
         - name: edith
           image: localhost:32000/edith
