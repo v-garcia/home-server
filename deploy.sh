@@ -191,4 +191,9 @@ kustomize build ./apps/home-assistant --load-restrictor LoadRestrictionsNone --e
 #grdf-tracker
 docker build ./apps/grdf-tracker -t localhost:32000/grdf-tracker && \
 docker push localhost:32000/grdf-tracker && \
-kustomize build ./apps/grdf-tracker --load-restrictor LoadRestrictionsNone | kubectl apply -f -
+kustomize build ./apps/grdf-tracker --load-restrictor LoadRestrictionsNone --enable-alpha-plugins| kubectl apply -f -
+
+#netcheck
+docker build ./apps/netcheck -t localhost:32000/netcheck && \
+docker push localhost:32000/netcheck && \
+kustomize build ./apps/netcheck --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
