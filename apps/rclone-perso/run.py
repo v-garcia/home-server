@@ -26,7 +26,7 @@ hostname = os.uname()[1]
 print(f"Running rclone-perso on {hostname}")
 start_time = time.monotonic()
 
-WORKING_DIR="/root/rclonesyncwd/"
+WORKING_DIR="/root/rclonewd/"
 
 # print args
 args=sys.argv[1:]
@@ -58,15 +58,14 @@ if isLocalDirEmpty :
   print(f"Local sync dir is empty ({localDir})")
 
 # append first-sync if necessary
-customParams = ["--first-sync"] if (isLocalDirEmpty or isSyncwdEmpty) else ["--check-access"]
+customParams = ["--resync"] if (isLocalDirEmpty or isSyncwdEmpty) else ["--check-access"]
 
 # run rclonesync
-finalArgs= ["rclonesync"] + customParams + args
-print("Executing rclonesync with: ", finalArgs)
+finalArgs= ["rclone", "bisync"] + customParams + args
+print("Executing rclone with: ", finalArgs)
 sys.stdout.flush()
 
 p = subprocess.run(finalArgs, timeout=(3*60*60))
-#os.execv("/usr/bin/rclonesync", finalArgs)
 
 end_time = time.monotonic()
 delta = timedelta(seconds=end_time - start_time)

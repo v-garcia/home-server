@@ -32,6 +32,7 @@ spec:
             - name: rclone-perso
               image: localhost:32000/rclone-perso
               args:
+                - --verbose
                 - --filters-file
                 - "/filters/rclone-filter"
                 - --config
