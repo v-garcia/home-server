@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+spec:
+  serviceName: influxdb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+        - name: influxdb
+          image: localhost:32000/influxdb
+          ports:
+            - containerPort: 8086
+          envFrom:
+            - secretRef:
+                name: influxdb-secret
+          volumeMounts:
+            - name: influxdb
+              subPath: data
+              mountPath: /var/lib/influxdb2
+            - name: influxdb
+              subPath: config
+              mountPath: /etc/influxdb2
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "/init.sh"]
+      volumes:
+        - name: influxdb
+          persistentVolumeClaim:
+            claimName: influxdb
