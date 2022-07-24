@@ -12,14 +12,6 @@ spec:
       labels:
         app: edith
     spec:
-      initContainers:
-        - name: edith-init
-          image: busybox
-          command: ["/bin/sh", "-c", "chmod 777 -R /opt/"]
-          volumeMounts:
-            - name: perso
-              subPath: pad
-              mountPath: /opt/
       containers:
         - name: edith
           image: localhost:32000/edith
@@ -29,6 +21,10 @@ spec:
             - name: perso
               subPath: pad
               mountPath: /app/data
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "chmod 777 -R /app/data"]
       volumes:
         - name: perso
           persistentVolumeClaim:
