@@ -3,5 +3,5 @@ docker build --rm -t edith-test ../
 docker run\
     --rm \
     -v $(pwd)/data/:/app/data/ \
-    -p 80:3000/tcp \
+    -p 9000:80/tcp \
     edith-test
