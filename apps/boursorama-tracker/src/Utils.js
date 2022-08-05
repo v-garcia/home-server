@@ -1,5 +1,5 @@
-import Papa from "papaparse";
-import got from "got";
+import Papa from 'papaparse';
+import got from 'got';
 
 class Utils {
   static groupBy = (items, key) =>
@@ -15,9 +15,9 @@ class Utils {
   static notify =
     (url, token) =>
     (title, message, priority = 1) => {
-      console.info("notification:", title, message);
+      console.info('notification:', title, message);
       return got.post(`${url}/message`, {
-        headers: { "X-Gotify-Key": token },
+        headers: { 'X-Gotify-Key': token },
         json: {
           title,
           message,

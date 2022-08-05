@@ -1,21 +1,21 @@
-import BoursoramaApi from "boursorama-unofficial-api";
-import Utils from "./Utils.js";
-import S3Store from "./S3Store.js";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js";
-import minMax from "dayjs/plugin/minMax.js";
+import BoursoramaApi from 'boursorama-unofficial-api';
+import Utils from './Utils.js';
+import S3Store from './S3Store.js';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter.js';
+import minMax from 'dayjs/plugin/minMax.js';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(minMax);
 
 const MAX_DAY_SEEK = 30;
 const pupetterParams = {
   args: [
-    "--no-sandbox",
-    "--disable-gpu",
-    "--no-first-run",
-    "--no-zygote",
-    "--disable-dev-shm-usage",
-    "--disable-setuid-sandbox",
+    '--no-sandbox',
+    '--disable-gpu',
+    '--no-first-run',
+    '--no-zygote',
+    '--disable-dev-shm-usage',
+    '--disable-setuid-sandbox',
   ],
 };
 
@@ -25,12 +25,12 @@ const notifier = Utils.notify(process.env.GOTIFY_URL, process.env.GOTIFY_TOKEN);
 
 async function cleanExit(signal) {
   signal && console.info(`*^!@4=> Received signal to terminate: ${signal}`);
-  console.info("Bourso tracker ending");
+  console.info('Bourso tracker ending');
   await boursoApi.getBrowser()?.close();
   process.exit();
 }
-process.on("SIGINT", cleanExit);
-process.on("SIGTERM", cleanExit);
+process.on('SIGINT', cleanExit);
+process.on('SIGTERM', cleanExit);
 
 async function slurpAccount(i) {
   // Retrieve bourso account info
@@ -38,24 +38,27 @@ async function slurpAccount(i) {
   const user = process.env[`BOURSO_USER_${i}`];
   const pwd = process.env[`BOURSO_PWD_${i}`];
 
+  // Get the oldest day we need to search from
+  const maxSeekDay = dayjs().subtract(MAX_DAY_SEEK, 'day');
+
   // Get saved daily movements
-  const savedMovements = await s3Store.getMovements(accountId);
-  // Get the last day we need to search from
-  const maxSeekDay = dayjs().subtract(MAX_DAY_SEEK, "day");
-  let lastDay = savedMovements.Contents?.map(
-    ({ Key }) => Key.split("/").pop().split("_")[0]
-  )
-    .sort()
-    .reverse()[0];
-  lastDay = lastDay ? dayjs.max(dayjs(lastDay), maxSeekDay) : maxSeekDay;
+  const savedMovements = await s3Store.getMovements(accountId, maxSeekDay);
+
+  let lastDay =
+    savedMovements.Contents?.map(({ Key }) => Key.split('/').pop().split('_')[0])
+      .sort()
+      .reverse()
+      .shift();
+
+  lastDay = lastDay ? dayjs(lastDay) : maxSeekDay;
 
   // If lastday is yesterday, no need to retrieve anything
-  if (lastDay.isSameOrAfter(dayjs().subtract(1, "day"), "day")) {
-    console.info("Last daily movement is very recent, no retrieve needed");
+  if (lastDay.isSameOrAfter(dayjs().subtract(1, 'day'), 'day')) {
+    console.info('Last daily movement is very recent, no retrieve needed');
     return;
   }
 
-  console.info(`Start fetching movements from ${lastDay.format()}`);
+  console.info(`Start fetching movements from ${lastDay.format('YYYY/MM/DD')}`);
 
   if (!boursoApi.getBrowser()) {
     await boursoApi.init(pupetterParams);
@@ -65,15 +68,11 @@ async function slurpAccount(i) {
   await boursoApi.connect(user, pwd);
   console.info(`User ${i} connected`);
 
-  let movements = await boursoApi.getMovements(
-    accountId,
-    lastDay.toDate(),
-    dayjs().subtract(1, "day").toDate()
-  );
+  let movements = await boursoApi.getMovements(accountId, lastDay.toDate(), dayjs().subtract(1, 'day').toDate());
 
   console.info(`${movements.length} movements fetched`);
 
-  movements = Utils.groupBy(movements, "dateOp");
+  movements = Utils.groupBy(movements, 'dateOp');
 
   for (let day in movements) {
     let dayMovements = movements[day];
@@ -88,14 +87,14 @@ async function slurpAccount(i) {
   }
 }
 
-console.info("Bourso tracker starting");
+console.info('Bourso tracker starting');
 let accountNb = 0;
 do {
   try {
     await slurpAccount(accountNb);
   } catch (error) {
     console.error(`Exception on slurp account ${0}`, error);
-    notifier("Bourso tracker error", error.toString());
+    notifier('Bourso tracker error', error.toString());
     await boursoApi.getBrowser()?.close();
   }
 } while (process.env[`BOURSO_ACCOUNT_${++accountNb}`]);

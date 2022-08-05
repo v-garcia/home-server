@@ -9,8 +9,16 @@ class S3Store {
     this.#s3 = new S3({ endpoint: process.env.AWS_S3_ENDPOINT });
   }
 
+  #accountToPrefix(accountId) {
+    return `movements/${accountId}`;
+  }
+
+  #dateToKey(day) {
+    return `${dayjs(day).format('YYYYMMDD')}_movements.csv`;
+  }
+
   async putDayMovement(day, accountId, movementsCsv) {
-    const id = `movements/${accountId}/${dayjs(day).format('YYYYMMDD')}_movements.csv`;
+    const id = `${this.#accountToPrefix(accountId)}/${this.#dateToKey(day)}`;
 
     await this.#s3.putObject({
       ContentType: 'text/csv',
@@ -20,10 +28,11 @@ class S3Store {
     });
   }
 
-  async getMovements(accountId) {
+  async getMovements(accountId, fromDay) {
     return await this.#s3.listObjectsV2({
       Bucket: this.#bucketName,
-      Prefix: `movements/${accountId}`,
+      Prefix: this.#accountToPrefix(accountId),
+      StartAfter: `${this.#accountToPrefix(accountId)}/${this.#dateToKey(fromDay)}`
     });
   }
 }
