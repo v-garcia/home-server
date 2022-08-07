@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: influxdb-local
-
   labels:
     type: local
 spec:
@@ -12,7 +11,7 @@ spec:
         paths:
           - backend:
               service:
-                name: home-assistant
+                name: influxdb
                 port:
                   number: 8086
             path: /
