@@ -1,23 +1,23 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - vaultwarden-ext-ing.yaml
-  - vaultwarden-deploy.yaml
-  - vaultwarden-svc.yaml
-  - vaultwarden-pvc.yaml
-  - vaultwarden-pv.yaml
+  - http-server-cm.yaml
+  - http-server-deploy.yaml
+  - http-server-ext-ing.yaml
+  - http-server-local-ing.yaml
+  - http-server-svc.yaml
 patches:
   - path: ../../overlays/pv-node-affinity.yaml
     target:
       kind: PersistentVolume
-  - path: ../../overlays/ing-external.yaml
-    target:
-      kind: Ingress
-      labelSelector: type=external
   - path: ../../overlays/ing-authentified.yaml
     target:
       kind: Ingress
       labelSelector: authentified
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
   - path: ../../overlays/ing-local.yaml
     target:
       kind: Ingress
