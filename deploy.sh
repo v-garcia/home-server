@@ -3,7 +3,8 @@
 # awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 # copying transformers
-./scipts/cp-transformers-to-plugin-dir.sh
+pip install pyyaml
+./scripts/cp-tranformers-to-plugin-dir.sh
 
 # creating dirs
 sudo mkdir -p /data/perso/
@@ -25,6 +26,7 @@ sudo mkdir -p /data/yarr
 sudo mkdir -p /data/slurp-news
 sudo mkdir -p /data/radio-autoplaylist
 sudo mkdir -p /data/home-assistant
+sudo mkdir -p /data/influxdb
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -32,7 +34,7 @@ sudo mkdir -p /data/home-assistant
 # https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
 
 kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 
 
 # deploy-ctn-app () {
@@ -64,7 +66,7 @@ kustomize build ./global/ --load-restrictor LoadRestrictionsNone | kubectl apply
 
 #dashboard
 # uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/alternative.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/alternative.yaml
 ./apps/dashboard/gen-resources.sh | kubectl apply -f -
 
 #ddns-updater
@@ -192,3 +194,8 @@ kustomize build ./apps/home-assistant --load-restrictor LoadRestrictionsNone --e
 docker build ./apps/netcheck -t localhost:32000/netcheck && \
 docker push localhost:32000/netcheck && \
 kustomize build ./apps/netcheck --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#influxdb
+docker build ./apps/influxdb -t localhost:32000/influxdb && \
+docker push localhost:32000/influxdb && \
+kustomize build ./apps/influxdb --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
