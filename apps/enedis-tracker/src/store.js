@@ -16,10 +16,10 @@ async function readableToString(readable) {
   return result;
 }
 
-async function putDailyConsumption(date, consumption) {
-  const id = `daily_consumption/${dateFormat(date, 'yyyyMMdd')}_daily.json`;
+async function putDailyConsumption(usagePointId ,date, info) {
+  const id = `${usagePointId}/daily_consumption/${dateFormat(date, 'yyyyMMdd')}_daily.json`;
 
-  await s3.putObject({ Key: id, Bucket: BUCKET_NAME, Body: JSON.stringify(consumption, null, 2) });
+  await s3.putObject({ Key: id, Bucket: BUCKET_NAME, Body: JSON.stringify(info, null, 2) });
 
 }
 
@@ -37,15 +37,15 @@ function putAuthTokens(accessToken, refreshToken) {
   return s3.putObject({ Key: "auth_tokens.json", Bucket: BUCKET_NAME, Body: JSON.stringify({ accessToken, refreshToken }, null, 2) });
 }
 
-async function getLastDay() {
-  const { Contents: keys } = await s3.listObjectsV2({ Bucket: BUCKET_NAME, Prefix: 'daily_consumption/' });
+async function getLastDay(usagePointId) {
+  const { Contents: keys } = await s3.listObjectsV2({ Bucket: BUCKET_NAME, Prefix: `${usagePointId}/daily_consumption` });
 
   if (!keys || !keys.length) {
     return null;
   }
 
   const [lastKey] = keys.map(({ Key }) => Key).sort().reverse();
-  const [lastDate] = lastKey.match(/\d{8}/);
+  const [lastDate] = lastKey.split('/').pop().match(/\d{8}/);
 
   return dateParseISO(lastDate);
 }

@@ -68,11 +68,11 @@ function getDayPriceText({ monthlyFlatRage, kwhPrice }, { date, value }) {
   };
 }
 
-async function dailyRoutine(linkySession, gotifyClient) {
+async function dailyRoutine(linkySession, gotifyClient, usagePointId) {
   // Determining min days
 
   let minDay = subDays(startOfToday(), SEEK_DAYS);
-  minDay = dateMax([minDay, (await store.getLastDay()) || minDay]);
+  minDay = dateMax([minDay, (await store.getLastDay(usagePointId)) || minDay]);
   minDay = addDays(minDay, 1);
 
   // Retrieving prices 
@@ -90,7 +90,7 @@ async function dailyRoutine(linkySession, gotifyClient) {
     date = dateParseISO(date);
 
     // Store
-    await store.putDailyConsumption(date, { unit, value, usagePointId: process.env.USAGE_POINT_ID});
+    await store.putDailyConsumption(usagePointId, date, { unit, value, usagePointId});
 
     // Notify
     const dayCost = getDayPriceText(prices, { date, value });
@@ -113,10 +113,10 @@ const routines = {
   console.info(`Starting ${routine} routine`);
 
   try {
+    var gotifyClient = getGotityClient();
     const linkySession = await getLinkySession();
-    const gotifyClient = getGotityClient();
-
-    await toRun(linkySession, gotifyClient);
+    
+    await toRun(linkySession, gotifyClient, process.env.USAGE_POINT_ID);
     console.info(`Ending ${routine} routine`);
   } catch (e) {
     console.error(e);
