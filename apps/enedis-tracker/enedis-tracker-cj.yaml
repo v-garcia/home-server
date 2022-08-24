@@ -17,22 +17,10 @@ spec:
               args:
                 - "daily"
               env:
-                - name: USAGE_POINT_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: enedis-tracker-secret
-                      key: usage-point-id
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-                - name: GOTIFY_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: enedis-tracker-secret
-                      key: gotify-token
               envFrom:
                 - secretRef:
                     name: s3-secret
-          volumes:
-            - name: enedis-tracker-secret
-              secret:
-                secretName: enedis-tracker-secret
+                - secretRef:
+                    name: enedis-tracker-secret
