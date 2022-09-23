@@ -31,7 +31,7 @@
   [date]
   (->> date
        (t/format "yyyyMMdd")
-       (format "daily_wallets/%s_daily_wallet.json")))
+       (format "daily_wallets/%s.json")))
 
 (defn- price->keyword
   [{:keys [:currency :amount] :as p}]

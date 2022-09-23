@@ -14,7 +14,7 @@ class S3Store {
   }
 
   #dateToKey(day) {
-    return `${dayjs(day).format('YYYYMMDD')}_movements.csv`;
+    return `${dayjs(day).format('YYYYMMDD')}.csv`;
   }
 
   async putDayMovement(day, accountId, movementsCsv) {

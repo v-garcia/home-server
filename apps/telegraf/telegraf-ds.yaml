@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: telegraf
+  labels:
+    app: telegraf
+spec:
+  selector:
+    matchLabels:
+      name: telegraf
+  template:
+    metadata:
+      labels:
+        name: telegraf
+    spec:
+      serviceAccountName: telegraf
+      containers:
+      - name: telegraf
+        image: localhost:32000/telegraf
+        envFrom:
+          - secretRef:
+              name: telegraf-secret
+        env:
+            - name: HOSTIP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: INFLUXDB_URL
+              value: http://$(INFLUXDB_SERVICE_HOST):$(INFLUXDB_SERVICE_PORT)
+            - name: tty-usb0
+        volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: true
+            - name: telegraf-config
+              subPath: telegraf.conf
+              mountPath: /etc/telegraf/telegraf.conf
+      volumes:
+        - name: data
+          hostPath:
+            path: /data
+        - name: telegraf-config
+          configMap:
+            name: telegraf

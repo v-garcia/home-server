@@ -45,7 +45,7 @@ async function slurpAccount(i) {
   const savedMovements = await s3Store.getMovements(accountId, maxSeekDay);
 
   let lastDay =
-    savedMovements.Contents?.map(({ Key }) => Key.split('/').pop().split('_')[0])
+    savedMovements.Contents?.map(({ Key }) => Key.split('/').pop().split('.')[0])
       .sort()
       .reverse()
       .shift();

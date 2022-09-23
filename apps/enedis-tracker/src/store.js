@@ -17,7 +17,7 @@ async function readableToString(readable) {
 }
 
 async function putDailyConsumption(usagePointId ,date, info) {
-  const id = `${usagePointId}/daily_consumption/${dateFormat(date, 'yyyyMMdd')}_daily.json`;
+  const id = `${usagePointId}/daily_consumption/${dateFormat(date, 'yyyyMMdd')}.json`;
 
   await s3.putObject({ Key: id, Bucket: BUCKET_NAME, Body: JSON.stringify(info, null, 2) });
 
