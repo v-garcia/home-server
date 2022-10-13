@@ -1,0 +1,79 @@
+inputs:
+  - type: daily
+    s3:
+      bucket: wallet-monitor
+      path: "daily_wallets/{day}.json"
+    content:
+      items_key: wallet
+    influx: 
+      bucket: test-bucket
+      measurement: wallet_daily
+      time:
+        path: "request.Key"
+        fns: ["s3_key_to_day"]
+      tags:
+        - path: isin
+          name: isin
+        - path: price.currency
+          name: amountCurrency
+      fields:
+        - path: targetRatio
+          name: targetRatio
+          fns: ["float"]
+        - path: qtyOwned
+          name: qtyOwned
+        - path: price.amount
+          name: stockPrice
+          fns: ["float"]
+  - type: daily
+    s3:
+      bucket: enedis-tracker
+      path: "{env.ENEDIS_USAGE_POINT_ID}/daily_consumption/{day}.json"
+    influx: 
+      bucket: test-bucket
+      measurement: enedis_daily
+      time:
+        path: "request.Key"
+        fns: ["s3_key_to_day"]
+      tags:
+        - path: usagePointId
+          name: usagePointId
+        - path: unit
+          name: unit
+        - path: request.Key
+          name: s3Key
+      fields:
+        - path: value
+          name: consumption
+  - type: daily
+    s3:
+      bucket: boursorama-tracker
+      path: "movements/{env.BOURSO_ACCOUNT_ID}/{day}.json"
+    influx: 
+      bucket: test-bucket
+      measurement: boursorama-expenses
+      time:
+        path: dateOp
+      tags:
+        - path: label
+          name: label
+        - path: category
+          name: category
+        - path: categoryParent
+          name: categoryParent
+        - path: comment
+          name: comment
+        - path: accountNum
+          name: accountNum
+        - path: accountLabel
+          name: accountLabel
+        - path: request.Key
+          name: s3Key
+      fields:
+        - path: amount
+          name: amount
+          fns: ["float"]
+        - path: accountBalance
+          name: accountBalance
+          fns: ["float_nullable"]
+        
