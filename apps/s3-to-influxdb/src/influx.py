@@ -5,7 +5,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 client = InfluxDBClient(url=os.getenv('INFLUXDB_URL'),
                         token=os.getenv('INFLUXDB_TOKEN'),
-                        org=os.getenv('INFLUXDB_ORGANIZATION')) # , debug=True
+                        org=os.getenv('INFLUXDB_ORGANIZATION')) #, debug=True
 
 query_api = client.query_api()
 write_api = client.write_api(write_options=SYNCHRONOUS)

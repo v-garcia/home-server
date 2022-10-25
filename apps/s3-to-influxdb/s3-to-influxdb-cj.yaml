@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: s3-to-influxdb
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "*/15 * * * *" # Every 15 minutes
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: s3-to-influxdb
+              image: localhost:32000/s3-to-influxdb
+              envFrom:
+                - secretRef:
+                    name: s3-to-influxdb-secret
+                - secretRef:
+                    name: s3-secret
+              env:
+                - name: INFLUXDB_URL
+                  value: http://$(INFLUXDB_SERVICE_HOST):$(INFLUXDB_SERVICE_PORT)
+                - name: BOURSO_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: boursorama-tracker-secret
+                      key: BOURSO_ACCOUNT_0
+                - name: ENEDIS_USAGE_POINT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: enedis-tracker-secret
+                      key: USAGE_POINT_ID
+              volumeMounts:
+                - name: s3-to-influxdb-config
+                  subPath: s3-to-influx-conf.yaml
+                  mountPath: /etc/s3-to-influx-conf.yaml
+                  readOnly: true
+          volumes:
+            - name: s3-to-influxdb-config
+              configMap:
+                name: s3-to-influxdb

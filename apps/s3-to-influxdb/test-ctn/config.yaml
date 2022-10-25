@@ -5,7 +5,7 @@ inputs:
       path: "daily_wallets/{day}.json"
     content:
       items_key: wallet
-    influx: 
+    influx:
       bucket: test-bucket
       measurement: wallet_daily
       time:
@@ -29,7 +29,7 @@ inputs:
     s3:
       bucket: enedis-tracker
       path: "{env.ENEDIS_USAGE_POINT_ID}/daily_consumption/{day}.json"
-    influx: 
+    influx:
       bucket: test-bucket
       measurement: enedis_daily
       time:
@@ -49,7 +49,7 @@ inputs:
     s3:
       bucket: boursorama-tracker
       path: "movements/{env.BOURSO_ACCOUNT_ID}/{day}.json"
-    influx: 
+    influx:
       bucket: test-bucket
       measurement: boursorama-expenses
       time:
@@ -76,4 +76,4 @@ inputs:
         - path: accountBalance
           name: accountBalance
           fns: ["float_nullable"]
-        
+

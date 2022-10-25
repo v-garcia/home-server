@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - s3-to-influxdb-cj.yaml
+  - s3-to-influxdb-cm.yaml
+  - s3-to-influxdb-secret.yaml
