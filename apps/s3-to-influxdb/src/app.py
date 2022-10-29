@@ -8,6 +8,7 @@ from typing import Dict
 import itertools
 import argparse
 
+
 def list_in_dic(dic, l_key):
     dic = dict(dic)
     r = dic.get(l_key, [])
@@ -35,7 +36,7 @@ def object_to_items(content_info, obj_response):
 field_fns = {"int":  int,
              "float": float,
              "float_nullable": lambda x: float(x) if x else None,
-             "s3_key_to_day": lambda k: re.search(r"\d{8}", k.split("/")[-1]).group() }
+             "s3_key_to_day": lambda k: re.search(r"\d{8}", k.split("/")[-1]).group()}
 record_fns = {"name": lambda p, v: [p, v],
               "path": jmespath.search,
               "val": lambda p, _: utils.substitute(p),
@@ -48,6 +49,7 @@ def parse_field(record, field_info):
     except Exception as e:
         e.args += record, field_info
         raise
+
 
 def parse_record(record_info, record):
     parse_field_ = functools.partial(parse_field, record)
@@ -76,6 +78,17 @@ def date_to_str(input_type, date):
         return date.isoformat()
 
 
+def tag_duplicate_datapoints(dps):
+    acc = {}
+    def get_key(dp): return (dp["time"], frozenset(dp.get("tags", {}).items()))
+    for dp in dps:
+        k = get_key(dp)
+        nb_k = acc.get(k, 0)
+
+        acc[k] = nb_k + 1
+        yield dp if nb_k < 1 else {**dp, "tags": {**dp.get("tags", {}), "uniq": nb_k}}
+
+
 def sync_measure(input_info):
     def conf(path): return jmespath.search(path, input_info)
     measure_name = conf("influx.bucket") + "." + conf("influx.measurement")
@@ -92,7 +105,7 @@ def sync_measure(input_info):
             Bucket=conf("s3.bucket"),
             Prefix=utils.substitute(get_s3_prefix(conf("s3.path"))),
             StartAfter=utils.substitute(get_s3_start_after(conf("type"), fromTime, conf("s3.path")) if fromTime is not None else get_s3_prefix(conf("s3.path"))))
-   
+
         # Transform object to items
         items = itertools.chain.from_iterable(
             map(functools.partial(object_to_items, conf("content")), objects))
@@ -100,7 +113,11 @@ def sync_measure(input_info):
         # Transform record to flux datapoints
         datapoints = map(functools.partial(
             parse_record, conf("influx")), items)
-    
+
+        # Handle duplicate flux datapoints
+        if (conf("influx.allow_duplicates")):
+            datapoints = tag_duplicate_datapoints(datapoints)
+
         # Send datpoints to influx
         influx.write_datapoints(datapoints)
 
@@ -117,10 +134,11 @@ def main(args):
         sync_measure(input)
     print("End syncing")
 
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = 'S3 to Influx')
-    parser.add_argument('--config', type=str, default="/etc/s3-to-influx-conf.yaml")
+    parser = argparse.ArgumentParser(description='S3 to Influx')
+    parser.add_argument('--config', type=str,
+                        default="/etc/s3-to-influx-conf.yaml")
     args = parser.parse_args()
     print(args)
     main(args)
-

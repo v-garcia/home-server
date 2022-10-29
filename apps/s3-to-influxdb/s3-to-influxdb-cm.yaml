@@ -53,6 +53,7 @@ data:
         influx:
           bucket: my-data
           measurement: boursorama-expenses
+          allow_duplicates: true
           time:
             path: dateOp
           tags:

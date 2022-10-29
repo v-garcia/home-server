@@ -4,12 +4,20 @@ import os
 import json
 import jmespath
 import re
+import functools
 
-s3_client = boto3.client('s3',
-                         region_name=os.getenv('AWS_REGION'),
-                         endpoint_url=os.getenv('AWS_S3_ENDPOINT'))
 
-paged_list_v2 = s3_client.get_paginator('list_objects_v2')
+@functools.cache
+def get_client():
+    return boto3.client('s3',
+                        region_name=os.getenv('AWS_REGION'),
+                        endpoint_url=os.getenv('AWS_S3_ENDPOINT'))
+
+
+@functools.cache
+def get_list_objects_paginator():
+    return get_client().get_paginator('list_objects_v2')
+
 
 class TextIterator:
     def __init__(self, iterable, encoding):
@@ -22,13 +30,16 @@ class TextIterator:
     def __next__(self):
         return self.iterable.__next__().decode(self.encoding)
 
+
 def parse_csv(streaming_body):
     it = TextIterator(streaming_body.iter_lines(), "utf-8")
     for row in csv.DictReader(it):
         yield row
 
+
 def parse_json(streaming_body):
     return json.load(streaming_body)
+
 
 def parse_response_body(s3_object):
     s3_object = s3_object.copy()
@@ -43,19 +54,21 @@ def parse_response_body(s3_object):
             raise Exception(f"Cannot parse extension '{ext}'")
     return s3_object
 
+
 def get_object(*args, **kwargs):
-    r = s3_client.get_object(*args, **kwargs)
+    r = get_client().get_object(*args, **kwargs)
     r["Request"] = kwargs
     return r
+
 
 def get_and_parse_object(*args, **kwargs):
     r = get_object(*args, **kwargs)
     return parse_response_body(r)
 
+
 def get_and_parse_objects(*args, **kwargs):
-    pages = paged_list_v2.paginate(*args, **kwargs)
+    pages = get_list_objects_paginator()(*args, **kwargs)
     keys = sorted(filter(None, pages.search("Contents[].Key")))
     for k in keys:
-        print("Parsing s3 object %s:%s"% (kwargs["Bucket"], k))
+        print("Parsing s3 object %s:%s" % (kwargs["Bucket"], k))
         yield get_and_parse_object(Bucket=kwargs["Bucket"], Key=k)
-
