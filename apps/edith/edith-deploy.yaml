@@ -24,7 +24,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "chmod 777 -R /app/data"]
+                command: ["/bin/sh", "-c", "while sleep 600; do chmod 777 -R /app/data; done"]
       volumes:
         - name: perso
           persistentVolumeClaim:
