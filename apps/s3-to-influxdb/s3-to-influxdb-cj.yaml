@@ -4,7 +4,7 @@ metadata:
   name: s3-to-influxdb
 spec:
   concurrencyPolicy: Forbid
-  schedule: "*/15 * * * *" # Every 15 minutes
+  schedule: "*/30 * * * *" # Every 15 minutes
   jobTemplate:
     spec:
       backoffLimit: 1
