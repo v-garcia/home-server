@@ -1,0 +1,87 @@
+woob:
+  backends:
+    ca:
+      module: cragr
+      params:
+        website: www.ca-sudmed.fr
+        login: "{env.CA_ACCOUNT}"
+        password: "{env.CA_PASSWORD}"
+    bd:
+      module: boursedirect
+      params:
+        login: "{env.BD_ACCOUNT}"
+        password: "{env.BD_PASSWORD}"
+    bp:
+      module: bp
+      params:
+        login: "{env.BP_ACCOUNT}"
+        password: "{env.BP_PASSWORD}" 
+extracts:
+  ca_accounts:
+      woob:
+        backend: ca
+        fn: iter_accounts
+      data:
+        fields: ["id", "label", "balance"]
+      s3:
+        bucket: woob-extractor
+        key: "ca/accounts/{const.today_str}.csv"
+  ca_history:
+      woob:
+        backend: ca
+        fn: iter_history
+        fn_params:
+          account: "{env.CA_ACCOUNT}"
+      data:
+        fields: ["date", "rdate", "type", "category", "label", "amount"]
+        group_by: date
+      s3:
+        bucket: woob-extractor
+        key: "ca/history/{env.CA_ACCOUNT}/{group_value}.csv"
+        prevent_overwrite: true
+  bd_investment:
+      woob:
+        backend: bd
+        fn: iter_investment
+        fn_params:
+          account: "{env.BD_PEA_ACCOUNT_ID}"
+      data:
+        fields: [ "label", "code", "code_type", "quantity", "unitprice", "unitvalue", "valuation", "diff", "diff_ratio", "portfolio_share"]
+      s3:
+        bucket: woob-extractor
+        key: "bd/investment/{env.BD_PEA_ACCOUNT_ID}/{const.today_str}.csv"
+  bd_history:
+      woob:
+        backend: bd
+        fn: iter_history
+        fn_params:
+          account: "{env.BD_PEA_ACCOUNT_ID}"
+      data:
+        fields: ["date", "rdate", "type", "label", "amount"]
+        group_by: date
+      s3:
+        bucket: woob-extractor
+        key: "bd/history/{env.BD_PEA_ACCOUNT_ID}/{group_value}.csv"
+        prevent_overwrite: true
+  bp_accounts:
+      woob:
+        backend: bp
+        fn: iter_accounts
+      data:
+        fields: ["id", "label", "currency", "type", "balance", "amount", "coming"]
+      s3:
+        bucket: woob-extractor
+        key: "bp/accounts/{const.today_str}.csv"
+  bp_history:
+      woob:
+        backend: bp
+        fn: iter_history
+        fn_params:
+          account: "{env.BP_ACCOUNT_ID}"
+      data:
+        fields: ["date", "rdate", "type", "label", "amount"]
+        group_by: date
+      s3:
+        bucket: woob-extractor
+        key: "bp/history/{env.BP_ACCOUNT_ID}/{group_value}.csv"
+        prevent_overwrite: true
