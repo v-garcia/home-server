@@ -67,7 +67,7 @@ def get_and_parse_object(*args, **kwargs):
 
 
 def get_and_parse_objects(*args, **kwargs):
-    pages = get_list_objects_paginator()(*args, **kwargs)
+    pages = get_list_objects_paginator().paginate(*args, **kwargs)
     keys = sorted(filter(None, pages.search("Contents[].Key")))
     for k in keys:
         print("Parsing s3 object %s:%s" % (kwargs["Bucket"], k))
