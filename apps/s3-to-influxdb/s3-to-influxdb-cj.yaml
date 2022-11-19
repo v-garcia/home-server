@@ -25,8 +25,8 @@ spec:
                 - name: BOURSO_ACCOUNT_ID
                   valueFrom:
                     secretKeyRef:
-                      name: boursorama-tracker-secret
-                      key: BOURSO_ACCOUNT_0
+                      name: account-bourso-secret
+                      key: mainAccountId
                 - name: ENEDIS_USAGE_POINT_ID
                   valueFrom:
                     secretKeyRef:

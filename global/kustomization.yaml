@@ -11,6 +11,10 @@ resources:
     - res-limit-range.yaml
     - letsencrypt-cluster-issuer.yaml
     - domain-name-secret.yaml
+    - accounts/bd-secret.yaml
+    - accounts/bourso-secret.yaml
+    - accounts/bp-secret.yaml
+    - accounts/ca-secret.yaml
 patches:
     - path: ../overlays/pv-node-affinity.yaml
       target:

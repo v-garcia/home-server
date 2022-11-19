@@ -17,6 +17,21 @@ spec:
               env:
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: BOURSO_USER_0
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bourso-secret
+                      key: login
+                - name: BOURSO_PWD_0
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bourso-secret
+                      key: password
+                - name: BOURSO_ACCOUNT_0
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bourso-secret
+                      key: mainAccountId
               envFrom:
                 - secretRef:
                     name: s3-secret
