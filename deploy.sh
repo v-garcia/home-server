@@ -199,3 +199,13 @@ kustomize build ./apps/netcheck --load-restrictor LoadRestrictionsNone --enable-
 docker build ./apps/influxdb -t localhost:32000/influxdb && \
 docker push localhost:32000/influxdb && \
 kustomize build ./apps/influxdb --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#telegraf
+docker build ./apps/telegraf -t localhost:32000/telegraf && \
+docker push localhost:32000/telegraf && \
+kustomize build ./apps/telegraf --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#s3-to-influxdb
+docker build ./apps/s3-to-influxdb -t localhost:32000/s3-to-influxdb && \
+docker push localhost:32000/s3-to-influxdb && \
+kustomize build ./apps/s3-to-influxdb --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
