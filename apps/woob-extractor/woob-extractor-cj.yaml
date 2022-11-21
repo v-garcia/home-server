@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: woob-extractor
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 23 * * *" # At 23h
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: woob-extractor
+              image: localhost:32000/woob-extractor
+              envFrom:
+                - secretRef:
+                    name: woob-extractor-secret
+                - secretRef:
+                    name: s3-secret
+              env:
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: CA_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-ca-secret
+                      key: login
+                - name: CA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-ca-secret
+                      key: password
+                - name: BD_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bd-secret
+                      key: login
+                - name: BD_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bd-secret
+                      key: password
+                - name: BD_PEA_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bd-secret
+                      key: mainAccountId
+                - name: CA_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-ca-secret
+                      key: login
+                - name: CA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-ca-secret
+                      key: password
+                - name: BP_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bp-secret
+                      key: login
+                - name: BP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bp-secret
+                      key: password
+                - name: BP_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bp-secret
+                      key: mainAccountId
+              volumeMounts:
+                - name: woob-extractor-config
+                  subPath: config.yaml
+                  mountPath: /etc/config.yaml
+                  readOnly: true
+          volumes:
+            - name: woob-extractor-config
+              configMap:
+                name: woob-extractor
