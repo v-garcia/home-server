@@ -76,6 +76,52 @@ data:
             - path: accountBalance
               name: accountBalance
               fns: ["float_nullable"]
+      - type: daily
+        s3:
+          bucket: woob-extractor
+          path: "bp/accounts/{day}.csv"
+        influx:
+          bucket: my-data
+          measurement: bp-accounts
+          time:
+            path: "request.Key"
+            fns: ["s3_key_to_day"]
+          tags:
+            - path: id
+              name: accountNumber
+            - path: label
+              name: label
+            - val: eur
+              name: currency
+            - path: type
+              name: type
+          fields:
+            - path: balance
+              name: balance
+              fns: ["float"]
+            - path: coming
+              name: coming
+              fns: ["float_nullable"]
+      - type: daily
+        s3:
+          bucket: woob-extractor
+          path: "bp/history/{env.BP_MAIN_ACCOUNT_ID}/{day}.csv"
+        influx:
+          bucket: my-data
+          measurement: bp-history
+          allow_duplicates: true
+          time:
+            path: "request.Key"
+            fns: ["s3_key_to_day"]
+          tags:
+            - path: label
+              name: label
+            - path: type
+              name: type
+          fields:
+            - path: amount
+              name: amount
+              fns: ["float"]
 kind: ConfigMap
 metadata:
   name: s3-to-influxdb

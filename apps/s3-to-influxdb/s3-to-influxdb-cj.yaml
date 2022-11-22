@@ -32,6 +32,11 @@ spec:
                     secretKeyRef:
                       name: enedis-tracker-secret
                       key: USAGE_POINT_ID
+                - name: BP_MAIN_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-bp-secret
+                      key: mainAccountId
               volumeMounts:
                 - name: s3-to-influxdb-config
                   subPath: s3-to-influx-conf.yaml
