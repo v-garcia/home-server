@@ -122,6 +122,67 @@ data:
             - path: amount
               name: amount
               fns: ["float"]
+      - type: daily
+        s3:
+          bucket: woob-extractor
+          path: "bd/investment/{env.BD_MAIN_ACCOUNT_ID}/{day}.csv"
+        influx:
+          bucket: my-data
+          measurement: bd-investment
+          time:
+            path: "request.Key"
+            fns: ["s3_key_to_day"]
+          tags:
+            - path: label
+              name: label
+            - path: code
+              name: code
+            - path: code_type
+              name: code_type
+          fields:
+            - path: quantity
+              name: quantity
+              fns: ["int"]
+              skip_when: ["code", "eq", "XX-liquidity"]
+            - path: unitprice
+              name: unitprice
+              fns: ["float"]
+              skip_when: ["code", "eq", "XX-liquidity"]
+            - path: unitvalue
+              name: unitvalue
+              fns: ["float"]
+              skip_when: ["code", "eq", "XX-liquidity"]
+            - path: valuation
+              name: valuation
+              fns: ["float"]
+            - path: diff
+              name: diff
+              fns: ["float"]
+              skip_when: ["code", "eq", "XX-liquidity"]
+            - path: portfolio_share
+              name: portfolio_share
+              fns: ["float"]
+              skip_when: ["code", "eq", "XX-liquidity"]
+      - type: daily
+        s3:
+          bucket: woob-extractor
+          path: "bd/history/{env.BD_MAIN_ACCOUNT_ID}/{day}.csv"
+        influx:
+          bucket: my-data
+          measurement: bd-history
+          allow_duplicates: true
+          time:
+            path: "request.Key"
+            fns: ["s3_key_to_day"]
+          tags:
+            - path: label
+              name: label
+            - path: type
+              name: type
+          fields:
+            - path: amount
+              name: amount
+              fns: ["float"]
 kind: ConfigMap
 metadata:
   name: s3-to-influxdb

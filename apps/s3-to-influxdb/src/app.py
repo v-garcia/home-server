@@ -5,9 +5,9 @@ import influx
 import functools
 import re
 from typing import Dict
-import itertools
+from itertools import chain
 import argparse
-
+import operator
 
 def list_in_dic(dic, l_key):
     dic = dict(dic)
@@ -45,20 +45,23 @@ record_fns = {"name": lambda p, v: [p, v],
 
 def parse_field(record, field_info):
     try:
+        if skip := field_info.get("skip_when", None):
+            field, op, val = skip
+            if getattr(operator, op)(record[field], val): return
+
         return functools.reduce(lambda acc, e: record_fns[e](field_info[e], acc) if acc != None and (e in field_info) else acc, ["val", "path", "fns", "name"], record)
     except Exception as e:
         e.args += record, field_info
         raise
 
-
 def parse_record(record_info, record):
     parse_field_ = functools.partial(parse_field, record)
-    def todict(xs): return dict(filter(None, xs))
+    parse_fields = lambda xs: dict(filter(None, map(parse_field_, xs)))
 
     return {**record_info,
             **{"time": parse_field_(record_info["time"]),
-               "tags": todict(map(parse_field_, record_info["tags"])),
-               "fields": todict(map(parse_field_, record_info["fields"]))}}
+               "tags": parse_fields(record_info["tags"]),
+               "fields": parse_fields(record_info["fields"])}}
 
 
 def get_s3_start_after(input_type, last_date, s3_path):
@@ -107,7 +110,7 @@ def sync_measure(input_info):
             StartAfter=utils.substitute(get_s3_start_after(conf("type"), fromTime, conf("s3.path")) if fromTime is not None else get_s3_prefix(conf("s3.path"))))
 
         # Transform object to items
-        items = itertools.chain.from_iterable(
+        items = chain.from_iterable(
             map(functools.partial(object_to_items, conf("content")), objects))
 
         # Transform record to flux datapoints
