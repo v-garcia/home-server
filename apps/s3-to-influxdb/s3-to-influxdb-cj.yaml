@@ -42,6 +42,11 @@ spec:
                     secretKeyRef:
                       name: account-bd-secret
                       key: mainAccountId
+                - name: CA_MAIN_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-ca-secret
+                      key: login
               volumeMounts:
                 - name: s3-to-influxdb-config
                   subPath: s3-to-influx-conf.yaml
