@@ -128,13 +128,23 @@ data:
       ## Use TLS but skip chain & host verification
       # insecure_skip_verify = false
 
+    [[outputs.influxdb_v2]]
+      urls = ["$INFLUXDB_URL"]
+      token = "$INFLUX_TOKEN"
+      organization = "$ORGANIZATION"
+      bucket = "my-data"
+      namepass = ["http_ipinfo"]
+
     [[inputs.disk]]
       ## By default stats will be gathered for all mount points.
       ## Set mount_points will restrict the stats to only the specified mount points.
       mount_points = ["/data"]
       ## Ignore mount points by filesystem type.
       ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+      fieldpass = ["free", "total",  "used"]
 
+    [[inputs.mem]]
+      fieldpass = ["total", "used"]
 
     [[inputs.ping]]
       fieldpass = ["percent_packet_loss", "average_response_ms", "percent_reply_loss"]
@@ -163,12 +173,85 @@ data:
       ## the "-W" option of the ping command.
       timeout = 0.5
 
+      # If set, the total ping deadline, in seconds.  Operates like the -w option
+      # of the ping command.
+      deadline = 9
+      
+    [[inputs.exec]]
+      interval = "60m"
+
+      # Shell/commands array
+      # Full command line to executable with parameters, or a glob pattern to run all matching files.
+      commands = ["/usr/local/bin/librespeed-cli --ipv4 --json"]
+
+      ## Timeout for each command to complete.
+      timeout = "2m"
+
+      # Data format to consume.
+      # NOTE json only reads numerical measurements, strings and booleans are ignored.
+      data_format = "json"
+
+      ## Tag keys is an array of keys that should be added as tags.  Matching keys
+      ## are no longer saved as fields. Supports wildcard glob matching.
+      tag_keys = ["server_*", "client_*"]
+
+      # measurement name suffix (for separating different commands)
+      name_suffix = "_speedtest"
+
+    [[inputs.http]]
+      interval = "60m"
+
+      # Read formatted metrics from one or more HTTP endpoints
+      urls=["https://api.ipify.org?format=json"]
+
+      # Data format to consume.
+      # NOTE json only reads numerical measurements, strings and booleans are ignored.
+      data_format = "json"
+
+      ## String fields is an array of keys that should be added as string fields.
+      json_string_fields = ["ip"]
+
+      # measurement name suffix (for separating different commands)
+      name_suffix = "_ipinfo"
+
     [[inputs.kubernetes]]
       url = "https://$HOSTIP:10250"
       bearer_token = "/run/secrets/kubernetes.io/serviceaccount/token"
       insecure_skip_verify = true
       fieldpass = ["cpu_usage_nanocores", "memory_usage_bytes", "memory_working_set_bytes", "network_rx_bytes",
                    "network_rx_errors", "network_tx_bytes", "network_tx_errors", "fs_capacity_bytes", "fs_used_bytes"]
+    
+    [[inputs.mqtt_consumer]]
+      servers = ["$MOSQUITTO_PORT"]
+
+      topics = ["zigbee2mqtt/+"]
+      data_format = "json"
+      persistent_session = true
+      qos = 1
+      client_id = "telegraf_mqtt"
+      tagexclude = ["topic", "host"]
+
+      [[inputs.mqtt_consumer.topic_parsing]]  
+        topic="zigbee2mqtt/+"
+        measurement = "measurement/_"
+        tags = "_/deviceId"
+
+    [[processors.regex]]
+      namepass = ["zigbee2mqtt"]
+
+      [[processors.regex.tags]]
+        order = 1
+        key = "deviceId"
+        pattern = "^(.*?)(?:_([^_]*))?$"
+        replacement = "${2}"
+        result_key = "name"
+      
+      [[processors.regex.tags]]
+        order = 2
+        key = "deviceId"
+        pattern = "^(.*?)(?:_([^_]*))?$"
+        replacement = "${1}"
+
 kind: ConfigMap
 metadata:
   creationTimestamp: null
