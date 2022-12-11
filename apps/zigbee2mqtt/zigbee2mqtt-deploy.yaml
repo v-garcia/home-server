@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zigbee2mqtt
+  template:
+    metadata:
+      labels:
+        app: zigbee2mqtt
+    spec:
+      initContainers:
+        - name: zigbee2mqtt-init
+          image: busybox
+          command: ["/bin/sh", "-c", "cp -nv /configuration.yaml /opt/"]
+          volumeMounts:
+            - name: zigbee2mqtt-config
+              subPath: configuration.yaml
+              mountPath: /configuration.yaml
+            - name: zigbee2mqtt
+              subPath: data
+              mountPath: /opt
+      containers:
+        - name: zigbee2mqtt
+          image: localhost:32000/zigbee2mqtt
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: zigbee2mqtt
+              subPath: data
+              mountPath: /app/data
+            - name: tty-usb0
+              mountPath: /dev/ttyACM0
+          env:
+            - name: TZ
+              value: Europe/Paris
+            - name:  ZIGBEE2MQTT_CONFIG_MQTT_SERVER
+              value: mqtt://$(MOSQUITTO_SERVICE_HOST):$(MOSQUITTO_SERVICE_PORT)
+      volumes:
+        - name: zigbee2mqtt
+          persistentVolumeClaim:
+            claimName: zigbee2mqtt
+        - name: zigbee2mqtt-config
+          configMap:
+            name: zigbee2mqtt
+        - name: tty-usb0
+          hostPath:
+            path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_b6ab06268c29ec1198856d7840c9ce8d-if00-port0

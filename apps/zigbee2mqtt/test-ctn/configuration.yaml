@@ -1,0 +1,18 @@
+homeassistant: false
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883
+serial:
+  port: /dev/ttyACM0
+  adapter: zstack
+advanced:
+  homeassistant_legacy_entity_attributes: false
+  legacy_api: false
+  legacy_availability_payload: false
+  log_level: debug
+  channel: 15
+device_options:
+  legacy: false
+frontend: true
+devices: devices.yaml

@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - zigbee2mqtt-cm.yaml
+  - zigbee2mqtt-deploy.yaml
+  - zigbee2mqtt-ext-ing.yaml
+  - zigbee2mqtt-local-ing.yaml
+  - zigbee2mqtt-pvc.yaml
+  - zigbee2mqtt-pv.yaml
+  - zigbee2mqtt-svc.yaml
+patches:
+  - path: ../../overlays/pv-node-affinity.yaml
+    target:
+      kind: PersistentVolume
+  - path: ../../overlays/ing-authentified.yaml
+    target:
+      kind: Ingress
+      labelSelector: authentified
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
+  - path: ../../overlays/ing-local.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=local
+transformers:
+  - ../../global/ingress-domain-transformer-secret.yaml

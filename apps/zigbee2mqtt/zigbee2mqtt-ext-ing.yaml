@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zigbee2mqtt-ext
+  labels:
+    type: external
+    authentified: "true"
+spec:
+  tls:
+    - hosts:
+        - zigbee2mqtt.{hostname}
+      secretName: zigbee2mqtt.ing.cert
+  rules:
+    - host: zigbee2mqtt.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: zigbee2mqtt
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
