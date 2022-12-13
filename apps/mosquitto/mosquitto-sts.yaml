@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mosquitto
+spec:
+  serviceName: mosquitto
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+        tier: mqtt
+    spec:
+      containers:
+        - name: mosquitto
+          image: localhost:32000/mosquitto
+          ports:
+            - name: mosquitto-mqtt
+              containerPort: 1883
+          volumeMounts:
+            - name: mosquitto
+              subPath: data
+              mountPath: /mosquitto/data
+            - name: mosquitto
+              subPath: log
+              mountPath: /mosquitto/log
+            - name: mosquitto-config
+              subPath: mosquitto.conf
+              mountPath: /mosquitto/config/mosquitto.conf
+              readOnly: true
+      volumes:
+        - name: mosquitto
+          persistentVolumeClaim:
+            claimName: mosquitto
+        - name: mosquitto-config
+          configMap:
+            name: mosquitto-config
+
