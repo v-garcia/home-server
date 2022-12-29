@@ -72,6 +72,21 @@ spec:
                     secretKeyRef:
                       name: account-bp-secret
                       key: mainAccountId
+                - name: ESALIA_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-esalia-secret
+                      key: login
+                - name: ESALIA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-esalia-secret
+                      key: password
+                - name: ESALIA_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: account-esalia-secret
+                      key: mainAccountId
               volumeMounts:
                 - name: woob-extractor-config
                   subPath: config.yaml

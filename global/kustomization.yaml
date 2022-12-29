@@ -15,6 +15,7 @@ resources:
     - accounts/bourso-secret.yaml
     - accounts/bp-secret.yaml
     - accounts/ca-secret.yaml
+    - accounts/esalia-secret.yaml
 patches:
     - path: ../overlays/pv-node-affinity.yaml
       target:

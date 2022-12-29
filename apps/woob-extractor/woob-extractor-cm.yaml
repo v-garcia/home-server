@@ -19,6 +19,11 @@ data:
           params:
             login: "{env.BP_ACCOUNT}"
             password: "{env.BP_PASSWORD}" 
+        esalia:
+          module: esalia
+          params:
+            login: "{env.ESALIA_ACCOUNT}"
+            password: "{env.ESALIA_PASSWORD}" 
     extracts:
       ca_accounts:
           woob:
@@ -87,6 +92,28 @@ data:
           s3:
             bucket: woob-extractor
             key: "bp/history/{env.BP_ACCOUNT_ID}/{group_value}.csv"
+            prevent_overwrite: true
+      esalia_accounts:
+          woob:
+            backend: esalia
+            fn: iter_accounts
+          data:
+            fields: ["id", "label", "currency", "type", "balance", "amount"]
+          s3:
+            bucket: woob-extractor
+            key: "esalia/accounts/{const.today_str}.csv"
+      esalia_history:
+          woob:
+            backend: esalia
+            fn: iter_history
+            fn_params:
+              account: "{env.ESALIA_ACCOUNT_ID}"
+          data:
+            fields: ["date", "rdate", "type", "label", "amount"]
+            group_by: date
+          s3:
+            bucket: woob-extractor
+            key: "esalia/history/{env.ESALIA_ACCOUNT_ID}/{group_value}.csv"
             prevent_overwrite: true
 kind: ConfigMap
 metadata:
