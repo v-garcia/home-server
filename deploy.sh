@@ -27,6 +27,8 @@ sudo mkdir -p /data/slurp-news
 sudo mkdir -p /data/radio-autoplaylist
 sudo mkdir -p /data/home-assistant
 sudo mkdir -p /data/influxdb
+sudo mkdir -p /data/mosquitto
+sudo mkdir -p /data/zigbee2mqtt
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -215,3 +217,12 @@ docker build ./apps/woob-extractor -t localhost:32000/woob-extractor && \
 docker push localhost:32000/woob-extractor && \
 kustomize build ./apps/woob-extractor --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
+#mosquitto
+docker build ./apps/mosquitto -t localhost:32000/mosquitto && \
+docker push localhost:32000/mosquitto && \
+kustomize build ./apps/mosquitto --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#zigbee2mqtt
+docker build ./apps/zigbee2mqtt -t localhost:32000/zigbee2mqtt && \
+docker push localhost:32000/zigbee2mqtt && \
+kustomize build ./apps/zigbee2mqtt --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -

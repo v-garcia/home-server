@@ -18,8 +18,10 @@ spec:
         - name: mosquitto
           image: localhost:32000/mosquitto
           ports:
-            - name: mosquitto-mqtt
+            - name: mosquitto
               containerPort: 1883
+            - name: mosquitto-ws
+              containerPort: 9001
           volumeMounts:
             - name: mosquitto
               subPath: data
@@ -31,6 +33,10 @@ spec:
               subPath: mosquitto.conf
               mountPath: /mosquitto/config/mosquitto.conf
               readOnly: true
+            - name: mosquitto-secret
+              subPath: password_file_wss
+              mountPath: /mosquitto/config/wss_passwd
+              readOnly: true
       volumes:
         - name: mosquitto
           persistentVolumeClaim:
@@ -38,4 +44,6 @@ spec:
         - name: mosquitto-config
           configMap:
             name: mosquitto-config
-
+        - name: mosquitto-secret
+          secret:
+            secretName: mosquitto-secret

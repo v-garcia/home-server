@@ -1,9 +1,16 @@
 ## Node maintenance
 See node managment info  
-https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/#maintenance-on-a-node  
+https://kubernetes.io/docs/tasks/admi nister-cluster/cluster-management/#maintenance-on-a-node  
 
 ## Clean microK8S registry
 https://gist.github.com/Kevinrob/4c7f1e5dbf6ce4e94d6ba2bfeff37aeb
+
+## remove some images
+
+microk8s ctr images ls | grep -i edith | while read line || [[ -n $line ]];
+do
+  microk8s ctr images rm $line
+done;
 
 ## Trouve uninstalling microk8s
 https://github.com/ubuntu/microk8s/issues/58#issuecomment-400647932

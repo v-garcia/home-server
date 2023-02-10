@@ -37,7 +37,7 @@ data:
     #
     # The default behaviour is for this to be set to false, which maintains the
     # setting behaviour from previous versions of mosquitto.
-    #per_listener_settings false
+    per_listener_settings true
 
 
     # This option controls whether a client is allowed to connect with a zero
@@ -236,6 +236,11 @@ data:
     # listener port-number [ip address/host name/unix socket path]
     listener 1883
     allow_anonymous true
+
+    listener 9001
+    protocol websockets
+    allow_anonymous false
+    password_file /mosquitto/config/wss_passwd
 
     # By default, a listener will attempt to listen on all supported IP protocol
     # versions. If you do not have an IPv4 or IPv6 interface you may wish to

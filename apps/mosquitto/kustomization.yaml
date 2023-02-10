@@ -6,9 +6,23 @@ resources:
   - mosquitto-pv.yaml
   - mosquitto-sts.yaml
   - mosquitto-svc.yaml
+  - mosquitto-ext-ing.yaml
+  - mosquitto-secret.yaml
 patches:
   - path: ../../overlays/pv-node-affinity.yaml
     target:
       kind: PersistentVolume
+  - path: ../../overlays/ing-authentified.yaml
+    target:
+      kind: Ingress
+      labelSelector: authentified
+  - path: ../../overlays/ing-external.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=external
+  - path: ../../overlays/ing-local.yaml
+    target:
+      kind: Ingress
+      labelSelector: type=local
 transformers:
   - ../../global/ingress-domain-transformer-secret.yaml

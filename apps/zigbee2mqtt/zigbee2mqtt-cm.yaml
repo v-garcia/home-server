@@ -1,11 +1,12 @@
 apiVersion: v1
 data:
-  configuration.yaml: |
-    homeassistant: false
+  configuration.yaml: |+
+    homeassistant: true
     permit_join: true
     mqtt:
       base_topic: zigbee2mqtt
       server: mqtt://localhost:1883
+      include_device_information: true
     serial:
       port: /dev/ttyACM0
       adapter: zstack
