@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influx-gotify-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influx-gotify-bridge
+  template:
+    metadata:
+      labels:
+        app: influx-gotify-bridge
+    spec:
+      containers:
+        - name: influx-gotify-bridge
+          image: localhost:32000/influx-gotify-bridge
+          envFrom:
+            - secretRef:
+                name: influx-gotify-bridge-secret
+          env:
+            - name: GOTIFY_URL
+              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: INFLUX_HOST
+              value: http://$(INFLUXDB_SERVICE_HOST):$(INFLUXDB_SERVICE_PORT)
