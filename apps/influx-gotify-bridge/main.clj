@@ -43,9 +43,8 @@
          :body    {:query        query})
         :body
         csv/read-csv
-        (map (comp rest rest))
-        butlast
         csv-data->maps
+        (filter (comp #{"_message"} :_field))
         (sort-by :_time)
         (map #(assoc % ::id (get-notif-key %)))))
 
@@ -115,15 +114,16 @@
   (println "Influx notifs main started")
   (while true
     (let [{:keys [:last-vals :notifs]} @state]
-      (println (format "Statuses: %s, Notifs to send: %s" 
-        (count notifs)
+      (println (format "Statuses: %s, NB notifs to send: %s" 
         (str/join ", " (->> last-vals (map (comp last last)) frequencies
-                             (map (fn [[k v]] (str k "=>" v))))))))
+                             (map (fn [[k v]] (str k "=>" v)))))
+        (count notifs))))
     
     (Thread/sleep (* 5 60 1000))))
 
 (-main)
 
 (comment
+
  (a/close! ch-checks)
  (a/close! ch-gotify))
