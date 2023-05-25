@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: boss-restarter
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 9 */3 * *" # Every 3days at 9pm
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: boss-restarter
+              image: localhost:32000/boss-restarter
+              env:
+                - name: GOTIFY_URL
+                  value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+                - name: GOTIFY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: boss-restarter-secret
+                      key: gotify-token
+              volumeMounts:
+                - name: boss-restarter
+                  subPath: aws-config
+                  mountPath: /root/.aws/config
+                - name: boss-restarter
+                  subPath: aws-credentials
+                  mountPath: /root/.aws/credentials
+          volumes:
+            - name: boss-restarter
+              secret:
+                secretName: boss-restarter-secret
