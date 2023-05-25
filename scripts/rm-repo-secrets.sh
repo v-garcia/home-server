@@ -11,7 +11,7 @@ fi
 
 echo "regex:.*" > replace.txt
 
-java -jar bfg.jar -fi '*.{key,env}' -rt replace.txt --no-blob-protection
+java -jar bfg.jar -fi '*.{key,env,secret}' -rt replace.txt --no-blob-protection
 java -jar bfg.jar -fi '*secret.{json,conf,yaml}' -rt replace.txt --no-blob-protection
 
 rm bfg.jar replace.txt
