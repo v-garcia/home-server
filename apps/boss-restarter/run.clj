@@ -41,7 +41,8 @@
 
 (defn swith-notif [on?]
   (execute-command
-   (format "aws codestar-notifications update-notification-rule --arn arn:aws:codestar-notifications:eu-central-1:406826153012:notificationrule/2082e356f117871f4dee31dfc85c09c69de86149 --status %s"
+   (format "aws codestar-notifications update-notification-rule --arn %s --status %s"
+           (env "notification-rule-arn")
            (if on? "ENABLED" "DISABLED"))))
 
 
