@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotify-ntfy-bridge-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotify-ntfy-bridge-deploy
+  template:
+    metadata:
+      labels:
+        app: gotify-ntfy-bridge-deploy
+    spec:
+      containers:
+        - name: gotify-ntfy-bridge
+          image: localhost:32000/gotify-ntfy-bridge
+          env:
+            - name: GOTIFY_HOST
+              value: $(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gotify-ntfy-bridge-secret
+                  key: gotify-token
+            - name: NTFY_TOPICS_PREFIX
+              valueFrom:
+                secretKeyRef:
+                  name: gotify-ntfy-bridge-secret
+                  key: ntfy-topics-prefix
