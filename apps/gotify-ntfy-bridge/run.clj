@@ -67,4 +67,4 @@
      (or ws (listen-gotify-events)) 
      (catch Exception e
        (println "Error while trying to listen gotify websocket, will retry" e))
-     (finally (Thread/sleep 10000)))))
+     (finally (Thread/sleep 30000)))))

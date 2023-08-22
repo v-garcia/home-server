@@ -1,10 +1,8 @@
-FROM  babashka/babashka:1.3.182-alpine
-
-RUN apk add --no-cache  openjdk11
+FROM babashka/babashka:1.3.183-alpine
 
 WORKDIR /app
 
-COPY ./bb.edn ./run.clj ./
+COPY ./run.clj ./
 
 ENTRYPOINT ["bb"]
 CMD  ["/app/run.clj"]
