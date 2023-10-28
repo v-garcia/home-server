@@ -1,27 +1,14 @@
-const linky = require('linky');
-const { format: dateFormat, parseISO: dateParseISO, subDays, startOfToday, max: dateMax, addDays, getDaysInMonth } = require('date-fns')
-const got = require('got');
-const store = require('./store');
+import { Session } from 'linky';
+import { format as dateFormat, parseISO as dateParseISO, subDays, startOfToday, max as dateMax, addDays, getDaysInMonth } from 'date-fns';
+import got from 'got';
+import store from './store.js';
 
-const SEEK_DAYS = 30;
+const SEEK_DAYS = 30;   
 
 async function getLinkySession() {
-  const { accessToken, refreshToken } = await store.getAuthTokens();
+  const { accessToken } = await store.getAuthTokens();
 
-  const session = new linky.Session({
-    accessToken,
-    refreshToken,
-    usagePointId: process.env.USAGE_POINT_ID,
-    onTokenRefresh: (accessToken, refreshToken) => {
-      console.log('Token refresh');
-      console.log({ accessToken, refreshToken });
-
-      store.putAuthTokens(accessToken, refreshToken).catch(x => {
-        console.error('Failled to save new tokens');
-      });
-    },
-  });
-
+  const session = new Session(accessToken, process.env.USAGE_POINT_ID);  
   return session;
 }
 
@@ -64,7 +51,7 @@ function getDayPriceText({ monthlyFlatRage, kwhPrice }, { date, value }) {
       `${dateFormat(date, 'EEEEEE d LLL')} | *${centsToEuroStr(dayTotal)}* ` +
       `(${centsToEuroStr(day)} + flat ${centsToEuroStr(dayFlat)})`,
       `${Number(value).toFixed(2)} kVA`
-    ].join('\n')
+    ].join('\n')  
   };
 }
 
@@ -82,8 +69,11 @@ async function dailyRoutine(linkySession, gotifyClient, usagePointId) {
   const dailyParams = [toLinkyDate(minDay), toLinkyDate(startOfToday())];
   console.info(`Running 'getDailyConsumption' with params: '${dailyParams}'`);
 
-  const { unit, data } = dailyParams[0] === dailyParams[1] ?
-    { data: [] } : await linkySession.getDailyConsumption(...dailyParams);
+  let data = [];
+  let unit = 'Wh';
+  if (dailyParams[0] !== dailyParams[1]) {
+    data = (await linkySession.getDailyConsumption(...dailyParams))?.interval_reading;
+  }
 
   // Handling daily consumptions
   for (let { date, value } of data) {

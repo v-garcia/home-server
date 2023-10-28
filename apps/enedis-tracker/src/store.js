@@ -1,6 +1,6 @@
+import { S3 } from '@aws-sdk/client-s3';
+import { format as dateFormat, parseISO as dateParseISO } from 'date-fns';
 
-const { S3 } = require('@aws-sdk/client-s3');
-const { format: dateFormat, parseISO: dateParseISO } = require('date-fns')
 
 
 const s3 = new S3({ endpoint: process.env.AWS_S3_ENDPOINT });
@@ -49,4 +49,4 @@ async function getLastDay(usagePointId) {
   return dateParseISO(lastDate);
 }
 
-module.exports = { putDailyConsumption, getAuthTokens, getPrices, putAuthTokens, getLastDay };
+export default { putDailyConsumption, getAuthTokens, getPrices, putAuthTokens, getLastDay };
