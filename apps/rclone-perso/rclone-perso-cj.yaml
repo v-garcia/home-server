@@ -40,7 +40,7 @@ spec:
                 - "--workdir"
                 - "/root/rclonesyncwd/"
                 - "/sync/"
-                - "zaclys:/"
+                - "perso:/"
               env:
                 - name: GOTIFY_URL
                   value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)

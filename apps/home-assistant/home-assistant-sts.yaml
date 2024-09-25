@@ -27,8 +27,6 @@ spec:
       containers:
         - name: home-assistant
           image: localhost:32000/home-assistant
-          securityContext:
-            privileged: true
           ports:
             - containerPort: 8123
           env:
@@ -38,15 +36,10 @@ spec:
             - name: home-assistant
               subPath: config
               mountPath: /config
-            - name: tty-usb0
-              mountPath: /dev/ttyUSB0
       volumes:
         - name: home-assistant
           persistentVolumeClaim:
             claimName: home-assistant
-        - name: tty-usb0
-          hostPath:
-            path: /dev/ttyUSB0
         - name: home-assistant-config
           configMap:
             name: home-assistant-config

@@ -1,4 +1,4 @@
-FROM deluan/navidrome:0.47.5
+FROM deluan/navidrome:0.48.0
 
 # https://hub.docker.com/r/deluan/navidrome/tags
 # https://hub.docker.com/r/deluan/navidrome/dockerfile

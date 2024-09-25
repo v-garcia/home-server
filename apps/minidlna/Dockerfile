@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.18.2
 
 RUN apk add --no-cache minidlna tini
 

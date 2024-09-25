@@ -12,4 +12,4 @@ docker run\
     --config "/.rclone.conf" \
     --workdir "/.rclonesyncwd/" \
     --filters-file "/rclone-filter" \
-    "/sync/" "zaclys:/"
+    "/sync/" "perso:/"

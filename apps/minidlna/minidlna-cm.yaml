@@ -115,7 +115,7 @@ data:
     #enable_tivo=no
 
     # Notify interval, in seconds.
-    notify_interval=30
+    notify_interval=90000
 
     # Path to the MiniSSDPd socket, for MiniSSDPd support.
     #minissdpdsocket=/run/minissdpd.sock
