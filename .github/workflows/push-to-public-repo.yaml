@@ -9,6 +9,7 @@ concurrency: 1
 
 jobs:
   build:
+    if: github.event.repository.private
     name: Push / deploy
     runs-on: ubuntu-latest
 
