@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emby
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emby
+  template:
+    metadata:
+      labels:
+        app: emby
+    spec:
+      # Puting this hostnetwork because it seems that my Samsung TV doesn't support External HTTPS Ingress
+      # Becous of outdated Certificate
+      # https://emby.media/community/index.php?/topic/118397-new-samsung-tv-is-unable-to-play-some-media-via-emby/page/2/#comment-1258456
+      hostNetwork: true
+      containers:
+        - name: emby
+          image: localhost:32000/emby
+          ports:
+            - containerPort: 8096
+          volumeMounts:
+            - name: public
+              subPath: videos
+              mountPath: /media/public
+            - name: emby
+              subPath: config
+              mountPath: /config
+            - name: aria2
+              subPath: downloads
+              mountPath: /media/aria2
+          env:
+            - name: UID
+              value: "0"
+            - name: GID
+              value: "0"
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: emby
+          persistentVolumeClaim:
+            claimName: emby
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2

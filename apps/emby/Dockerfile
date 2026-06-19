@@ -1,0 +1,1 @@
+FROM emby/embyserver:4.8.6.0

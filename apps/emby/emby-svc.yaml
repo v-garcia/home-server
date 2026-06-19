@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: emby
+spec:
+  type: ClusterIP
+  selector:
+    app: emby
+  ports:
+    - name: emby
+      port: 8096
+      targetPort: 8096
