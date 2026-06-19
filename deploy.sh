@@ -99,8 +99,8 @@ kustomize build ./apps/navidrome --load-restrictor LoadRestrictionsNone --enable
 #samba
 docker build ./apps/samba -t localhost:32000/samba && \
 docker push localhost:32000/samba && \
-kustomize build ./apps/samba --load-restrictor LoadRestrictionsNone | kubectl apply -f -  && \
-./apps/samba/patch-ingress.sh # redirect samba ports in ingress
+kustomize build ./apps/samba --load-restrictor LoadRestrictionsNone | kubectl apply -f -
+
 
 #minidlna
 docker build ./apps/minidlna -t localhost:32000/minidlna && \
