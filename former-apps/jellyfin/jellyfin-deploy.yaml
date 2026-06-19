@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: localhost:32000/jellyfin
+          ports:
+            - containerPort: 8096
+          volumeMounts:
+            - name: public
+              subPath: videos
+              mountPath: /media/public
+            - name: jellyfin
+              subPath: config
+              mountPath: /config
+            - name: aria2
+              subPath: downloads
+              mountPath: /media/aria2
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: Europe/Paris
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public
+        - name: jellyfin
+          persistentVolumeClaim:
+            claimName: jellyfin
+        - name: aria2
+          persistentVolumeClaim:
+            claimName: aria2

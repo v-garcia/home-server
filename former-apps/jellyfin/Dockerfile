@@ -1,0 +1,1 @@
+FROM linuxserver/jellyfin:10.10.6
