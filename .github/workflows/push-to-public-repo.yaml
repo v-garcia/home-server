@@ -20,8 +20,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - run:  ./scripts/rm-repo-secrets.sh
-      - name: Do not move github action itselft
-        run: rm -f .github/workflows/push-to-public-repo.yaml
       - name: Push changes to public repo
         uses: ad-m/github-push-action@master
         with:
