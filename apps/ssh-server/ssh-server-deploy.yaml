@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssh-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ssh-server
+  template:
+    metadata:
+      labels:
+        app: ssh-server
+    spec:
+      containers:
+        - name: ssh-server
+          image: localhost:32000/ssh-server
+          livenessProbe:
+            tcpSocket:
+              port: 22
+            initialDelaySeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 22
+          ports:
+            - containerPort: 22
+              protocol: TCP
+            - containerPort: 1080
+              protocol: TCP
+          volumeMounts:
+            - name: ssh-server-secret
+              mountPath: /secrets/authorized_keys
+              subPath: authorized_keys
+              readOnly: true
+            - name: ssh-server-secret
+              mountPath: /secrets/password
+              subPath: password
+              readOnly: true
+            - name: ssh-server-cm
+              mountPath: /etc/ssh/sshd_config.d/99-ssh-server.conf
+              subPath: 99-ssh-server.conf
+              readOnly: true
+        - name: wstunnel
+          image: localhost:32000/wstunnel
+          env:
+            - name: WSTUNNEL_HTTP_PREFIX
+              valueFrom:
+                secretKeyRef:
+                  name: ssh-server-secret
+                  key: wstunnel-http-prefix
+          args:
+            - --restrict-to
+            - 127.0.0.1:22
+            - --restrict-http-upgrade-path-prefix
+            - $(WSTUNNEL_HTTP_PREFIX)
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+      volumes:
+        - name: ssh-server-secret
+          secret:
+            secretName: ssh-server-secret
+        - name: ssh-server-cm
+          configMap:
+            name: ssh-server-cm

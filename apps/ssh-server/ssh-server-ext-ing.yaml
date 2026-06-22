@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ssh-server-ext
+  labels:
+    type: external
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: ssh-server-wstunnel
+spec:
+  tls:
+    - hosts:
+        - link.{hostname}
+      secretName: link.ing.cert
+  rules:
+    - host: link.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: ssh-server-wstunnel
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

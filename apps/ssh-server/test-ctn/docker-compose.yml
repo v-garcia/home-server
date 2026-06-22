@@ -1,0 +1,25 @@
+name: ssh-server-test-ctn
+
+services:
+  ssh-server:
+    image: ssh-server-test
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: ssh-server-test
+    ports:
+      - "8080:8080"
+      - "2223:22"
+      - "1080:1080"
+    volumes:
+      - ./password:/secrets/password:ro
+      - ./99-ssh-server.conf:/etc/ssh/sshd_config.d/99-ssh-server.conf:ro
+
+  wstunnel:
+    image: ssh-server-wstunnel-test
+    build:
+      context: ..
+      dockerfile: wstunnel.Dockerfile
+    network_mode: "service:ssh-server"
+    depends_on:
+      - ssh-server
