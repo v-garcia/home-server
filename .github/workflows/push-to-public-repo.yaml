@@ -1,0 +1,29 @@
+name: Push To Public Repo
+
+on:
+  push:
+    branches: master
+
+concurrency: 1
+
+
+jobs:
+  build:
+    if: github.event.repository.private
+    name: Push / deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run:  ./scripts/rm-repo-secrets.sh
+      - name: Push changes to public repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN_MY_HOME_SERVER }}
+          repository: v-garcia/home-server
+          branch: ${{ github.ref }}
+          force: true
