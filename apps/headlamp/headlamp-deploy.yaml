@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headlamp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headlamp
+  template:
+    metadata:
+      labels:
+        app: headlamp
+    spec:
+      serviceAccountName: headlamp
+      containers:
+        - name: headlamp
+          image: localhost:32000/headlamp
+          args:
+            - -in-cluster
+          ports:
+            - name: headlamp
+              containerPort: 4466
+          readinessProbe:
+            httpGet:
+              path: /
+              port: headlamp
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: headlamp
+              scheme: HTTP

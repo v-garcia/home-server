@@ -46,6 +46,12 @@
                    :explain "Eur, Santé"}
    "LU1291101555" {:libelle "BNPP Small SRI ETF"
                    :mnemo "EESM"
-                   :explain "EUR: Petite capitalisation"}})
+                   :explain "EUR: Petite capitalisation"}
+
+   ; Added 11/12/2022
+   "LU2089238112" {:libelle "LU2089238112"
+                   :mnemo "PRAZ"
+                   :explain "EUR: Grande capitalisation"}             
+                   })
 
 

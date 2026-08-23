@@ -33,7 +33,9 @@
    "LU1681041544" "CEM.PAR"
 
    "LU1834986900" "HLT.PAR"
-   "LU1291101555" "EESM.PAR"})
+   "LU1291101555" "EESM.PAR"
+   "LU2089238112" "PRAZ.DEX"
+   })
 
 ; Note get alphavantage symbol:
 ; https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=FR0013412285&apikey=

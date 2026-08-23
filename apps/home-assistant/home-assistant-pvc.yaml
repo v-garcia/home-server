@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: home-assistant
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 2Gi
+  volumeName: home-assistant

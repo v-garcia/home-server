@@ -1,16 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources: 
 resources:
-  - upload-ext-ing.yaml
-  - upload-local-ing.yaml
-  - upload-secret.yaml
-  - upload-deploy.yaml
-  - upload-svc.yaml
+- upload-ext-ing.yaml
+- upload-local-ing.yaml
+- upload-secret.yaml
+- upload-deploy.yaml
+- upload-svc.yaml
 patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
 - path: ../../overlays/ing-authentified.yaml
   target:
     kind: Ingress
@@ -24,4 +20,4 @@ patches:
     kind: Ingress
     labelSelector: type=local
 transformers:
-  - ../../global/ingress-domain-transformer-secret.yaml
+- ../../global/ingress-domain-transformer-secret.yaml

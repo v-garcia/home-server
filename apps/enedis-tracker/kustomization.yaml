@@ -4,9 +4,6 @@ resources:
 - enedis-tracker-cj.yaml
 - enedis-tracker-secret.yaml
 patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
 - path: ../../overlays/ing-authentified.yaml
   target:
     kind: Ingress

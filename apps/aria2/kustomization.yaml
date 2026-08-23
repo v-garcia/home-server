@@ -5,14 +5,10 @@ resources:
 - aria2-ext-ing.yaml
 - aria2-local-ing.yaml
 - aria2-pvc.yaml
-- aria2-pv.yaml
 - aria2-secret.yaml
 - aria2-sts.yaml
 - aria2-svc.yaml
 patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
 - path: ../../overlays/ing-authentified.yaml
   target:
     kind: Ingress
@@ -26,4 +22,4 @@ patches:
     kind: Ingress
     labelSelector: type=local
 transformers:
-  - ../../global/ingress-domain-transformer-secret.yaml
+- ../../global/ingress-domain-transformer-secret.yaml

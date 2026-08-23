@@ -8,20 +8,7 @@ spec:
   capacity:
     storage: 500Gi
   accessModes:
-    # the volume can be mounted as read-write by many nodes
-    - ReadWriteMany
-    # Allow WaitForFirstConsumer
-  storageClassName: local-storage
-  local:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
     path: /data/public
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - to-be-replaced
-  claimRef:
-    namespace: default
-    name: public

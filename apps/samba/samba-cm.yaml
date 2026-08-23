@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: samba-config
+data:
+  smb.conf: |
+    [global]
+        server string = Samba Server
+        server role = standalone server
+        log file = /dev/stdout
+        max log size = 50
+        dns proxy = no
+
+        pam password change = yes
+        map to guest = bad user
+        usershare allow guests = yes
+
+        create mask = 0664
+        force create mode = 0664
+        directory mask = 0775
+        force directory mode = 0775
+        force user = root
+        force group = smb
+
+        follow symlinks = yes
+        load printers = no
+        printing = bsd
+        printcap name = /dev/null
+        disable spoolss = yes
+        strict locking = no
+
+        ntlm auth = yes
+        client min protocol = SMB2_10
+        server min protocol = SMB2_10
+
+    [downloads]
+        path = /downloads
+        browsable = yes
+        read only = no
+        guest ok = yes
+        veto files = /.apdisk/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
+        delete veto files = yes
+
+    [public]
+        path = /public
+        browsable = yes
+        read only = no
+        guest ok = yes
+        veto files = /.apdisk/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
+        delete veto files = yes
+
+    [perso]
+        path = /perso
+        browsable = yes
+        read only = no
+        guest ok = no
+        veto files = /.apdisk/.DS_Store/.TemporaryItems/.Trashes/desktop.ini/ehthumbs.db/Network Trash Folder/Temporary Items/Thumbs.db/
+        delete veto files = yes
+        valid users = @smb

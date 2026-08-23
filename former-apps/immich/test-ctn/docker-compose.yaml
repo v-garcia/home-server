@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  immich:
+    image: ghcr.io/imagegenius/immich:22.01.24
+    container_name: immich
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - DB_HOSTNAME=postgres14
+      - DB_USERNAME=postgres
+      - DB_DATABASE_NAME=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOSTNAME=redis
+      - MACHINE_LEARNING_EAGER_STARTUP=false
+    volumes:
+      - ${PWD}/data/config:/config
+      - ${PWD}/data/photos:/photos
+      - ${PWD}/data/imports:/import:ro
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+# This container requires an external application to be run separately to be run separately.
+# Redis:
+  redis:
+    image: redis:7.2.4-alpine3.19
+    ports:
+      - 6379:6379
+    container_name: redis
+# PostgreSQL 14:
+  postgres14:
+    image: tensorchord/pgvecto-rs:pg14-v0.1.11
+    ports:
+      - 5432:5432
+    container_name: postgres14
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: immich
+    volumes:
+      - ${PWD}/data/postgres:/var/lib/postgresql/data

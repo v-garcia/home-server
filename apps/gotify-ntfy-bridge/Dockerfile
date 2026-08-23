@@ -1,4 +1,4 @@
-FROM babashka/babashka:1.3.183-alpine
+FROM babashka/babashka:1.3.191-alpine
 
 WORKDIR /app
 

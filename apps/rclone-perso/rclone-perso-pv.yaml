@@ -6,21 +6,9 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 2Gi
-  persistentVolumeReclaimPolicy: Retain
+    storage: 1Gi
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
-  local:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
     path: /data/rclone-perso
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - vincent
-  claimRef:
-    namespace: default
-    name: rclone-perso

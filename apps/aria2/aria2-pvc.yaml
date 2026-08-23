@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: aria2
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 600Gi
+  volumeName: aria2

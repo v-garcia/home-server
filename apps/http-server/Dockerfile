@@ -1,5 +1,5 @@
 # FROM nginx:1.19.2-alpine
-FROM alpine:3.14
+FROM alpine:3.23.5
 
 RUN apk update && apk add --no-cache nginx-mod-http-fancyindex
 

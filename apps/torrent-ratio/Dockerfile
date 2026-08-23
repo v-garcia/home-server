@@ -1,9 +1,9 @@
-FROM python:3.9-rc-alpine3.10
+FROM python:3.12-alpine
 
 WORKDIR /app/
 
 RUN apk add --no-cache git && \
-      git clone --depth=1 https://github.com/MisterDaneel/Ratio.py ./ && \
+      git clone --depth=1 https://github.com/v-garcia/Ratio.py ./ && \
       pip install -r requirements.txt
       
 ENTRYPOINT "/bin/sh" \ 

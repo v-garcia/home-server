@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: zigbee2mqtt
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
+  volumeName: zigbee2mqtt

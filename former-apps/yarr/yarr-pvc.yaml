@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: yarr
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 3Gi

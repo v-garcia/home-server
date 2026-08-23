@@ -1,4 +1,4 @@
-FROM dperson/samba:latest
+FROM dockurr/samba:4.23
 
-# https://github.com/dperson/samba/blob/master/Dockerfile
-# https://hub.docker.com/r/dperson/samba/dockerfile
+# https://github.com/dockur/samba/blob/master/Dockerfile
+# https://hub.docker.com/r/dockurr/samba

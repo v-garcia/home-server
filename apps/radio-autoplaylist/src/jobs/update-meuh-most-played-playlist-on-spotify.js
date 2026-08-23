@@ -17,5 +17,8 @@ export default async function () {
     await saveSpotifyNotFoundTracks(notFound.map(x => ({ ...x, spotifyId: null })));
   }
 
-  await spotifyApi.updateSpotifyPLaylistTracks(SPOTIFY_PLAYLIST_ID, wantedTracks);
+  const bannedSongs = ['65EHIh75TK9eT0Iz8XeFPf', '47ahdgvNAbWnLUXc1ll0bh', '1wPrRerwqkikcJk4GW0Lat',
+    '1HgVxZN7ZboxbPwE0noLG4', '44qs3i4Wj1WVmeKcxnwLVA', '3vSn1frPgFcRXrjWOfhMLl', '6qn6KkhjbNI9ZSR83qG6so'];
+
+  await spotifyApi.updateSpotifyPLaylistTracks(SPOTIFY_PLAYLIST_ID, wantedTracks.filter(t => bannedSongs.indexOf(t) == -1));
 }

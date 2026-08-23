@@ -22,22 +22,17 @@ sudo mkdir -p /data/vaultwarden/
 sudo mkdir -p /data/heimdall/
 sudo mkdir -p /data/slurp-lemonde/
 sudo mkdir -p /data/navidrome
-sudo mkdir -p /data/yarr
-sudo mkdir -p /data/slurp-news
-sudo mkdir -p /data/radio-autoplaylist
-sudo mkdir -p /data/home-assistant
-sudo mkdir -p /data/influxdb
 sudo mkdir -p /data/mosquitto
 sudo mkdir -p /data/zigbee2mqtt
+sudo mkdir -p /data/kopia/
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
-# https://cert-manager.io/docs/installation/upgrading/
+# https://cert-manager.io/docs/installation/upgrading/em
 # https://github.com/jetstack/cert-manager/issues/2451#issuecomment-583333899
 
 kubectl create namespace cert-manager
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
-
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.21.1/cert-manager.yaml
 
 # deploy-ctn-app () {
 #   echo "Deploying app: $1"
@@ -60,21 +55,16 @@ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/relea
 # kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443
 
 #make tcp ports configurable
-./scripts/custom-k8s-ingress.sh 
+#./scripts/custom-k8s-ingress.sh
 
 #apply config
 echo "Applying global manifests"
 kustomize build ./global/ --load-restrictor LoadRestrictionsNone | kubectl apply -f -
 
-#dashboard
-# uses alternative setup https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#alternative-setup
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/alternative.yaml
-./apps/dashboard/gen-resources.sh | kubectl apply -f -
-
-#ddns-updater
-docker build ./apps/ddns-updater -t localhost:32000/ddns-updater && \
-docker push localhost:32000/ddns-updater && \
-kustomize build ./apps/ddns-updater --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+#headlamp
+docker build ./apps/headlamp -t localhost:32000/headlamp && \
+docker push localhost:32000/headlamp && \
+kustomize build ./apps/headlamp --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #http-server
 docker build ./apps/http-server -t localhost:32000/http-server && \
@@ -101,6 +91,12 @@ docker build ./apps/samba -t localhost:32000/samba && \
 docker push localhost:32000/samba && \
 kustomize build ./apps/samba --load-restrictor LoadRestrictionsNone | kubectl apply -f -
 
+#ssh-server
+docker build ./apps/ssh-server -t localhost:32000/ssh-server && \
+docker build -f ./apps/ssh-server/wstunnel.Dockerfile -t localhost:32000/wstunnel ./apps/ssh-server && \
+docker push localhost:32000/ssh-server && \
+docker push localhost:32000/wstunnel && \
+kustomize build ./apps/ssh-server --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #minidlna
 docker build ./apps/minidlna -t localhost:32000/minidlna && \
@@ -142,21 +138,6 @@ docker build ./apps/heimdall -t localhost:32000/heimdall && \
 docker push localhost:32000/heimdall && \
 kustomize build ./apps/heimdall --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
-#add-video-cover
-docker build ./apps/add-video-cover -t localhost:32000/add-video-cover && \
-docker push localhost:32000/add-video-cover && \
-kustomize build ./apps/add-video-cover --load-restrictor LoadRestrictionsNone | kubectl apply -f -
-
-#yarr
-docker build ./apps/yarr -t localhost:32000/yarr
-docker push localhost:32000/yarr
-kustomize build ./apps/yarr --load-restrictor LoadRestrictionsNone  --enable-alpha-plugins | kubectl apply -f -
-
-#slurp-news
-docker build ./apps/slurp-news -t localhost:32000/slurp-news && \
-docker push localhost:32000/slurp-news && \
-kustomize build ./apps/slurp-news --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
 #radio-autoplaylist
 docker build ./apps/radio-autoplaylist -t localhost:32000/radio-autoplaylist && \
 docker push localhost:32000/radio-autoplaylist && \
@@ -166,21 +147,6 @@ kustomize build ./apps/radio-autoplaylist --load-restrictor LoadRestrictionsNone
 docker build ./apps/enedis-tracker -t localhost:32000/enedis-tracker && \
 docker push localhost:32000/enedis-tracker && \
 kustomize build ./apps/enedis-tracker --load-restrictor LoadRestrictionsNone | kubectl apply -f -
-
-#boursorama-tracker
-docker build ./apps/boursorama-tracker -t localhost:32000/boursorama-tracker && \
-docker push localhost:32000/boursorama-tracker && \
-kustomize build ./apps/boursorama-tracker --load-restrictor LoadRestrictionsNone | kubectl apply -f -
-
-#radio-autoplaylist-frontend
-docker build ./apps/radio-autoplaylist-frontend -t localhost:32000/radio-autoplaylist-frontend && \
-docker push localhost:32000/radio-autoplaylist-frontend && \
-kustomize build ./apps/radio-autoplaylist-frontend --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#edith
-docker build ./apps/edith -t localhost:32000/edith && \
-docker push localhost:32000/edith && \
-kustomize build ./apps/edith --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #vaultwarden
 docker build ./apps/vaultwarden -t localhost:32000/vaultwarden && \
@@ -192,30 +158,15 @@ docker build ./apps/home-assistant -t localhost:32000/home-assistant && \
 docker push localhost:32000/home-assistant && \
 kustomize build ./apps/home-assistant --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
+#kopia
+docker build ./apps/kopia -t localhost:32000/kopia && \
+docker push localhost:32000/kopia && \
+kustomize build ./apps/kopia --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
 #netcheck
 docker build ./apps/netcheck -t localhost:32000/netcheck && \
 docker push localhost:32000/netcheck && \
 kustomize build ./apps/netcheck --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#influxdb
-docker build ./apps/influxdb -t localhost:32000/influxdb && \
-docker push localhost:32000/influxdb && \
-kustomize build ./apps/influxdb --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#telegraf
-docker build ./apps/telegraf -t localhost:32000/telegraf && \
-docker push localhost:32000/telegraf && \
-kustomize build ./apps/telegraf --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#s3-to-influxdb
-docker build ./apps/s3-to-influxdb -t localhost:32000/s3-to-influxdb && \
-docker push localhost:32000/s3-to-influxdb && \
-kustomize build ./apps/s3-to-influxdb --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#woob-extractor
-docker build ./apps/woob-extractor -t localhost:32000/woob-extractor && \
-docker push localhost:32000/woob-extractor && \
-kustomize build ./apps/woob-extractor --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #mosquitto
 docker build ./apps/mosquitto -t localhost:32000/mosquitto && \
@@ -226,3 +177,8 @@ kustomize build ./apps/mosquitto --load-restrictor LoadRestrictionsNone --enable
 docker build ./apps/zigbee2mqtt -t localhost:32000/zigbee2mqtt && \
 docker push localhost:32000/zigbee2mqtt && \
 kustomize build ./apps/zigbee2mqtt --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#emby
+docker build ./apps/emby -t localhost:32000/emby && \
+docker push localhost:32000/emby && \
+kustomize build ./apps/emby --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -

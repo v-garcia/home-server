@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: radio-autoplaylist
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
+  volumeName: radio-autoplaylist

@@ -2,13 +2,14 @@
 docker build --rm -t  samba ../
 
 docker run --net=host \
-    -v $(pwd)/share1/:/share1/ \
-    -e USERID="0" \
-    -e GROUPID="0" \
-    samba \
-    -u "toto;toto;" \
-    -g "ntlm auth = yes" \
-    -s "share1;/share1;yes;no;yes;toto;" \
-    -n
+    -v $(pwd)/share1/:/downloads/ \
+    -v $(pwd)/share1/:/public/ \
+    -v $(pwd)/share1/:/perso/ \
+    -v $(pwd)/../smb.conf:/etc/samba/smb.conf \
+    -e USER="vincent" \
+    -e PASS="toto" \
+    -e UID="1000" \
+    -e GID="0" \
+    samba
 
 # net use * /delete

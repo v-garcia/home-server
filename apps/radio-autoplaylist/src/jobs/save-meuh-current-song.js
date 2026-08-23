@@ -2,7 +2,7 @@ import got from 'got';
 import localStore from '../local-store.js';
 
 export default async function () {
-    const url = "https://www.radiomeuh.com/player/rtdata/tracks.json";
+    const url = "https://www.radiomeuh.com/storage/curtrack.json";
 
     // query parse
     const { body: [{ artist, titre: title } = {}] = [] } = await got.get(url, { responseType: 'json' });

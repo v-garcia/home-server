@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-local
+
+  labels:
+    type: local
+spec:
+  rules:
+    - host: immich.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: immich
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kopia-backup
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 3 * * *" # Every night at 3am
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 14400 # 4 hours
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: kopia-backup
+              image: localhost:32000/kopia
+              args:
+                - kopia
+                - snapshot
+                - create
+                - /backup-src/perso
+                - /backup-src/vaultwarden
+              envFrom:
+                - secretRef:
+                    name: s3-secret
+                - secretRef:
+                    name: kopia-secret
+              volumeMounts:
+                - name: perso
+                  mountPath: /backup-src/perso
+                  readOnly: true
+                - name: vaultwarden
+                  subPath: data
+                  mountPath: /backup-src/vaultwarden
+                  readOnly: true
+                - name: kopia
+                  subPath: backup/config
+                  mountPath: /app/config
+                - name: kopia
+                  subPath: backup/cache
+                  mountPath: /app/cache
+          volumes:
+            - name: perso
+              persistentVolumeClaim:
+                claimName: perso
+            - name: vaultwarden
+              persistentVolumeClaim:
+                claimName: vaultwarden
+            - name: kopia
+              persistentVolumeClaim:
+                claimName: kopia

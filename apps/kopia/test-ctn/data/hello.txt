@@ -1,0 +1,2 @@
+Hello from the kopia test-ctn setup.
+This is a sample file to snapshot with kopia.

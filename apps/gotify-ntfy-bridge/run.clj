@@ -8,19 +8,18 @@
 
 (def env #(System/getenv %))
 
-(defn retrieve-applications-names 
+(defn retrieve-applications-names
   []
   (->>
-   (http/request {
-                 :method :get
-                 :uri (format "http://%s/application" (env "GOTIFY_HOST")) 
-                 :headers {"X-Gotify-Key" (env "GOTIFY_TOKEN")}})
+   (http/request {:method :get
+                  :uri (format "http://%s/application" (env "GOTIFY_HOST"))
+                  :headers {"X-Gotify-Key" (env "GOTIFY_TOKEN")}})
    :body
    json/parse-string
    (map (fn [app] [(get app "id") (get app "name")]))
    (into {})))
 
-(def application-names 
+(def application-names
   (delay (retrieve-applications-names)))
 
 (defn send-ntfy-message
@@ -54,17 +53,18 @@
                              _          (println gtfy-msg)
                              ntfy-msg   (gotify-msg->ntfy-msg @application-names gtfy-msg)]
                          (println ntfy-msg)
-                         (send-ntfy-message ntfy-msg)
-                         )
+                         (send-ntfy-message ntfy-msg))
                        (catch Exception e
                          (println "Error on websocket:on-message" e))))}))
 
-
 (println "Run gotify-to-ntfy-bridge")
- (loop [ws nil]
-   (recur
-   (try
-     (or ws (listen-gotify-events)) 
-     (catch Exception e
-       (println "Error while trying to listen gotify websocket, will retry" e))
-     (finally (Thread/sleep 30000)))))
+(while true
+  (try
+    (println "Start ws connection")
+    (let [socket (listen-gotify-events)]
+      (println "Waiting 12 hour before closing")
+      (Thread/sleep (* 12 60 60 1000))
+      (ws/close! socket))
+    (catch Exception e
+      (println "Error while trying to listen gotify websocket, will retry" e)
+      (Thread/sleep (* 60 1000)))))

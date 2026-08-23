@@ -4,12 +4,8 @@ resources:
 - heimdall-deploy.yaml
 - heimdall-ext-ing.yaml
 - heimdall-pvc.yaml
-- heimdall-pv.yaml
 - heimdall-svc.yaml
 patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
 - path: ../../overlays/ing-authentified.yaml
   target:
     kind: Ingress
@@ -23,4 +19,4 @@ patches:
     kind: Ingress
     labelSelector: type=local
 transformers:
-  - ../../global/ingress-domain-transformer-secret.yaml
+- ../../global/ingress-domain-transformer-secret.yaml

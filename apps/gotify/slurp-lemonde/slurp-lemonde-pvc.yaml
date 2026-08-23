@@ -4,8 +4,8 @@ metadata:
   name: slurp-lemonde
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
+  storageClassName: microk8s-hostpath
   resources:
     requests:
       storage: 10Gi

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kopia-ext
+  labels:
+    authentified: "true"
+    type: external
+spec:
+  tls:
+    - hosts:
+        - kopia.{hostname}
+      secretName: kopia.ing.cert
+  rules:
+    - host: kopia.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: kopia
+                port:
+                  number: 51515
+            path: /
+            pathType: Prefix

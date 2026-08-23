@@ -4,9 +4,7 @@ resources:
     - basic-auth-nginx-secret.yaml
     - s3-secret.yaml
     - local-sc.yaml
-    - perso-pv.yaml
     - perso-pvc.yaml
-    - public-pv.yaml
     - public-pvc.yaml
     - res-limit-range.yaml
     - letsencrypt-cluster-issuer.yaml

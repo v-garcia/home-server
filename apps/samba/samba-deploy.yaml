@@ -15,33 +15,20 @@ spec:
       containers:
         - name: samba
           image: localhost:32000/samba
-          args:
-            - -u
-            - "$(SAMBA_USR);$(SAMBA_PWD)"
-            - -g #https://github.com/dperson/samba/issues/81
-            - "ntlm auth = yes"
-            - -s
-            - "downloads;/downloads;yes;no;yes;$(SAMBA_USR)"
-            - -s
-            - "public;/public;yes;no;yes;$(SAMBA_USR)"
-            - -s
-            - "perso;/perso;yes;no;no;$(SAMBA_USR)"
-            - -p
-          # browsable;readonly;guest
           env:
-            - name: SAMBA_USR
+            - name: USER
               valueFrom:
                 secretKeyRef:
                   name: samba-secret
                   key: username
-            - name: SAMBA_PWD
+            - name: PASS
               valueFrom:
                 secretKeyRef:
                   name: samba-secret
                   key: password
-            - name: USERID
-              value: "0"
-            - name: GROUPID
+            - name: UID
+              value: "1000"
+            - name: GID
               value: "0"
           resources:
             requests:
@@ -68,6 +55,9 @@ spec:
           #   - containerPort: 138
           #     protocol: UDP
           volumeMounts:
+            - name: samba-config
+              subPath: smb.conf
+              mountPath: /etc/samba/smb.conf
             - name: sabnzbd
               subPath: downloads
               mountPath: /downloads/sabnzbd
@@ -85,6 +75,9 @@ spec:
               subPath: watchdir
               mountPath: /downloads/watchdir/aria2
       volumes:
+        - name: samba-config
+          configMap:
+            name: samba-config
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

@@ -32,10 +32,6 @@ spec:
               mountPath: /secrets/authorized_keys
               subPath: authorized_keys
               readOnly: true
-            - name: ssh-server-secret
-              mountPath: /secrets/password
-              subPath: password
-              readOnly: true
             - name: ssh-server-cm
               mountPath: /etc/ssh/sshd_config.d/99-ssh-server.conf
               subPath: 99-ssh-server.conf
@@ -67,6 +63,7 @@ spec:
         - name: ssh-server-secret
           secret:
             secretName: ssh-server-secret
+            defaultMode: 384
         - name: ssh-server-cm
           configMap:
             name: ssh-server-cm

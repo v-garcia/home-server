@@ -4,9 +4,6 @@ resources:
 - wallet-monitor-cj.yaml
 - wallet-monitor-secret.yaml
 patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
 - path: ../../overlays/ing-authentified.yaml
   target:
     kind: Ingress

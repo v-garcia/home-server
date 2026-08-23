@@ -12,4 +12,3 @@ data:
     AllowTcpForwarding yes
     GatewayPorts clientspecified
     PermitListen *:1080
-    AuthorizedKeysFile .ssh/authorized_keys

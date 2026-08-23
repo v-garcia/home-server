@@ -57,8 +57,9 @@ const savePlayedTrackIfDifferent = (prefix) => async (date, artist, title) => {
   const value = JSON.stringify({ title, artist });
   const latestValue = await db.get(latest_key).catch(handleNotFoundError);
 
+  console.debug("Comparing", [latestValue.toString(), value]);
   if (latestValue?.toString() != value) {
-    console.info({ title, artist, key });
+    console.info("Saving", { title, artist, key });
     return Promise.all([db.put(key, value), db.put(latest_key, value)]);
   }
 };

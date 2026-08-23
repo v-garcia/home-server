@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      initContainers:
+        - name: wait-postgres
+          image: safesecurity/wait-for-it
+          args:
+            - "$(IMMICH_POSTGRES_SERVICE_HOST):$(IMMICH_POSTGRES_SERVICE_PORT)"
+        - name: wait-redis
+          image: safesecurity/wait-for-it
+          args:
+            - "$(IMMICH_REDIS_SERVICE_HOST):$(IMMICH_REDIS_SERVICE_PORT)"
+      containers:
+        - name: immich
+          image: localhost:32000/immich
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOSTNAME
+              value: $(IMMICH_POSTGRES_SERVICE_HOST)
+            - name: REDIS_HOSTNAME
+              value: $(IMMICH_REDIS_SERVICE_HOST)
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-secret
+                  key: db-password
+          envFrom:
+            - configMapRef:
+                name: immich-config
+          volumeMounts:
+            - name: immich
+              subPath: immich-config
+              mountPath: /config
+            - name: immich
+              subPath: immich-photos
+              mountPath: /photos
+            - name: public
+              subPath: photos
+              mountPath: /import
+      volumes:
+        - name: immich
+          persistentVolumeClaim:
+            claimName: immich
+        - name: public
+          persistentVolumeClaim:
+            claimName: public

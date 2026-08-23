@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: filebrowser
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 400Gi
+  volumeName: filebrowser

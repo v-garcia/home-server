@@ -20,7 +20,8 @@
              "LU1834985845" "FOO.PA"
              "LU1681041544" "CEM.PA"
              "LU1834986900" "HLT.PA"
-             "LU1291101555" "EESM.PA"})
+             "LU1291101555" "EESM.PA"
+             "LU2089238112" "PRAZ.F"})
 
 ; Search on https://fr.finance.yahoo.com
 (defn ^:private isin->av-sym

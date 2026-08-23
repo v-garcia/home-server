@@ -1,1 +1,3 @@
-FROM emby/embyserver:4.8.6.0
+FROM emby/embyserver:4.10.0.26
+
+# https://hub.docker.com/r/emby/embyserver

@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: rclone-perso
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
+  volumeName: rclone-perso

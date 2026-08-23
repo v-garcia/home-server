@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kopia-local
+  labels:
+    type: local
+spec:
+  rules:
+    - host: kopia.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: kopia
+                port:
+                  number: 51515
+            path: /
+            pathType: Prefix

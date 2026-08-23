@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: mosquitto
 spec:
+  storageClassName: ''
   accessModes:
-    - ReadWriteMany
-  storageClassName: local-storage
+  - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
+  volumeName: mosquitto

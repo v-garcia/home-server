@@ -8,21 +8,7 @@ spec:
   capacity:
     storage: 400Gi
   accessModes:
-    # the volume can be mounted as read-write by many nodes
-    - ReadWriteMany
-    # Allow WaitForFirstConsumer
+  - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
+  hostPath:
     path: /data/filebrowser
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - node-name
-  claimRef:
-    namespace: default
-    name: filebrowser

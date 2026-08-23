@@ -36,7 +36,6 @@ print(args)
 configIdx=args.index('--config')
 configPath=args[configIdx+1]
 
-# print config info
 subprocess.run(["rclone", "config", "--config", configPath, "file"])
 
 # check if distant remotes exists

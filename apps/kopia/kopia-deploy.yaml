@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kopia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kopia
+  template:
+    metadata:
+      labels:
+        app: kopia
+    spec:
+      containers:
+        - name: kopia
+          image: localhost:32000/kopia
+          args:
+            - kopia
+            - server
+            - start
+            - --address=0.0.0.0:51515
+            - --insecure
+            - --disable-csrf-token-checks
+            - --without-password
+            # relies entirely on the ingress for auth, see apps/kopia/kustomization.yaml
+            - --allow-extremely-dangerous-unauthenticated-server-on-the-network
+          ports:
+            - name: kopia
+              containerPort: 51515
+          envFrom:
+            - secretRef:
+                name: s3-secret
+            - secretRef:
+                name: kopia-secret
+          volumeMounts:
+            - name: kopia
+              subPath: webui/config
+              mountPath: /app/config
+            - name: kopia
+              subPath: webui/cache
+              mountPath: /app/cache
+          readinessProbe:
+            httpGet:
+              path: /api/v1/repo/status
+              port: kopia
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: /api/v1/repo/status
+              port: kopia
+              scheme: HTTP
+      volumes:
+        - name: kopia
+          persistentVolumeClaim:
+            claimName: kopia

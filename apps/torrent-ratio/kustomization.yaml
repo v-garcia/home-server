@@ -3,7 +3,4 @@ kind: Kustomization
 resources:
 - torrent-ratio-deploy.yaml
 - torrent-ratio-secret.yaml
-patches:
-- path: ../../overlays/pv-node-affinity.yaml
-  target:
-    kind: PersistentVolume
+patches: []

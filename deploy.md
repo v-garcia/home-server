@@ -29,7 +29,7 @@ snap install yq
 ```
 sudo snap install microk8s --classic
 sudo usermod -a -G microk8s vincent  
-sudo microk8s.enable metrics-server dns storage registry ingress  
+sudo microk8s.enable metrics-server dns storage registry ingress metallb:192.168.1.200-192.168.1.200
 microk8s.stop && microk8s.start  
 sudo snap alias microk8s.kubectl kubectl  
 sudo iptables -P FORWARD ACCEPT   

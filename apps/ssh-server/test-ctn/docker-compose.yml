@@ -7,6 +7,12 @@ services:
       context: ..
       dockerfile: Dockerfile
     container_name: ssh-server-test
+    command:
+      - /bin/sh
+      - -c
+      - |
+        printf 'ssh:%s' "$$(tr -d '\n\r' < /secrets/password)" | chpasswd
+        exec /usr/sbin/sshd -D -e
     ports:
       - "8080:8080"
       - "2223:22"
