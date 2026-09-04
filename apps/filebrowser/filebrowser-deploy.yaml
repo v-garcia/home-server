@@ -18,7 +18,7 @@ spec:
           args:
             - --noauth
             - --database
-            - "/root/workingdir/database.db"
+            - "/database/workingdir/database.db"
             - --port
             - "3000"
           ports:
@@ -43,7 +43,7 @@ spec:
               mountPath: /srv/public
             - name: filebrowser
               subPath: workingdir
-              mountPath: /root/workingdir
+              mountPath: /database/workingdir
       volumes:
         - name: sabnzbd
           persistentVolumeClaim:
