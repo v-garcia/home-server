@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # microk8s' ingress addon creates this configmap outside of kustomize;
+  # this patches it to allow nginx.ingress.kubernetes.io/configuration-snippet
+  # annotations (used by apps/headlamp to auto-inject its login token).
+  # Both keys are required: allow-snippet-annotations alone still gets
+  # rejected ("... contains risky annotation based on ingress configuration")
+  # because configuration-snippet is classified as Critical risk and the
+  # controller's default annotations-risk-level (High) is below that.
+  name: nginx-load-balancer-microk8s-conf
+  namespace: ingress
+data:
+  allow-snippet-annotations: "true"
+  annotations-risk-level: "Critical"

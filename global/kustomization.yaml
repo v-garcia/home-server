@@ -14,6 +14,7 @@ resources:
     - accounts/bp-secret.yaml
     - accounts/ca-secret.yaml
     - accounts/esalia-secret.yaml
+    - ingress-nginx-configmap-patch.yaml
 patches:
     - path: ../overlays/pv-node-affinity.yaml
       target:

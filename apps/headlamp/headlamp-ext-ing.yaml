@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: headlamp-ext
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Authorization "Bearer {{BEARER}}";
   labels:
     type: external
     authentified: "true"

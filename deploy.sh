@@ -64,7 +64,7 @@ kustomize build ./global/ --load-restrictor LoadRestrictionsNone | kubectl apply
 #headlamp
 docker build ./apps/headlamp -t localhost:32000/headlamp && \
 docker push localhost:32000/headlamp && \
-kustomize build ./apps/headlamp --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+./apps/headlamp/gen-resources.sh
 
 #http-server
 docker build ./apps/http-server -t localhost:32000/http-server && \
