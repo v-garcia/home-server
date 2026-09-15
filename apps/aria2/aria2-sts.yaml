@@ -36,13 +36,8 @@ spec:
               subPath: aria2.conf
               mountPath: /etc/aria2.conf
           env:
-            - name: GOTIFY_URL
-              value: http://$(GOTIFY_SERVICE_HOST):$(GOTIFY_SERVICE_PORT)
-            - name: GOTIFY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: aria2-secret
-                  key: gotify-token
+            - name: APPRISE_URL
+              value: http://$(APPRISE_SERVICE_HOST):$(APPRISE_SERVICE_PORT)/notify/apprise
           # livenessProbe:
           #   exec:
           #     command:
@@ -58,6 +53,3 @@ spec:
         - name: aria2-config
           configMap:
             name: aria2-config
-        - name: aria2-secret
-          secret:
-            secretName: aria2-secret

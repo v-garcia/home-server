@@ -5,7 +5,6 @@ resources:
 - aria2-ext-ing.yaml
 - aria2-local-ing.yaml
 - aria2-pvc.yaml
-- aria2-secret.yaml
 - aria2-sts.yaml
 - aria2-svc.yaml
 patches:

@@ -12,8 +12,7 @@ docker run \
     --name aria2 \
     -p 6801:80 \
     -p 6800:6800 \
-    -e GOTIFY_URL="$GOTIFY_URL" \
-    -e GOTIFY_TOKEN="$GOTIFY_TOKEN" \
+    -e APPRISE_URL="$APPRISE_URL" \
     -v $(pwd)/incomplete/:/incomplete \
     -v $(pwd)/watchdir/:/watchdir \
     -v $(pwd)/downloads/:/downloads \

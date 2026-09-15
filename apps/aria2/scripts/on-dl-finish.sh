@@ -21,12 +21,11 @@ echo "Handling torrent $dl_name"
 rm -rv "$bpath.aria2"
 
 # sending end of download notification
-body="{\"title\": \"New file downloaded!\", \"message\":\"File: $dl_name\"}"
-
 curl -X POST \
-     -H "X-Gotify-Key: $GOTIFY_TOKEN" \
-     -H "Content-type: application/json" \
-     -d "$body"\
+     -H "Accept: application/json" \
+     -d "tag=aria2,torrent,download-finished" \
+     -d "title=New file downloaded!" \
+     -d "body=File: $dl_name" \
      --retry 3 \
      --max-time 5 \
-     "$GOTIFY_URL/message"
+     "$APPRISE_URL"
