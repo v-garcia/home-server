@@ -15,7 +15,6 @@ sudo mkdir -p /data/config/
 sudo mkdir -p /data/workdir/
 sudo mkdir -p /data/filebrowser/
 sudo mkdir -p /data/rclone-perso/
-sudo mkdir -p /data/gotify/
 sudo mkdir -p /data/minidlna/
 sudo mkdir -p /data/aria2/
 sudo mkdir -p /data/vaultwarden/
@@ -108,11 +107,6 @@ docker build ./apps/filebrowser -t localhost:32000/filebrowser && \
 docker push localhost:32000/filebrowser && \
 kustomize build ./apps/filebrowser --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
-#gotify
-docker build ./apps/gotify -t localhost:32000/gotify && \
-docker push localhost:32000/gotify && \
-kustomize build ./apps/gotify --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
 #upload
 docker build ./apps/upload -t localhost:32000/upload
 docker push localhost:32000/upload
@@ -182,3 +176,8 @@ kustomize build ./apps/emby --load-restrictor LoadRestrictionsNone --enable-alph
 docker build ./apps/apprise -t localhost:32000/apprise && \
 docker push localhost:32000/apprise && \
 kustomize build ./apps/apprise --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#rustatio
+docker build ./apps/rustatio -t localhost:32000/rustatio && \
+docker push localhost:32000/rustatio && \
+kustomize build ./apps/rustatio --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
