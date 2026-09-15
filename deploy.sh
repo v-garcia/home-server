@@ -123,11 +123,6 @@ docker build ./apps/wallet-monitor -t localhost:32000/wallet-monitor && \
 docker push localhost:32000/wallet-monitor && \
 kustomize build ./apps/wallet-monitor --load-restrictor LoadRestrictionsNone  | kubectl apply -f -
 
-#torrent-ratio
-docker build ./apps/torrent-ratio -t localhost:32000/torrent-ratio
-docker push localhost:32000/torrent-ratio
-kustomize build ./apps/torrent-ratio --load-restrictor LoadRestrictionsNone | kubectl apply -f -
-
 #aria2
 docker build ./apps/aria2 -t localhost:32000/aria2 && \
 docker push localhost:32000/aria2 && \
