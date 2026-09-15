@@ -182,3 +182,8 @@ kustomize build ./apps/zigbee2mqtt --load-restrictor LoadRestrictionsNone --enab
 docker build ./apps/emby -t localhost:32000/emby && \
 docker push localhost:32000/emby && \
 kustomize build ./apps/emby --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#apprise
+docker build ./apps/apprise -t localhost:32000/apprise && \
+docker push localhost:32000/apprise && \
+kustomize build ./apps/apprise --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -

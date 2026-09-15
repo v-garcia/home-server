@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apprise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apprise
+  template:
+    metadata:
+      labels:
+        app: apprise
+    spec:
+      initContainers:
+        - name: apprise-config-init
+          image: alpine:latest
+          command:
+            - /bin/sh
+            - -c
+            - apk add --no-cache gettext && envsubst < /template/apprise.yml.template > /config/apprise.yml
+          envFrom:
+            - secretRef:
+                name: apprise-secret
+          volumeMounts:
+            - name: apprise-template
+              mountPath: /template
+            - name: apprise-config
+              mountPath: /config
+      containers:
+        - name: apprise
+          image: localhost:32000/apprise
+          ports:
+            - name: apprise
+              containerPort: 8000
+          env:
+            - name: APPRISE_CONFIG_LOCK
+              value: "yes"
+            - name: APPRISE_STATEFUL_MODE
+              value: simple
+            - name: APPRISE_WORKER_COUNT
+              value: "1"
+          volumeMounts:
+            - name: apprise-config
+              mountPath: /config
+      volumes:
+        - name: apprise-template
+          configMap:
+            name: apprise-cm
+        - name: apprise-config
+          emptyDir: {}

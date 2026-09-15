@@ -1,0 +1,13 @@
+# kubectl create configmap apprise-cm \
+#     --from-file=apprise.yml.template=test-ctn/apprise.yml.template \
+#     --dry-run=client -o yaml
+
+apiVersion: v1
+data:
+  apprise.yml.template: |
+    urls:
+      - pover://${POVER_USER_KEY}@${POVER_API_TOKEN}:
+          tag: always
+kind: ConfigMap
+metadata:
+  name: apprise-cm

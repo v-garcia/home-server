@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apprise
+spec:
+  type: ClusterIP
+  selector:
+    app: apprise
+  ports:
+    - name: apprise
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
