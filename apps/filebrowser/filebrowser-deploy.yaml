@@ -12,6 +12,9 @@ spec:
       labels:
         app: filebrowser
     spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
       containers:
         - name: filebrowser
           image: localhost:32000/filebrowser
