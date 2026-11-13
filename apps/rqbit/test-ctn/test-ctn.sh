@@ -19,6 +19,7 @@ docker run \
     --name rqbit \
     --add-host=host.docker.internal:host-gateway \
     -p 3030:3030 \
+    --env-file .env \
     -v $(pwd)/db/:/home/rqbit/db \
     -v $(pwd)/cache/:/home/rqbit/cache \
     -v $(pwd)/downloads/:/home/rqbit/downloads \
