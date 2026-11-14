@@ -71,10 +71,27 @@ docker build ./apps/http-server -t localhost:32000/http-server && \
 docker push localhost:32000/http-server && \
 kustomize build ./apps/http-server --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
+#apprise
+docker build ./apps/apprise -t localhost:32000/apprise && \
+docker push localhost:32000/apprise && \
+kustomize build ./apps/apprise --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
 #sabnzbd
 docker build ./apps/sabnzbd -t localhost:32000/sabnzbd && \
 docker push localhost:32000/sabnzbd && \
 kustomize build ./apps/sabnzbd --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#aria2
+docker build ./apps/aria2 -t localhost:32000/aria2 && \
+docker push localhost:32000/aria2 && \
+kustomize build ./apps/aria2 --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
+#rqbit
+docker build ./apps/rqbit -t localhost:32000/rqbit && \
+docker build -f ./apps/rqbit/notifier.Dockerfile -t localhost:32000/rqbit-notifier ./apps/rqbit && \
+docker push localhost:32000/rqbit && \
+docker push localhost:32000/rqbit-notifier && \
+kustomize build ./apps/rqbit --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #rclone-perso
 docker build ./apps/rclone-perso -t localhost:32000/rclone-perso && \
@@ -117,18 +134,6 @@ kustomize build ./apps/upload --load-restrictor LoadRestrictionsNone --enable-al
 docker build ./apps/wallet-monitor -t localhost:32000/wallet-monitor && \
 docker push localhost:32000/wallet-monitor && \
 kustomize build ./apps/wallet-monitor --load-restrictor LoadRestrictionsNone  | kubectl apply -f -
-
-#aria2
-docker build ./apps/aria2 -t localhost:32000/aria2 && \
-docker push localhost:32000/aria2 && \
-kustomize build ./apps/aria2 --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#rqbit
-docker build ./apps/rqbit -t localhost:32000/rqbit && \
-docker build -f ./apps/rqbit/notifier.Dockerfile -t localhost:32000/rqbit-notifier ./apps/rqbit && \
-docker push localhost:32000/rqbit && \
-docker push localhost:32000/rqbit-notifier && \
-kustomize build ./apps/rqbit --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #heimdall
 docker build ./apps/heimdall -t localhost:32000/heimdall && \
@@ -179,11 +184,6 @@ kustomize build ./apps/zigbee2mqtt --load-restrictor LoadRestrictionsNone --enab
 docker build ./apps/emby -t localhost:32000/emby && \
 docker push localhost:32000/emby && \
 kustomize build ./apps/emby --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#apprisesudo pacman -Syu
-docker build ./apps/apprise -t localhost:32000/apprise && \
-docker push localhost:32000/apprise && \
-kustomize build ./apps/apprise --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
 #rustatio
 docker build ./apps/rustatio -t localhost:32000/rustatio && \
