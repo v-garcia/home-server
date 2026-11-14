@@ -14,7 +14,6 @@ sudo mkdir -p /data/sabnzbd/
 sudo mkdir -p /data/config/
 sudo mkdir -p /data/workdir/
 sudo mkdir -p /data/filebrowser/
-sudo mkdir -p /data/rclone-perso/
 sudo mkdir -p /data/minidlna/
 sudo mkdir -p /data/aria2/
 sudo mkdir -p /data/vaultwarden/
@@ -92,11 +91,6 @@ docker build -f ./apps/rqbit/notifier.Dockerfile -t localhost:32000/rqbit-notifi
 docker push localhost:32000/rqbit && \
 docker push localhost:32000/rqbit-notifier && \
 kustomize build ./apps/rqbit --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
-
-#rclone-perso
-docker build ./apps/rclone-perso -t localhost:32000/rclone-perso && \
-docker push localhost:32000/rclone-perso && \
-kustomize build ./apps/rclone-perso --load-restrictor LoadRestrictionsNone | kubectl apply -f -
 
 #navidrome
 docker build ./apps/navidrome -t localhost:32000/navidrome && \
