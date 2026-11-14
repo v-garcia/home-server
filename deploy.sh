@@ -24,6 +24,7 @@ sudo mkdir -p /data/navidrome
 sudo mkdir -p /data/mosquitto
 sudo mkdir -p /data/zigbee2mqtt
 sudo mkdir -p /data/kopia/
+sudo mkdir -p /data/rqbit/
 
 # cert-manager
 # https://cert-manager.io/docs/installation/kubernetes/
@@ -122,6 +123,13 @@ docker build ./apps/aria2 -t localhost:32000/aria2 && \
 docker push localhost:32000/aria2 && \
 kustomize build ./apps/aria2 --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
+#rqbit
+docker build ./apps/rqbit -t localhost:32000/rqbit && \
+docker build -f ./apps/rqbit/notifier.Dockerfile -t localhost:32000/rqbit-notifier ./apps/rqbit && \
+docker push localhost:32000/rqbit && \
+docker push localhost:32000/rqbit-notifier && \
+kustomize build ./apps/rqbit --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
+
 #heimdall
 docker build ./apps/heimdall -t localhost:32000/heimdall && \
 docker push localhost:32000/heimdall && \
@@ -172,7 +180,7 @@ docker build ./apps/emby -t localhost:32000/emby && \
 docker push localhost:32000/emby && \
 kustomize build ./apps/emby --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
 
-#apprise
+#apprisesudo pacman -Syu
 docker build ./apps/apprise -t localhost:32000/apprise && \
 docker push localhost:32000/apprise && \
 kustomize build ./apps/apprise --load-restrictor LoadRestrictionsNone --enable-alpha-plugins | kubectl apply -f -
