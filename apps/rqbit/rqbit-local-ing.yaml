@@ -6,7 +6,6 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /web/
     nginx.ingress.kubernetes.io/proxy-body-size: 0m
   labels:
-    authentified: "true"
     type: local
 spec:
   rules:
