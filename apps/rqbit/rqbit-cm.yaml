@@ -1,0 +1,14 @@
+# rqbit has no config file: each RQBIT_* variable maps to a CLI flag (see `rqbit server start --help`)
+# Keep in sync with test-ctn/.env. Read at container start only: `kubectl rollout restart sts/rqbit` after a change
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rqbit-env
+data:
+  RQBIT_WATCH_FOLDER: /home/rqbit/watchdir
+  # Bytes per second (1048576 = 1 MiB/s), 0 is not allowed: remove to disable the limit
+  RQBIT_RATELIMIT_UPLOAD: "1048576"
+  # Permissions removed from created files/dirs (octal): 000 = any user can modify downloads
+  RQBIT_UMASK: "000"
+  # Peer port is published by rqbit-peer-svc, don't ask the router through UPnP
+  RQBIT_UPNP_PORT_FORWARD_DISABLE: "true"

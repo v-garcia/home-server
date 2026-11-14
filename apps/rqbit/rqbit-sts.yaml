@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rqbit
+spec:
+  serviceName: rqbit
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rqbit
+  template:
+    metadata:
+      labels:
+        app: rqbit
+        tier: downloader
+    spec:
+      containers:
+        - name: rqbit
+          image: localhost:32000/rqbit
+          ports:
+            - name: rqbit-http
+              containerPort: 3030
+            - name: rqbit-peer
+              containerPort: 4240
+          envFrom:
+            - configMapRef:
+                name: rqbit-env
+          volumeMounts:
+            - name: rqbit
+              subPath: downloads
+              mountPath: /home/rqbit/downloads
+            - name: rqbit
+              subPath: db
+              mountPath: /home/rqbit/db
+            - name: rqbit
+              subPath: cache
+              mountPath: /home/rqbit/cache
+            - name: rqbit
+              subPath: watchdir
+              mountPath: /home/rqbit/watchdir
+        # Sidecar: listens to rqbit log stream (localhost:3030) and notifies apprise when a torrent is finished
+        - name: rqbit-notifier
+          image: localhost:32000/rqbit-notifier
+          env:
+            - name: APPRISE_URL
+              value: http://$(APPRISE_SERVICE_HOST):$(APPRISE_SERVICE_PORT)/notify/apprise
+      volumes:
+        - name: rqbit
+          persistentVolumeClaim:
+            claimName: rqbit

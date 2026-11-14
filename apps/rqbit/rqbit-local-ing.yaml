@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rqbit-local
+  annotations:
+    nginx.ingress.kubernetes.io/app-root: /web/
+    nginx.ingress.kubernetes.io/proxy-body-size: 0m
+  labels:
+    authentified: "true"
+    type: local
+spec:
+  rules:
+    - host: rqbit.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: rqbit
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

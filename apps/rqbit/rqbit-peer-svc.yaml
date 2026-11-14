@@ -1,0 +1,18 @@
+# BitTorrent peer port published on the LAN (to be forwarded by the main router)
+# Kept apart from rqbit-svc: the HTTP API has no auth and must only be reachable through the ingress
+apiVersion: v1
+kind: Service
+metadata:
+  name: rqbit-peer
+  annotations:
+    metallb.io/allow-shared-ip: main-node-vip
+spec:
+  selector:
+    app: rqbit
+  type: LoadBalancer
+  loadBalancerIP: 192.168.1.200
+  ports:
+    - name: rqbit-peer
+      protocol: TCP
+      port: 4240
+      targetPort: 4240

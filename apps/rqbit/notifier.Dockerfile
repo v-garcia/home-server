@@ -1,4 +1,4 @@
-FROM alpine:3.23.5
+FROM alpine:3.24.4
 
 # Sidecar of rqbit: push an apprise notification when a torrent is finished
 

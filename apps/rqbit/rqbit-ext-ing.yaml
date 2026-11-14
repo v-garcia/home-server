@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rqbit-ext
+  annotations:
+    nginx.ingress.kubernetes.io/app-root: /web/
+    nginx.ingress.kubernetes.io/proxy-body-size: 0m
+  labels:
+    authentified: "true"
+    type: external
+spec:
+  tls:
+    - hosts:
+        - rqbit.{hostname}
+      secretName: rqbit.ing.cert
+  rules:
+    - host: rqbit.{hostname}
+      http:
+        paths:
+          - backend:
+              service:
+                name: rqbit
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
