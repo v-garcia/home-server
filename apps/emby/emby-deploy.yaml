@@ -31,6 +31,9 @@ spec:
             - name: aria2
               subPath: downloads
               mountPath: /media/aria2
+            - name: rqbit
+              subPath: downloads
+              mountPath: /media/rqbit
           env:
             - name: UID
               value: "0"
@@ -46,3 +49,6 @@ spec:
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2
+        - name: rqbit
+          persistentVolumeClaim:
+            claimName: rqbit

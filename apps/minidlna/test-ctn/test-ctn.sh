@@ -10,6 +10,7 @@ docker run --net=host \
     -v $(pwd)/minidlna.conf:/etc/minidlna.conf \
     -v /data/sabnzbd/downloads:/media/sabnzbd \
     -v /data/aria2/downloads:/media/aria2 \
+    -v /data/rqbit/downloads:/media/rqbit \
     -v /data/public:/media/public \
     minidlna 
 

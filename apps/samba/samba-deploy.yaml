@@ -74,6 +74,12 @@ spec:
             - name: aria2
               subPath: watchdir
               mountPath: /downloads/watchdir/aria2
+            - name: rqbit
+              subPath: downloads
+              mountPath: /downloads/rqbit
+            - name: rqbit
+              subPath: watchdir
+              mountPath: /downloads/watchdir/rqbit
       volumes:
         - name: samba-config
           configMap:
@@ -90,3 +96,6 @@ spec:
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2
+        - name: rqbit
+          persistentVolumeClaim:
+            claimName: rqbit

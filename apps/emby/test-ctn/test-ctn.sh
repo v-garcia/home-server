@@ -7,6 +7,7 @@ docker run --net=host \
     -v $(pwd)/data:/data \
     -v $(pwd)/config:/config \
     -v /data/aria2/downloads:/media/aria2 \
+    -v /data/rqbit/downloads:/media/rqbit \
     -p 8096:8096/tcp \
     -e UID=0 \
     -e GID=0 \

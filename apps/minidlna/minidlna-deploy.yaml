@@ -28,6 +28,9 @@ spec:
             - name: aria2
               subPath: downloads
               mountPath: /media/aria2
+            - name: rqbit
+              subPath: downloads
+              mountPath: /media/rqbit
             - name: sabnzbd
               subPath: downloads
               mountPath: /media/sabnzbd
@@ -47,6 +50,9 @@ spec:
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2
+        - name: rqbit
+          persistentVolumeClaim:
+            claimName: rqbit
         - name: sabnzbd
           persistentVolumeClaim:
             claimName: sabnzbd

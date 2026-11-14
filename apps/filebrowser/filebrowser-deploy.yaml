@@ -37,6 +37,12 @@ spec:
             - name: aria2
               subPath: downloads
               mountPath: /srv/downloads/aria2
+            - name: rqbit
+              subPath: downloads
+              mountPath: /srv/downloads/rqbit
+            - name: rqbit
+              subPath: watchdir
+              mountPath: /srv/downloads/watchdir/rqbit
             - name: sabnzbd
               subPath: downloads
               mountPath: /srv/downloads/watchdir/nzb
@@ -54,6 +60,9 @@ spec:
         - name: aria2
           persistentVolumeClaim:
             claimName: aria2
+        - name: rqbit
+          persistentVolumeClaim:
+            claimName: rqbit
         - name: perso
           persistentVolumeClaim:
             claimName: perso

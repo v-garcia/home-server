@@ -26,6 +26,7 @@ data:
     #   * "V" for video    (eg. media_dir=V,/var/lib/minidlna/videos)
     #   * "PV" for pictures and video (eg. media_dir=PV,/var/lib/minidlna/digital_camera)
     media_dir=V,/media/aria2
+    media_dir=V,/media/rqbit
     media_dir=V,/media/sabnzbd
     media_dir=PV,/media/public
 
