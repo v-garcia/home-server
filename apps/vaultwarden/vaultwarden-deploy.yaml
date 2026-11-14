@@ -30,6 +30,8 @@ spec:
               value: "3000"
             - name: SHOW_PASSWORD_HINT
               value: "true"
+            - name: EXPERIMENTAL_CLIENT_FEATURE_FLAGS
+              value: "enable-basic-auth-response"
           volumeMounts:
             - name: vaultwarden
               subPath: data
