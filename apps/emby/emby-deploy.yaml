@@ -4,6 +4,8 @@ metadata:
   name: emby
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: emby
@@ -12,10 +14,6 @@ spec:
       labels:
         app: emby
     spec:
-      # Puting this hostnetwork because it seems that my Samsung TV doesn't support External HTTPS Ingress
-      # Becous of outdated Certificate
-      # https://emby.media/community/index.php?/topic/118397-new-samsung-tv-is-unable-to-play-some-media-via-emby/page/2/#comment-1258456
-      hostNetwork: true
       containers:
         - name: emby
           image: localhost:32000/emby
