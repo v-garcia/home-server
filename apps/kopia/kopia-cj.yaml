@@ -21,6 +21,12 @@ spec:
                 - create
                 - /backup-src/perso
                 - /backup-src/vaultwarden
+              env:
+                # Enables failure notifications in entrypoint.sh
+                - name: NOTIFY_ON_FAILURE
+                  value: "true"
+                - name: APPRISE_URL
+                  value: http://$(APPRISE_SERVICE_HOST):$(APPRISE_SERVICE_PORT)/notify/apprise
               envFrom:
                 - secretRef:
                     name: s3-secret
